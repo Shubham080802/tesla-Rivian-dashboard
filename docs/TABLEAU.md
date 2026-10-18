@@ -44,6 +44,9 @@ Then arrange sheets 1 to 3 and 6 on a "Head to head" dashboard, and 4, 5 and 7 t
 * Attention is English Wikipedia only. Charging counts only stations open today.
 * `outlook` and `chance_of_growth` come from the same rule as the web dashboard; `scripts/check_data.py` proves they match.
 
+## Stock vs business
+`stock_vs_business.csv` has one row per company and year: `stock_return`, `revenue_growth`, `volume_growth` (derived percentages only; raw prices are not published because the free sources do not allow it). Suggested sheet: bars of `stock_return` next to `revenue_growth` by `year`, one pane per `company`.
+
 ## Regional tables
 | File | One row per | Key columns |
 |---|---|---|

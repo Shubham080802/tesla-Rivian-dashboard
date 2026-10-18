@@ -1,6 +1,7 @@
 # To do
 
 ## Data
+- [ ] **Share prices:** refresh by hand with `python scripts/build_stocks.py` after each month end (it fetches into a git-ignored cache). If a licensed, redistributable source is ever available (or Tableau's own connectors are used), a full monthly price chart could replace the derived figures.
 - [ ] **Europe registrations:** add each new ACEA monthly press release (`Press_release_car_registrations_<Month>_2026.pdf`; ACEA skips July, so derive it from year-to-date totals) to `data/external/ev/acea_primary_rows.csv` and `europe_registrations.csv`. BYD January to June 2024 is not reported separately by ACEA.
 - [ ] **Tesla China monthly:** add each new month from the CPCA release (domestic deliveries and exports) to `data/external/ev/tesla_china_monthly.csv`.
 - [ ] **U.S. registrations** for Tesla and BYD's China retail (CPCA members-only) are not free; look for a legitimate public source.

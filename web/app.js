@@ -1,10 +1,10 @@
 // Start-up, tabs and URL state. Each tab's logic lives in its own file; helpers are in core.js.
 let EV = null, VS = null, RG = null;
 const state = { tab: "versus" };
-const TABS = ["versus", "ev", "regions", "lab", "drivers", "quality"];
+const TABS = ["versus", "ev", "regions", "stocks", "lab", "drivers", "quality"];
 const renderers = {
   versus: () => typeof renderVersus === "function" && renderVersus(), ev: () => typeof renderEv === "function" && renderEv(),
-  regions: () => typeof renderRegions === "function" && renderRegions(), lab: () => renderLab(), drivers: () => renderDrivers(), quality: () => renderQuality(),
+  regions: () => typeof renderRegions === "function" && renderRegions(), stocks: () => typeof renderStocks === "function" && renderStocks(), lab: () => renderLab(), drivers: () => renderDrivers(), quality: () => renderQuality(),
 };
 function prepEv(d) { EV = d; }
 function prepVersus(d) { VS = d; }
@@ -43,8 +43,8 @@ function renderChips() {
 
 function start() {
   const get = (u, opt) => fetch(u).then((r) => (r.ok ? r.json() : Promise.reject(u))).catch((e) => (opt ? null : Promise.reject(e)));
-  Promise.all([get("ev.json"), get("versus.json"), get("drivers.json", true), get("checks.json", true), get("regions.json", true)]).then(([ev, vs, dr, ck, rg]) => {
-    prepEv(ev); prepVersus(vs); if (rg) prepRegions(rg); if (dr) prepDrivers(dr); if (ck) prepChecks(ck);
+  Promise.all([get("ev.json"), get("versus.json"), get("drivers.json", true), get("checks.json", true), get("regions.json", true), get("stocks.json", true)]).then(([ev, vs, dr, ck, rg, sk]) => {
+    prepEv(ev); prepVersus(vs); if (rg) prepRegions(rg); if (sk) prepStocks(sk); if (dr) prepDrivers(dr); if (ck) prepChecks(ck);
     $("subtitle").textContent = `Public filings and announcements, through ${fmt.month(ev.byd.months.at(-1).m)}`;
     readHash(); renderChips(); initLab(); initAsk();
     $("tabs").onclick = (e) => { const b = e.target.closest("button"); if (b) goTab(b.dataset.tab); };

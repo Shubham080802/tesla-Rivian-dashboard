@@ -91,6 +91,18 @@ if rg_path.exists():
     check("Europe monthly sums stay within 2% of ACEA's year-to-date totals", not gaps, "revisions to earlier months explain the small difference (BYD about 1.5%)" if not gaps else "; ".join(gaps))
     check("Europe data is current", months_old(eu["months"][-1]) <= 4, f"latest {eu['months'][-1]} (ACEA publishes about three weeks after month end; see docs/TODO.md)", warn=True)
 
+sk_path = W / "stocks.json"
+if sk_path.exists():
+    sk = json.loads(sk_path.read_text())
+    check("stocks.json has no missing or infinite numbers", finite(sk), "all values are finite")
+    t = {r["year"]: r["stock_return"] for r in sk["years"] if r["company"] == "Tesla"}
+    check("Tesla yearly share price changes match the published record", abs(t[2020] - 7.434) < 0.01 and abs(t[2021] - 0.498) < 0.01 and abs(t[2022] + 0.650) < 0.01 and abs(t[2023] - 1.017) < 0.01 and abs(t[2024] - 0.625) < 0.01,
+          "2020 +743%, 2021 +50%, 2022 -65%, 2023 +102%, 2024 +63% (split-adjusted, price only)")
+    byd = {r["year"]: r["revenue_growth"] for r in sk["years"] if r["company"] == "BYD"}
+    check("BYD revenue growth in the stock table matches the annual reports", abs(byd[2022] - (424060.635 / 216142.395 - 1)) < 0.001 and abs(byd[2025] - (803964.958 / 777102.455 - 1)) < 0.001, "2022 +96.2%, 2025 +3.5%")
+    check("Share price data is current", months_old(sk["meta"]["through"]) <= 3, f"through {sk['meta']['through']} (refreshed by hand; not part of the daily job)", warn=True)
+    check("No raw prices are published", all(set(r) <= {"company", "year", "stock_return", "revenue_growth", "volume_growth"} for r in sk["years"]) and set(sk["companies"]["Tesla"]) <= {"symbol", "ytd_return", "ytd_through", "volatility_36m"}, "only percentage figures appear in stocks.json")
+
 # the Tableau export must agree with the dashboard's own rule
 import subprocess
 tab = ROOT / "tableau" / "outlook.csv"

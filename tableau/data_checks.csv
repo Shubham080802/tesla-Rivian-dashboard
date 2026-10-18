@@ -32,4 +32,9 @@ Europe registrations are plausible,pass,"Tesla Europe 326,525 in 2024 and 238,72
 Europe months equal the figures read from ACEA's press releases,pass,"14 release rows checked, including the restated 2025 months"
 Europe monthly sums stay within 2% of ACEA's year-to-date totals,pass,revisions to earlier months explain the small difference (BYD about 1.5%)
 Europe data is current,pass,latest 2026-08 (ACEA publishes about three weeks after month end; see docs/TODO.md)
+stocks.json has no missing or infinite numbers,pass,all values are finite
+Tesla yearly share price changes match the published record,pass,"2020 +743%, 2021 +50%, 2022 -65%, 2023 +102%, 2024 +63% (split-adjusted, price only)"
+BYD revenue growth in the stock table matches the annual reports,pass,"2022 +96.2%, 2025 +3.5%"
+Share price data is current,pass,through 2026-09 (refreshed by hand; not part of the daily job)
+No raw prices are published,pass,only percentage figures appear in stocks.json
 The Tableau export gives the same chance of growth as the dashboard,pass,4 series compared

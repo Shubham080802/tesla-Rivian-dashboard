@@ -92,6 +92,11 @@ if (W / "regions.json").exists():
     eu = rg["europe"]
     save("europe_registrations_monthly.csv", pd.concat([pd.DataFrame({"company": co, "month": [m + "-01" for m in eu["months"]], "registrations": eu[k]}).dropna() for co, k in (("Tesla", "tesla"), ("BYD", "byd"))]))
 
+# stock vs business (derived percentages only)
+if (W / "stocks.json").exists():
+    sk = json.loads((W / "stocks.json").read_text())
+    save("stock_vs_business.csv", pd.DataFrame(sk["years"]))
+
 # checks
 ck = json.loads((W / "checks.json").read_text())
 save("data_checks.csv", pd.DataFrame(ck["checks"]).rename(columns={"status": "result"}))

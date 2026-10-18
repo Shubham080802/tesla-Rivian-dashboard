@@ -3,3 +3,6 @@ __pycache__/
 .venv/
 .DS_Store
 .claude/
+
+# raw monthly stock closes (personal-use data, never committed; see scripts/build_stocks.py)
+data/external/ev/stock_monthly_local.csv

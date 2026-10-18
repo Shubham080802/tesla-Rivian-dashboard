@@ -10,6 +10,7 @@ A head-to-head dashboard for Tesla and BYD built only from public filings, annou
 | **Head to head** | A scoreboard (volume, growth, revenue, margins, attention) with the leader on each row, a plain-language reading, revenue and profit by year, gross margin, attention, and Tesla's charging stations. |
 | **Sales & forecast** | Tesla deliveries by quarter and BYD NEV sales by month with forecasts and 80% ranges, production vs deliveries, Tesla revenue and margin, model mix, BYD home vs overseas sales. |
 | **Where they sell** | Tesla's China wholesale split into domestic deliveries and Shanghai exports, BYD's home market vs overseas, the share each sells abroad, and Europe registrations for both from ACEA's own press releases (BYD is not reported separately before mid-2024). |
+| **Stock vs business** | Calendar-year share price changes for Tesla and BYD (H shares) beside revenue and volume growth, year-to-date change and volatility. Only derived percentages are published (see the terms note on the page); not investment advice. |
 | **Forecast lab** | Ask the dashboard (suggested questions, answered from the same numbers), an outlook scorecard (Expanding, Contracting, Uncertain), a per-series lab with demand scenarios and a target tester, an on-track check and seasonality. |
 | **Drivers** | Gasoline price, loan rates, vehicle sales, new-car prices, sentiment and the fed funds rate, tested against Tesla and BYD growth with an overlap-corrected test. |
 | **About the data** | How current each source is, the 26 checks run on every refresh, and what is not here. |
@@ -31,6 +32,7 @@ pip install -r requirements.txt
 python scripts/build_ev_data.py        # Tesla + BYD volumes, financials, forecasts -> web/ev.json
 python scripts/build_versus_data.py    # attention, annual financials in USD, charging -> web/versus.json
 python scripts/build_regions.py        # Tesla China, BYD home vs overseas, Europe -> web/regions.json (Tesla China and Europe figures are typed in; see docs/TODO.md)
+python scripts/build_stocks.py         # by hand only: share price changes vs the business -> web/stocks.json (fetches personal-use prices into a git-ignored cache; publishes only percentages)
 python scripts/build_drivers.py        # demand drivers and the exploratory test -> web/drivers.json
 python scripts/export_tableau.py       # eleven tidy CSVs for Tableau -> tableau/
 python scripts/check_data.py           # checks (needs Node for the dashboard-vs-Tableau comparison) -> web/checks.json

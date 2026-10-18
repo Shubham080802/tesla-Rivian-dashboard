@@ -45,6 +45,7 @@
       <button role="tab" data-tab="versus" class="active">Head to head</button>
       <button role="tab" data-tab="ev">Sales &amp; forecast</button>
       <button role="tab" data-tab="regions">Where they sell</button>
+      <button role="tab" data-tab="stocks">Stock vs business</button>
       <button role="tab" data-tab="lab">Forecast lab</button>
       <button role="tab" data-tab="drivers">Drivers</button>
       <button role="tab" data-tab="quality">About the data</button>
@@ -133,6 +134,18 @@
     <p class="note" id="rgNote"></p>
   </div>
 
+  <div class="panel" id="tab-stocks">
+    <article class="card"><header><h3>How have the shares done next to the business?</h3><p>Calendar-year share price changes for Tesla (TSLA) and BYD (H shares, 1211.HK) beside revenue and vehicle volume growth. Prices are split-adjusted and exclude dividends.</p></header>
+      <div class="tiles tiles-4" id="skTiles"></div></article>
+    <article class="card"><header><h3>Share price change by year</h3><p>Each company's price at year end vs the year before, in its own currency.</p></header><div class="plot h-lg" id="c-sk-ret"></div></article>
+    <div class="grid2">
+      <article class="card"><header><h3>Tesla: market vs business</h3><p>Price change, revenue growth and deliveries growth.</p></header><div class="plot h-lg" id="c-sk-tesla"></div></article>
+      <article class="card"><header><h3>BYD: market vs business</h3><p>Price change, revenue growth and NEV sales growth (volumes from 2023).</p></header><div class="plot h-lg" id="c-sk-byd"></div></article>
+    </div>
+    <article class="card"><header><h3>Was the market ahead of or behind the business?</h3></header><div class="tablewrap"><table id="skTable"></table></div></article>
+    <p class="note" id="skNote"></p>
+  </div>
+
   <div class="panel" id="tab-lab">
     <article class="card ask" id="askCard">
       <header><h3>Ask the dashboard</h3><p>Pick a question or type one. Answers are built from the same numbers as the charts and say where they come from. No guessing.</p></header>
@@ -183,7 +196,7 @@
       <ul class="plain">
         <li><b>Customer reviews and ratings.</b> No open dataset exists for Tesla or BYD.</li>
         <li><b>BYD monthly volumes before 2022, and the passenger and overseas split before 2023.</b> 2022 totals are included and reconcile to BYD's reported 1,863,494 for the year; earlier months and the 2022 split are on the roadmap.</li>
-        <li><b>Stock prices.</b> No clean free monthly source confirmed yet.</li>
+        <li><b>Raw share prices.</b> No free source clearly allows republishing prices, so only derived yearly percentage changes are shown on the Stock vs business tab; the monthly prices themselves stay on the maintainer's machine.</li>
         <li><b>Registrations by country.</b> Tesla's China domestic and export figures are included (CPCA). Europe runs to August 2026 (BYD not reported separately in early 2024); BYD's own China retail is not published separately; the U.S. is not included.</li>
         <li><b>Sales as revenue.</b> Volumes are what the companies report; BYD's monthly figures are unaudited and its revenue includes phone components.</li>
       </ul></article>
@@ -200,6 +213,7 @@
 <script src="ev.js"></script>
 <script src="versus.js"></script>
 <script src="regions.js"></script>
+<script src="stocks.js"></script>
 <script src="lab.js"></script>
 <script src="drivers.js"></script>
 <script src="quality.js"></script>
