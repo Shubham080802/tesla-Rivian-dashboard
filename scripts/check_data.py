@@ -40,9 +40,9 @@ ms = [r["m"] for r in B]
 consec = all((int(b[:4]) * 12 + int(b[5:]) - int(a[:4]) * 12 - int(a[5:])) == 1 for a, b in zip(ms, ms[1:]))
 check("BYD months are consecutive and recent", consec and months_old(ms[-1]) <= 3, f"{len(ms)} months, latest {ms[-1]} ({months_old(ms[-1])} months ago)")
 yr = lambda y, k: sum(r[k] for r in B if r["m"].startswith(y))
-check("BYD transcription matches published totals", yr("2023", "passenger") == 3012906 and abs(yr("2024", "total") - 4272145) < 1000 and abs(yr("2025", "total") - 4602436) < 1000,
-      f"2023 passenger {yr('2023', 'passenger'):,}, 2024 total {yr('2024', 'total'):,}, 2025 total {yr('2025', 'total'):,}")
-check("BYD passenger and overseas never exceed total", all(r["passenger"] <= r["total"] and r["overseas"] <= r["total"] for r in B), "holds in every month")
+check("BYD transcription matches published totals", yr("2022", "total") == 1863494 and yr("2023", "passenger") == 3012906 and abs(yr("2024", "total") - 4272145) < 1000 and abs(yr("2025", "total") - 4602436) < 1000,
+      f"2022 total {yr('2022', 'total'):,}, 2023 passenger {yr('2023', 'passenger'):,}, 2024 total {yr('2024', 'total'):,}, 2025 total {yr('2025', 'total'):,}")
+check("BYD passenger and overseas never exceed total", all((r["passenger"] or 0) <= r["total"] and (r["overseas"] or 0) <= r["total"] for r in B), "holds in every month")
 d25 = sum(r["deliveries"] for r in T if r["q"].startswith("2025"))
 check("Tesla 2025 deliveries match the published annual total", d25 == 1636129, f"{d25:,} delivered in 2025")
 check("Tesla quarters are consecutive and recent", months_old(T[-1]["q"]) <= 6 and len(T) >= 28, f"{len(T)} quarters, latest {T[-1]['q']}")

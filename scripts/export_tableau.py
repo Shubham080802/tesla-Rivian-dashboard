@@ -41,7 +41,7 @@ def save(name, df):
 
 # volumes
 B = pd.DataFrame(ev["byd"]["months"])
-save("volumes_monthly.csv", pd.concat([B.assign(company="BYD", metric=m_, value=B[k], month=B.m + "-01")[["company", "month", "metric", "value"]] for m_, k in (("NEV sales", "total"), ("Passenger NEV sales", "passenger"), ("Overseas sales", "overseas"))]))
+save("volumes_monthly.csv", pd.concat([B.assign(company="BYD", metric=m_, value=B[k], month=B.m + "-01")[["company", "month", "metric", "value"]].dropna() for m_, k in (("NEV sales", "total"), ("Passenger NEV sales", "passenger"), ("Overseas sales", "overseas"))]))
 T = pd.DataFrame(ev["tesla"]["quarters"])
 vol = pd.concat([T.assign(company="Tesla", metric=m_, value=T[k], quarter_start=T.q.map(qd))[["company", "quarter_start", "metric", "value"]].dropna() for m_, k in (("Deliveries", "deliveries"), ("Production", "production"), ("Model 3/Y deliveries", "model_3y"))])
 save("volumes_quarterly.csv", vol)

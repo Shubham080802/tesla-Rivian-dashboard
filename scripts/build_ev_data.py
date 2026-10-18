@@ -6,7 +6,7 @@ Sources (all public):
     (data/external/ev/tesla_q3_2026_manual.csv, with its accession number).
   * Tesla financials: SEC EDGAR company facts (CIK 1318605), quarters filled only by accounting identities.
   * BYD monthly NEV sales, passenger NEVs and overseas sales: BYD's monthly HKEX announcements as tabulated by CnEVPost
-    (data/external/ev/byd_monthly_sales.csv, Jan 2023 to Sep 2026). Spot-checked against HKEX filings for May, Jun, Aug 2026.
+    (data/external/ev/byd_monthly_sales.csv, Jan 2022 to Sep 2026). Spot-checked against HKEX filings for May, Jun, Aug 2026.
     The figures are unaudited and BYD may adjust them; "overseas" definitions differ between sources.
 Forecasts use the same backtested engine as the rest of the dashboard.
 
@@ -98,10 +98,10 @@ def main():
     fc_r = forecast_series(fr.to_numpy(float), fr.index[-1], season=4, step=3, horizon=6, origins=(8, 6, 4), min_history=16, monitor=True, monitor_n=8)
     # BYD: monthly NEV sales forecast (season 12)
     b = pd.read_csv(EV / "byd_monthly_sales.csv").set_index("month")
-    assert (b.passenger_nev <= b.total_nev).all() and (b.overseas <= b.total_nev).all() and b.index.is_monotonic_increasing
+    assert (b.passenger_nev.fillna(0) <= b.total_nev).all() and (b.overseas.fillna(0) <= b.total_nev).all() and b.index.is_monotonic_increasing
     last_m = b.index[-1]
     fc_b = forecast_series(b.total_nev.to_numpy(float), last_m, season=12, step=1, horizon=12, origins=(12, 9, 6), min_history=36, monitor=True, monitor_n=12)
-    fc_o = forecast_series(b.overseas.to_numpy(float), last_m, season=12, step=1, horizon=12, origins=(12, 9, 6), min_history=36, monitor=True, monitor_n=12)
+    fc_o = forecast_series(b.overseas.dropna().to_numpy(float), last_m, season=12, step=1, horizon=12, origins=(12, 9, 6), min_history=36, monitor=True, monitor_n=12)
     out = {
         "meta": {"built": dt.date.today().isoformat(), "tesla_latest_quarter": last_q, "byd_latest_month": last_m,
                  "tesla_sources": {"deliveries": "https://datahub.io/datapressr/tesla-quarterly-deliveries", "q3_2026": "Tesla 8-K filed 2026-10-02, Exhibit 99.1", "sec": "https://www.sec.gov/edgar/browse/?CIK=1318605"},
@@ -109,7 +109,7 @@ def main():
                  "notes": {"byd": "BYD's monthly figures are unaudited, reported in HKEX announcements, and may be adjusted. Overseas definitions differ between sources.",
                            "tesla": "Deliveries are not sales revenue; quarterly financials come from SEC filings."}},
         "tesla": {"quarters": tq, "forecast_deliveries": fc_t, "forecast_revenue": fc_r, "revenue_latest_quarter": fr.index[-1], "financials_ahead": fin_extra},
-        "byd": {"months": [{"m": m_, "total": int(r.total_nev), "passenger": int(r.passenger_nev), "overseas": int(r.overseas)} for m_, r in b.iterrows()],
+        "byd": {"months": [{"m": m_, "total": int(r.total_nev), "passenger": None if pd.isna(r.passenger_nev) else int(r.passenger_nev), "overseas": None if pd.isna(r.overseas) else int(r.overseas)} for m_, r in b.iterrows()],
                 "forecast_total": fc_b, "forecast_overseas": fc_o},
     }
     path = ROOT / "web" / "ev.json"
