@@ -48,6 +48,7 @@
       <button role="tab" data-tab="stocks">Stock vs business</button>
       <button role="tab" data-tab="lab">Forecast lab</button>
       <button role="tab" data-tab="drivers">Drivers</button>
+      <button role="tab" data-tab="tableau">Tableau</button>
       <button role="tab" data-tab="quality">About the data</button>
     </nav>
   </div>
@@ -189,6 +190,21 @@
     <div class="grid3" id="drGrid"></div>
   </div>
 
+  <div class="panel" id="tab-tableau">
+    <article class="card">
+      <header class="row-head">
+        <div><h3>Tableau Public dashboards</h3><p id="tbSub">The same data, built in Tableau and published on Tableau Public. Pick a dashboard; it loads from Tableau, so it can take a few seconds.</p></div>
+        <div class="seg" id="tbSeg" role="radiogroup" aria-label="Tableau dashboard">
+          <button type="button" role="radio" data-v="TeslavsBYDheadtohead" class="on">Head to head</button>
+          <button type="button" role="radio" data-v="VolumesoutlookandTeslaChina">Volumes and outlook</button>
+          <button type="button" role="radio" data-v="Europestocksanddrivers">Europe, stocks, drivers</button>
+        </div>
+      </header>
+      <div class="tb-frame"><iframe id="tbFrame" title="Tesla vs BYD on Tableau Public" loading="lazy" allowfullscreen></iframe></div>
+      <p class="note">Tableau Public keeps a snapshot of the data from when the workbook was published, so it can lag this site, which refreshes daily. <a id="tbOpen" target="_blank" rel="noopener">Open in Tableau Public</a>.</p>
+    </article>
+  </div>
+
   <div class="panel" id="tab-quality">
     <article class="card"><header><h3>How current is each source?</h3><p>Everything here is public data. Dates are the latest observation in each source.</p></header><div class="tablewrap fresh"><table id="qFresh"></table></div></article>
     <article class="card"><header><h3>Checks run on every refresh</h3><p id="qCheckSub"></p></header><ul class="plain" id="qChecks"></ul></article>
@@ -218,5 +234,6 @@
 <script src="drivers.js"></script>
 <script src="quality.js"></script>
 <script src="ask.js"></script>
+<script src="tableau.js"></script>
 </body>
 </html>

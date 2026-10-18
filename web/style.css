@@ -394,3 +394,7 @@ details.method { padding: 14px 20px; } details.method > summary { cursor: pointe
 .tabs .navsep { align-self: center; padding: 0 8px 0 12px; margin-left: 6px; border-left: 1px solid var(--line, var(--axis)); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
 ul.plain { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
 body[data-tab="versus"] .range, body[data-tab="ev"] .range, body[data-tab="versus"] .fresh, body[data-tab="ev"] .fresh, body[data-tab="versus"] .presets, body[data-tab="ev"] .presets { display: none !important; }
+
+/* Tableau Public embed */
+.tb-frame { position: relative; width: 100%; height: min(900px, 80vh); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; margin-top: 12px; }
+.tb-frame iframe { width: 100%; height: 100%; border: 0; display: block; }

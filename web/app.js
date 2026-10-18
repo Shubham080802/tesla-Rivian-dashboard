@@ -1,10 +1,10 @@
 // Start-up, tabs and URL state. Each tab's logic lives in its own file; helpers are in core.js.
 let EV = null, VS = null, RG = null;
 const state = { tab: "versus" };
-const TABS = ["versus", "ev", "regions", "stocks", "lab", "drivers", "quality"];
+const TABS = ["versus", "ev", "regions", "stocks", "lab", "drivers", "tableau", "quality"];
 const renderers = {
   versus: () => typeof renderVersus === "function" && renderVersus(), ev: () => typeof renderEv === "function" && renderEv(),
-  regions: () => typeof renderRegions === "function" && renderRegions(), stocks: () => typeof renderStocks === "function" && renderStocks(), lab: () => renderLab(), drivers: () => renderDrivers(), quality: () => renderQuality(),
+  regions: () => typeof renderRegions === "function" && renderRegions(), stocks: () => typeof renderStocks === "function" && renderStocks(), lab: () => renderLab(), drivers: () => renderDrivers(), tableau: () => typeof renderTableau === "function" && renderTableau(), quality: () => renderQuality(),
 };
 function prepEv(d) { EV = d; }
 function prepVersus(d) { VS = d; }
