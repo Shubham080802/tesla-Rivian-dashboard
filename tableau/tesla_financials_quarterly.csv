@@ -1,0 +1,175 @@
+company,quarter_start,metric,value_usd_m
+Tesla,2019-04-01,Revenue,6350.0
+Tesla,2019-07-01,Revenue,6303.0
+Tesla,2019-10-01,Revenue,7384.0
+Tesla,2020-01-01,Revenue,5985.0
+Tesla,2020-04-01,Revenue,6036.0
+Tesla,2020-07-01,Revenue,8771.0
+Tesla,2020-10-01,Revenue,10744.0
+Tesla,2021-01-01,Revenue,10389.0
+Tesla,2021-04-01,Revenue,11958.0
+Tesla,2021-07-01,Revenue,13757.0
+Tesla,2021-10-01,Revenue,17719.0
+Tesla,2022-01-01,Revenue,18756.0
+Tesla,2022-04-01,Revenue,16934.0
+Tesla,2022-07-01,Revenue,21454.0
+Tesla,2022-10-01,Revenue,24318.0
+Tesla,2023-01-01,Revenue,23329.0
+Tesla,2023-04-01,Revenue,24927.0
+Tesla,2023-07-01,Revenue,23350.0
+Tesla,2023-10-01,Revenue,25167.0
+Tesla,2024-01-01,Revenue,21301.0
+Tesla,2024-04-01,Revenue,25500.0
+Tesla,2024-07-01,Revenue,25182.0
+Tesla,2024-10-01,Revenue,25707.0
+Tesla,2025-01-01,Revenue,19335.0
+Tesla,2025-04-01,Revenue,22496.0
+Tesla,2025-07-01,Revenue,28095.0
+Tesla,2025-10-01,Revenue,24901.0
+Tesla,2026-01-01,Revenue,22387.0
+Tesla,2026-04-01,Revenue,28236.0
+Tesla,2019-04-01,Gross profit,921.0
+Tesla,2019-07-01,Gross profit,1191.0
+Tesla,2019-10-01,Gross profit,1391.0
+Tesla,2020-01-01,Gross profit,1234.0
+Tesla,2020-04-01,Gross profit,1267.0
+Tesla,2020-07-01,Gross profit,2063.0
+Tesla,2020-10-01,Gross profit,2066.0
+Tesla,2021-01-01,Gross profit,2215.0
+Tesla,2021-04-01,Gross profit,2884.0
+Tesla,2021-07-01,Gross profit,3660.0
+Tesla,2021-10-01,Gross profit,4847.0
+Tesla,2022-01-01,Gross profit,5460.0
+Tesla,2022-04-01,Gross profit,4234.0
+Tesla,2022-07-01,Gross profit,5382.0
+Tesla,2022-10-01,Gross profit,5777.0
+Tesla,2023-01-01,Gross profit,4511.0
+Tesla,2023-04-01,Gross profit,4533.0
+Tesla,2023-07-01,Gross profit,4178.0
+Tesla,2023-10-01,Gross profit,4438.0
+Tesla,2024-01-01,Gross profit,3696.0
+Tesla,2024-04-01,Gross profit,4578.0
+Tesla,2024-07-01,Gross profit,4997.0
+Tesla,2024-10-01,Gross profit,4179.0
+Tesla,2025-01-01,Gross profit,3153.0
+Tesla,2025-04-01,Gross profit,3878.0
+Tesla,2025-07-01,Gross profit,5054.0
+Tesla,2025-10-01,Gross profit,5009.0
+Tesla,2026-01-01,Gross profit,4720.0
+Tesla,2026-04-01,Gross profit,4751.0
+Tesla,2019-04-01,Operating income,-167.0
+Tesla,2019-07-01,Operating income,261.0
+Tesla,2019-10-01,Operating income,359.0
+Tesla,2020-01-01,Operating income,283.0
+Tesla,2020-04-01,Operating income,327.0
+Tesla,2020-07-01,Operating income,809.0
+Tesla,2020-10-01,Operating income,575.0
+Tesla,2021-01-01,Operating income,594.0
+Tesla,2021-04-01,Operating income,1312.0
+Tesla,2021-07-01,Operating income,2004.0
+Tesla,2021-10-01,Operating income,2613.0
+Tesla,2022-01-01,Operating income,3603.0
+Tesla,2022-04-01,Operating income,2464.0
+Tesla,2022-07-01,Operating income,3688.0
+Tesla,2022-10-01,Operating income,3901.0
+Tesla,2023-01-01,Operating income,2664.0
+Tesla,2023-04-01,Operating income,2399.0
+Tesla,2023-07-01,Operating income,1764.0
+Tesla,2023-10-01,Operating income,2064.0
+Tesla,2024-01-01,Operating income,1171.0
+Tesla,2024-04-01,Operating income,1605.0
+Tesla,2024-07-01,Operating income,2717.0
+Tesla,2024-10-01,Operating income,1583.0
+Tesla,2025-01-01,Operating income,399.0
+Tesla,2025-04-01,Operating income,923.0
+Tesla,2025-07-01,Operating income,1624.0
+Tesla,2025-10-01,Operating income,1409.0
+Tesla,2026-01-01,Operating income,941.0
+Tesla,2026-04-01,Operating income,398.0
+Tesla,2019-04-01,Net income,-408.0
+Tesla,2019-07-01,Net income,143.0
+Tesla,2019-10-01,Net income,105.0
+Tesla,2020-01-01,Net income,16.0
+Tesla,2020-04-01,Net income,104.0
+Tesla,2020-07-01,Net income,331.0
+Tesla,2020-10-01,Net income,270.0
+Tesla,2021-01-01,Net income,438.0
+Tesla,2021-04-01,Net income,1142.0
+Tesla,2021-07-01,Net income,1618.0
+Tesla,2021-10-01,Net income,2321.0
+Tesla,2022-01-01,Net income,3318.0
+Tesla,2022-04-01,Net income,2259.0
+Tesla,2022-07-01,Net income,3292.0
+Tesla,2022-10-01,Net income,3687.0
+Tesla,2023-01-01,Net income,2513.0
+Tesla,2023-04-01,Net income,2703.0
+Tesla,2023-07-01,Net income,1853.0
+Tesla,2023-10-01,Net income,7928.0
+Tesla,2024-01-01,Net income,1390.0
+Tesla,2024-04-01,Net income,1400.0
+Tesla,2024-07-01,Net income,2173.0
+Tesla,2024-10-01,Net income,2128.0
+Tesla,2025-01-01,Net income,409.0
+Tesla,2025-04-01,Net income,1172.0
+Tesla,2025-07-01,Net income,1373.0
+Tesla,2025-10-01,Net income,840.0
+Tesla,2026-01-01,Net income,477.0
+Tesla,2026-04-01,Net income,1114.0
+Tesla,2019-04-01,Operating cash flow,864.0
+Tesla,2019-07-01,Operating cash flow,756.0
+Tesla,2019-10-01,Operating cash flow,1425.0
+Tesla,2020-01-01,Operating cash flow,-440.0
+Tesla,2020-04-01,Operating cash flow,964.0
+Tesla,2020-07-01,Operating cash flow,2400.0
+Tesla,2020-10-01,Operating cash flow,3019.0
+Tesla,2021-01-01,Operating cash flow,1641.0
+Tesla,2021-04-01,Operating cash flow,2124.0
+Tesla,2021-07-01,Operating cash flow,3147.0
+Tesla,2021-10-01,Operating cash flow,4585.0
+Tesla,2022-01-01,Operating cash flow,3995.0
+Tesla,2022-04-01,Operating cash flow,2351.0
+Tesla,2022-07-01,Operating cash flow,5100.0
+Tesla,2022-10-01,Operating cash flow,3278.0
+Tesla,2023-01-01,Operating cash flow,2513.0
+Tesla,2023-04-01,Operating cash flow,3065.0
+Tesla,2023-07-01,Operating cash flow,3308.0
+Tesla,2023-10-01,Operating cash flow,4370.0
+Tesla,2024-01-01,Operating cash flow,242.0
+Tesla,2024-04-01,Operating cash flow,3612.0
+Tesla,2024-07-01,Operating cash flow,6255.0
+Tesla,2024-10-01,Operating cash flow,4814.0
+Tesla,2025-01-01,Operating cash flow,2156.0
+Tesla,2025-04-01,Operating cash flow,2540.0
+Tesla,2025-07-01,Operating cash flow,6238.0
+Tesla,2025-10-01,Operating cash flow,3813.0
+Tesla,2026-01-01,Operating cash flow,3937.0
+Tesla,2026-04-01,Operating cash flow,4697.0
+Tesla,2019-04-01,Capital spending,250.0
+Tesla,2019-07-01,Capital spending,385.0
+Tesla,2019-10-01,Capital spending,412.0
+Tesla,2020-01-01,Capital spending,455.0
+Tesla,2020-04-01,Capital spending,546.0
+Tesla,2020-07-01,Capital spending,1005.0
+Tesla,2020-10-01,Capital spending,1151.0
+Tesla,2021-01-01,Capital spending,1348.0
+Tesla,2021-04-01,Capital spending,1505.0
+Tesla,2021-07-01,Capital spending,1819.0
+Tesla,2021-10-01,Capital spending,1810.0
+Tesla,2022-01-01,Capital spending,1767.0
+Tesla,2022-04-01,Capital spending,1730.0
+Tesla,2022-07-01,Capital spending,1803.0
+Tesla,2022-10-01,Capital spending,1858.0
+Tesla,2023-01-01,Capital spending,2072.0
+Tesla,2023-04-01,Capital spending,2060.0
+Tesla,2023-07-01,Capital spending,2460.0
+Tesla,2023-10-01,Capital spending,2307.0
+Tesla,2024-01-01,Capital spending,2777.0
+Tesla,2024-04-01,Capital spending,2272.0
+Tesla,2024-07-01,Capital spending,3513.0
+Tesla,2024-10-01,Capital spending,2780.0
+Tesla,2025-01-01,Capital spending,1492.0
+Tesla,2025-04-01,Capital spending,2394.0
+Tesla,2025-07-01,Capital spending,2248.0
+Tesla,2025-10-01,Capital spending,2393.0
+Tesla,2026-01-01,Capital spending,2493.0
+Tesla,2026-04-01,Capital spending,5789.0

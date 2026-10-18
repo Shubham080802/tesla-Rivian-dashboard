@@ -1,0 +1,88 @@
+company,quarter_start,metric,value
+Tesla,2019-04-01,Deliveries,95200.0
+Tesla,2019-07-01,Deliveries,97000.0
+Tesla,2019-10-01,Deliveries,112000.0
+Tesla,2020-01-01,Deliveries,88400.0
+Tesla,2020-04-01,Deliveries,90650.0
+Tesla,2020-07-01,Deliveries,139300.0
+Tesla,2020-10-01,Deliveries,180570.0
+Tesla,2021-01-01,Deliveries,184800.0
+Tesla,2021-04-01,Deliveries,201250.0
+Tesla,2021-07-01,Deliveries,241300.0
+Tesla,2021-10-01,Deliveries,308600.0
+Tesla,2022-01-01,Deliveries,310048.0
+Tesla,2022-04-01,Deliveries,254695.0
+Tesla,2022-07-01,Deliveries,343830.0
+Tesla,2022-10-01,Deliveries,405278.0
+Tesla,2023-01-01,Deliveries,422875.0
+Tesla,2023-04-01,Deliveries,466140.0
+Tesla,2023-07-01,Deliveries,435059.0
+Tesla,2023-10-01,Deliveries,484507.0
+Tesla,2024-01-01,Deliveries,386810.0
+Tesla,2024-04-01,Deliveries,443956.0
+Tesla,2024-07-01,Deliveries,462890.0
+Tesla,2024-10-01,Deliveries,495570.0
+Tesla,2025-01-01,Deliveries,336681.0
+Tesla,2025-04-01,Deliveries,384122.0
+Tesla,2025-07-01,Deliveries,497099.0
+Tesla,2025-10-01,Deliveries,418227.0
+Tesla,2026-01-01,Deliveries,358023.0
+Tesla,2026-04-01,Deliveries,480126.0
+Tesla,2026-07-01,Deliveries,486532.0
+Tesla,2019-04-01,Production,87048.0
+Tesla,2019-07-01,Production,96155.0
+Tesla,2019-10-01,Production,104891.0
+Tesla,2020-01-01,Production,102672.0
+Tesla,2020-04-01,Production,82272.0
+Tesla,2020-07-01,Production,145036.0
+Tesla,2020-10-01,Production,179757.0
+Tesla,2021-01-01,Production,180338.0
+Tesla,2021-04-01,Production,206421.0
+Tesla,2021-07-01,Production,237823.0
+Tesla,2021-10-01,Production,305840.0
+Tesla,2022-01-01,Production,305407.0
+Tesla,2022-04-01,Production,258580.0
+Tesla,2022-07-01,Production,365923.0
+Tesla,2022-10-01,Production,439701.0
+Tesla,2023-01-01,Production,440808.0
+Tesla,2023-04-01,Production,479700.0
+Tesla,2023-07-01,Production,430488.0
+Tesla,2023-10-01,Production,494989.0
+Tesla,2024-01-01,Production,433371.0
+Tesla,2024-04-01,Production,410831.0
+Tesla,2024-07-01,Production,469796.0
+Tesla,2024-10-01,Production,459445.0
+Tesla,2025-01-01,Production,362615.0
+Tesla,2025-04-01,Production,410244.0
+Tesla,2025-07-01,Production,447450.0
+Tesla,2025-10-01,Production,434358.0
+Tesla,2026-01-01,Production,408386.0
+Tesla,2026-04-01,Production,451758.0
+Tesla,2026-07-01,Production,464391.0
+Tesla,2020-01-01,Model 3/Y deliveries,76200.0
+Tesla,2020-04-01,Model 3/Y deliveries,80050.0
+Tesla,2020-07-01,Model 3/Y deliveries,124100.0
+Tesla,2020-10-01,Model 3/Y deliveries,161650.0
+Tesla,2021-01-01,Model 3/Y deliveries,182780.0
+Tesla,2021-04-01,Model 3/Y deliveries,199360.0
+Tesla,2021-07-01,Model 3/Y deliveries,232025.0
+Tesla,2021-10-01,Model 3/Y deliveries,296850.0
+Tesla,2022-01-01,Model 3/Y deliveries,295324.0
+Tesla,2022-04-01,Model 3/Y deliveries,238533.0
+Tesla,2022-07-01,Model 3/Y deliveries,325158.0
+Tesla,2022-10-01,Model 3/Y deliveries,388131.0
+Tesla,2023-01-01,Model 3/Y deliveries,412180.0
+Tesla,2023-04-01,Model 3/Y deliveries,446915.0
+Tesla,2023-07-01,Model 3/Y deliveries,419074.0
+Tesla,2023-10-01,Model 3/Y deliveries,461538.0
+Tesla,2024-01-01,Model 3/Y deliveries,369783.0
+Tesla,2024-04-01,Model 3/Y deliveries,422405.0
+Tesla,2024-07-01,Model 3/Y deliveries,439975.0
+Tesla,2024-10-01,Model 3/Y deliveries,471930.0
+Tesla,2025-01-01,Model 3/Y deliveries,323800.0
+Tesla,2025-04-01,Model 3/Y deliveries,373728.0
+Tesla,2025-07-01,Model 3/Y deliveries,481166.0
+Tesla,2025-10-01,Model 3/Y deliveries,406585.0
+Tesla,2026-01-01,Model 3/Y deliveries,341893.0
+Tesla,2026-04-01,Model 3/Y deliveries,467762.0
+Tesla,2026-07-01,Model 3/Y deliveries,478237.0
