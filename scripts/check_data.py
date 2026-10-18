@@ -64,6 +64,19 @@ check("Charging stations counted with plausible totals", sum(vs["chargers"]["sta
 check("Driver tests use the overlap-corrected p-value", all("p_adj" in t and t["p_adj"] >= t["p"] - 1e-9 for t in dr["tests"]), f"{len(dr['tests'])} tests; Yes needs the adjusted p below {dr['meta']['alpha']}")
 check("Driver series are current", months_old(dr["meta"]["latest"]) <= 4, f"latest observation {dr['meta']['latest']}", warn=True)
 
+rg_path = W / "regions.json"
+if rg_path.exists():
+    rg = json.loads(rg_path.read_text())
+    check("regions.json has no missing or infinite numbers", finite(rg), "all values are finite")
+    tc = rg["tesla_china"]; wh = {m: d + e for m, d, e in zip(tc["months"], tc["domestic"], tc["exports"])}
+    check("Tesla China months are consecutive", all((int(b[:4]) * 12 + int(b[5:]) - int(a[:4]) * 12 - int(a[5:])) == 1 for a, b in zip(tc["months"], tc["months"][1:])), f"{len(tc['months'])} months, {tc['months'][0]} to {tc['months'][-1]}")
+    check("Tesla China reconciles to reported totals", wh["2026-07"] == 93579 and wh["2025-09"] == 90812 and wh["2026-07"] + wh["2026-08"] + wh["2026-09"] == 275111 and sum(v for m, v in wh.items() if m.startswith("2026")) == 743060,
+          "July 2026 93,579; Q3 2026 275,111; September 2025 90,812; January to September 2026 743,060")
+    check("Tesla China data is current", months_old(tc["months"][-1]) <= 3, f"latest {tc['months'][-1]}", warn=True)
+    eu = rg["europe"]; t24 = sum(v for m, v in zip(eu["months"], eu["tesla"]) if m.startswith("2024")); t25 = sum(v for m, v in zip(eu["months"], eu["tesla"]) if m.startswith("2025"))
+    check("Europe registrations are plausible", 300000 < t24 < 350000 and 220000 < t25 < 260000 and all(v is None or v > 0 for v in eu["byd"]), f"Tesla Europe {t24:,} in 2024 and {t25:,} in 2025")
+    check("Europe data is current", months_old(eu["months"][-1]) <= 4, f"latest {eu['months'][-1]} (the source table stops there; see docs/TODO.md)", warn=True)
+
 # the Tableau export must agree with the dashboard's own rule
 import subprocess
 tab = ROOT / "tableau" / "outlook.csv"

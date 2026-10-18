@@ -44,6 +44,7 @@
     <nav class="tabs" id="tabs" role="tablist">
       <button role="tab" data-tab="versus" class="active">Head to head</button>
       <button role="tab" data-tab="ev">Sales &amp; forecast</button>
+      <button role="tab" data-tab="regions">Where they sell</button>
       <button role="tab" data-tab="lab">Forecast lab</button>
       <button role="tab" data-tab="drivers">Drivers</button>
       <button role="tab" data-tab="quality">About the data</button>
@@ -115,6 +116,23 @@
     <p class="note" id="evNote"></p>
   </div>
 
+  <div class="panel" id="tab-regions">
+    <section>
+      <h2 class="sect">Home market vs abroad</h2>
+      <div class="tiles tiles-4" id="rgTiles"></div>
+    </section>
+    <div class="grid2">
+      <article class="card"><header><h3>Tesla in China: domestic vs exports</h3><p>CPCA monthly figures. Exports are Shanghai plant shipments abroad; the two together are Tesla's China wholesale.</p></header><div class="plot h-lg" id="c-rg-tsl"></div></article>
+      <article class="card"><header><h3>BYD: home market vs overseas</h3><p>From BYD's own announcements, so "overseas" follows BYD's definition.</p></header><div class="plot h-lg" id="c-rg-byd"></div></article>
+    </div>
+    <article class="card"><header><h3>Share sold outside the home market</h3><p>Tesla's Shanghai exports as a share of its China wholesale, vs BYD's overseas share of its sales. Different definitions, same direction of travel.</p></header><div class="plot" id="c-rg-share"></div></article>
+    <section>
+      <h2 class="sect">Europe</h2>
+      <article class="card"><header><h3>New registrations in Europe (EU, EFTA and UK)</h3><p id="rgEuSub"></p></header><div class="plot h-lg" id="c-rg-eu"></div></article>
+    </section>
+    <p class="note" id="rgNote"></p>
+  </div>
+
   <div class="panel" id="tab-lab">
     <article class="card ask" id="askCard">
       <header><h3>Ask the dashboard</h3><p>Pick a question or type one. Answers are built from the same numbers as the charts and say where they come from. No guessing.</p></header>
@@ -165,7 +183,8 @@
       <ul class="plain">
         <li><b>Customer reviews and ratings.</b> No open dataset exists for Tesla or BYD.</li>
         <li><b>BYD monthly volumes before 2022, and the passenger and overseas split before 2023.</b> 2022 totals are included and reconcile to BYD's reported 1,863,494 for the year; earlier months and the 2022 split are on the roadmap.</li>
-        <li><b>Stock prices and country registrations.</b> No clean free monthly source confirmed yet.</li>
+        <li><b>Stock prices.</b> No clean free monthly source confirmed yet.</li>
+        <li><b>Registrations by country.</b> Tesla's China domestic and export figures are included (CPCA). Europe stops at February 2026 and has gaps for BYD; BYD's own China retail is not published separately; the U.S. is not included.</li>
         <li><b>Sales as revenue.</b> Volumes are what the companies report; BYD's monthly figures are unaudited and its revenue includes phone components.</li>
       </ul></article>
   </div>
@@ -180,6 +199,7 @@
 <script src="app.js"></script>
 <script src="ev.js"></script>
 <script src="versus.js"></script>
+<script src="regions.js"></script>
 <script src="lab.js"></script>
 <script src="drivers.js"></script>
 <script src="quality.js"></script>

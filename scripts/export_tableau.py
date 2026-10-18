@@ -82,6 +82,16 @@ save("forecasts.csv", pd.DataFrame(fc_rows)); save("outlook.csv", pd.DataFrame(o
 save("drivers_series.csv", pd.concat([pd.DataFrame({"driver": v["label"], "date": [d + "-01" for d in v["dates"]], "value": v["values"], "unit": v["unit"]}) for v in dr["series"].values()]))
 save("driver_tests.csv", pd.DataFrame(dr["tests"]).rename(columns={"label": "driver", "p": "raw_p", "p_adj": "adjusted_p", "n_eff": "effective_n"}))
 
+# regions
+if (W / "regions.json").exists():
+    rg = json.loads((W / "regions.json").read_text())
+    tc = rg["tesla_china"]
+    save("tesla_china_monthly.csv", pd.DataFrame({"month": [m + "-01" for m in tc["months"]], "domestic": tc["domestic"], "exports": tc["exports"]}).assign(wholesale=lambda d: d.domestic + d.exports, export_share=lambda d: d.exports / d.wholesale))
+    bh = rg["byd_home"]
+    save("byd_home_vs_overseas_monthly.csv", pd.DataFrame({"month": [m + "-01" for m in bh["months"]], "home_and_other": bh["home"], "overseas": bh["overseas"]}).assign(overseas_share=lambda d: d.overseas / (d.overseas + d.home_and_other)))
+    eu = rg["europe"]
+    save("europe_registrations_monthly.csv", pd.concat([pd.DataFrame({"company": co, "month": [m + "-01" for m in eu["months"]], "registrations": eu[k]}).dropna() for co, k in (("Tesla", "tesla"), ("BYD", "byd"))]))
+
 # checks
 ck = json.loads((W / "checks.json").read_text())
 save("data_checks.csv", pd.DataFrame(ck["checks"]).rename(columns={"status": "result"}))

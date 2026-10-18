@@ -32,6 +32,7 @@ jobs:
         run: |
           python scripts/build_ev_data.py
           python scripts/build_versus_data.py
+          python scripts/build_regions.py
           python scripts/build_drivers.py
           python scripts/export_tableau.py
           python scripts/check_data.py || true      # writes checks.json; the strict run below decides

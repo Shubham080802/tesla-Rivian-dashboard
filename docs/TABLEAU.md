@@ -43,3 +43,12 @@ Then arrange sheets 1 to 3 and 6 on a "Head to head" dashboard, and 4, 5 and 7 t
 * Quote BYD figures with their caveats: unaudited monthly volumes, and revenue that includes phone components.
 * Attention is English Wikipedia only. Charging counts only stations open today.
 * `outlook` and `chance_of_growth` come from the same rule as the web dashboard; `scripts/check_data.py` proves they match.
+
+## Regional tables
+| File | One row per | Key columns |
+|---|---|---|
+| `tesla_china_monthly.csv` | Month | domestic, exports, wholesale, export_share |
+| `byd_home_vs_overseas_monthly.csv` | Month | home_and_other, overseas, overseas_share |
+| `europe_registrations_monthly.csv` | Company and month | registrations (EU, EFTA and UK; BYD has gaps; stops February 2026) |
+
+Suggested sheets: stacked bars of domestic and exports for Tesla China; stacked bars of home and overseas for BYD; a line sheet of `export_share` and `overseas_share` on one axis; and Europe registrations as lines by `company`, with gaps left as gaps (Show Missing Values off).

@@ -24,4 +24,10 @@ Page views are complete months and recent,pass,latest month 2026-09 (a partial r
 Charging stations counted with plausible totals,pass,"3,286 open Tesla stations"
 Driver tests use the overlap-corrected p-value,pass,12 tests; Yes needs the adjusted p below 0.0021
 Driver series are current,pass,latest observation 2026-10
+regions.json has no missing or infinite numbers,pass,all values are finite
+Tesla China months are consecutive,pass,"33 months, 2024-01 to 2026-09"
+Tesla China reconciles to reported totals,pass,"July 2026 93,579; Q3 2026 275,111; September 2025 90,812; January to September 2026 743,060"
+Tesla China data is current,pass,latest 2026-09
+Europe registrations are plausible,pass,"Tesla Europe 326,525 in 2024 and 238,484 in 2025"
+Europe data is current,warn,latest 2026-02 (the source table stops there; see docs/TODO.md)
 The Tableau export gives the same chance of growth as the dashboard,pass,4 series compared
