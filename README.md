@@ -2,7 +2,7 @@
 
 A head-to-head dashboard for Tesla and BYD built only from public filings, announcements and open data through 2026: vehicle volumes with backtested forecasts, annual financials in a common currency, English Wikipedia attention, Tesla's U.S. charging build-out, and U.S. demand drivers. It began as an Amazon Appliances review analysis; that project lives in its own repository.
 
-**Live site:** see the repository's website link. **Tableau:** the `tableau/` folder and [docs/TABLEAU.md](docs/TABLEAU.md).
+**Live site:** https://tesla-byd-dashboard.vercel.app. **Tableau:** the `tableau/` folder and [docs/TABLEAU.md](docs/TABLEAU.md).
 
 ## What's in it
 | Tab | Answers |
