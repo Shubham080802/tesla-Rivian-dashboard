@@ -12,7 +12,7 @@ function buildLab() {
     mk("tsl_del", "Tesla", "Tesla deliveries", "vehicles", 3, tq.map((r) => r.q), tq.map((r) => r.deliveries), T.forecast_deliveries, fmt.intC),
     mk("tsl_rev", "Tesla", "Tesla revenue", "$ millions", 3, rq.map((r) => r.q), rq.map((r) => r.revenue), T.forecast_revenue, fmt.usdB),
     mk("byd_total", "BYD", "BYD NEV sales", "vehicles", 1, B.months.map((r) => r.m), B.months.map((r) => r.total), B.forecast_total, fmt.intC),
-    mk("byd_over", "BYD", "BYD overseas sales", "vehicles", 1, B.months.map((r) => r.m), B.months.map((r) => r.overseas), B.forecast_overseas, fmt.intC),
+    mk("byd_over", "BYD", "BYD overseas sales", "vehicles", 1, B.months.filter((r) => r.overseas != null).map((r) => r.m), B.months.filter((r) => r.overseas != null).map((r) => r.overseas), B.forecast_overseas, fmt.intC),
   ];
   LAB.forEach((s) => {
     const n = s.n12, q = s.fc.cumq[n - 1], last12 = sum(s.y.slice(-n)), prior12 = sum(s.y.slice(-2 * n, -n)), fc12 = sum(s.fc.fc.mean.slice(0, n));

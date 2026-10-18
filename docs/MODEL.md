@@ -2,7 +2,7 @@
 
 ## Data
 * **Tesla volumes:** deliveries and production by quarter from Tesla's 8-K Exhibit 99.1 releases (datahub.io snapshot, Q2 2019 onward, plus the latest quarter read from the filing). **Tesla financials:** SEC EDGAR company facts; missing quarters are filled only by accounting identities (Q2 = six months minus Q1, and so on), never estimated.
-* **BYD monthly sales:** BYD's announcements to HKEX, tabulated by CnEVPost, January 2023 onward, unaudited. Typed-in figures are checked against published annual totals. **BYD annual financials:** BYD's annual reports, converted from RMB at each year's average CNY per USD (FRED DEXCHUS). BYD is not a pure car maker: it also makes phone components.
+* **BYD monthly sales:** BYD's announcements to HKEX, tabulated by CnEVPost, January 2022 onward (2022 as totals only; the passenger and overseas split starts in January 2023), unaudited. The 2022 months reconcile to the reported year-to-date figures and to the full-year total of 1,863,494. Typed-in figures are checked against published annual totals. **BYD annual financials:** BYD's annual reports, converted from RMB at each year's average CNY per USD (FRED DEXCHUS). BYD is not a pure car maker: it also makes phone components.
 * **Attention:** English Wikipedia monthly page views (Tesla = "Tesla, Inc." plus "Tesla Motors"; BYD = "BYD Company" plus "BYD Auto"), complete months only.
 * **Charging:** public Tesla-network stations open today, by opening year, from the U.S. federal station locator, so closed stations are missing and older years are understated.
 
@@ -16,4 +16,4 @@ Four exponential-smoothing candidates (level, damped trend, seasonality, trend p
 U.S. indicators from FRED tested against year-over-year growth in Tesla deliveries (quarterly, 26 points) and BYD sales (monthly, 33 points), at the same period and with the indicator leading by one period. Overlapping year-over-year windows overstate significance, so the p-value that counts uses an effective sample of n/12 (monthly) or n/4 (quarterly) and a Bonferroni correction. "Yes" needs that to pass; a raw p below 0.05 alone is "Suggestive". Nothing passes today. The indicators are context, not inputs to the forecast.
 
 ## Known limits
-No customer reviews or ratings (no open data), BYD monthly volumes before 2023, no stock prices or registrations by country. Volumes are not revenue. These are public figures and not investment advice.
+No customer reviews or ratings (no open data), BYD monthly volumes before 2022 (and the 2022 passenger and overseas split), no stock prices or registrations by country. Volumes are not revenue. These are public figures and not investment advice.

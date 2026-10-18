@@ -88,11 +88,12 @@ function renderEv() {
   const bh = B.map((r) => r.m), bf = fb.fc.month, bt = [...bh, ...bf].filter((l) => l.endsWith("-01"));
   evBand("c-byd-sales", bh, B.map((r) => r.total), bf, fb.fc, css("--c3"), { tickvals: bt, ticktext: bt.map((l) => l.slice(0, 4)), yaxis: { tickformat: ".2s" } });
   $("bydSub").textContent = `Monthly NEV sales from BYD's announcements, with the outlook for the next ${bf.length} months (backtest error ${fmt.pct(fb.wmape, 0)}; 80% range held ${fmt.pct(fb.coverage80, 0)} of the time).`;
+  const Bs = B.filter((r) => r.overseas != null), bsh = Bs.map((r) => r.m);          // the split exists from January 2023
   draw("c-byd-over", [
-    { x: bh, y: B.map((r) => r.total - r.overseas), type: "bar", name: "Home market and other", marker: { color: rgba(css("--c3"), 0.7) }, hovertemplate: "%{y:,.0f}" },
-    { x: bh, y: B.map((r) => r.overseas), type: "bar", name: "Overseas", marker: { color: css("--c2") }, hovertemplate: "%{y:,.0f}" },
-  ], layout({ barmode: "stack", bargap: 0.2, margin: { l: 8, r: 16, t: 28, b: 8 }, xaxis: { type: "category", tickmode: "array", tickvals: bh.filter((m) => m.endsWith("-01")), ticktext: bh.filter((m) => m.endsWith("-01")).map((m) => m.slice(0, 4)), tickangle: 0 }, yaxis: { tickformat: ".2s" } }));
-  const ov = B.slice(-24);
+    { x: bsh, y: Bs.map((r) => r.total - r.overseas), type: "bar", name: "Home market and other", marker: { color: rgba(css("--c3"), 0.7) }, hovertemplate: "%{y:,.0f}" },
+    { x: bsh, y: Bs.map((r) => r.overseas), type: "bar", name: "Overseas", marker: { color: css("--c2") }, hovertemplate: "%{y:,.0f}" },
+  ], layout({ barmode: "stack", bargap: 0.2, margin: { l: 8, r: 16, t: 28, b: 8 }, xaxis: { type: "category", tickmode: "array", tickvals: bsh.filter((m) => m.endsWith("-01")), ticktext: bsh.filter((m) => m.endsWith("-01")).map((m) => m.slice(0, 4)), tickangle: 0 }, yaxis: { tickformat: ".2s" } }));
+  const ov = Bs.slice(-24);
   draw("c-byd-overfc", [
     { x: ov.map((r) => r.m), y: ov.map((r) => r.overseas), mode: "lines+markers", name: "Actual", line: line(css("--c2"), 2.6), marker: { size: 5 }, hovertemplate: "%{y:,.0f}" },
     { x: fo.fc.month, y: fo.fc.p90, mode: "lines", line: { width: 0 }, showlegend: false, hoverinfo: "skip" },

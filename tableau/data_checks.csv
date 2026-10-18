@@ -2,8 +2,8 @@ name,result,detail
 ev.json has no missing or infinite numbers,pass,all values are finite
 versus.json has no missing or infinite numbers,pass,all values are finite
 drivers.json has no missing or infinite numbers,pass,all values are finite
-BYD months are consecutive and recent,pass,"45 months, latest 2026-09 (1 months ago)"
-BYD transcription matches published totals,pass,"2023 passenger 3,012,906, 2024 total 4,272,145, 2025 total 4,602,436"
+BYD months are consecutive and recent,pass,"57 months, latest 2026-09 (1 months ago)"
+BYD transcription matches published totals,pass,"2022 total 1,863,494, 2023 passenger 3,012,906, 2024 total 4,272,145, 2025 total 4,602,436"
 BYD passenger and overseas never exceed total,pass,holds in every month
 Tesla 2025 deliveries match the published annual total,pass,"1,636,129 delivered in 2025"
 Tesla quarters are consecutive and recent,pass,"30 quarters, latest 2026-07"
@@ -12,7 +12,7 @@ Tesla deliveries forecast is ordered and non-negative,pass,"6 periods, backtest 
 Tesla deliveries 80% range held up in backtests,pass,coverage 75% (target 80%)
 Tesla revenue forecast is ordered and non-negative,pass,"6 periods, backtest error 12%"
 Tesla revenue 80% range held up in backtests,pass,coverage 92% (target 80%)
-BYD sales forecast is ordered and non-negative,pass,"12 periods, backtest error 15%"
+BYD sales forecast is ordered and non-negative,pass,"12 periods, backtest error 14%"
 BYD sales 80% range held up in backtests,pass,coverage 78% (target 80%)
 BYD overseas forecast is ordered and non-negative,pass,"12 periods, backtest error 28%"
 BYD overseas 80% range held up in backtests,pass,coverage 78% (target 80%)
@@ -22,6 +22,6 @@ BYD revenue converts back to the reported RMB,pass,USD x rate equals the report 
 BYD 2025 revenue matches the annual report,pass,"RMB 803,965 million"
 Page views are complete months and recent,pass,latest month 2026-09 (a partial running month would show far lower views)
 Charging stations counted with plausible totals,pass,"3,286 open Tesla stations"
-Driver tests use the overlap-corrected p-value,pass,11 tests; Yes needs the adjusted p below 0.0021
+Driver tests use the overlap-corrected p-value,pass,12 tests; Yes needs the adjusted p below 0.0021
 Driver series are current,pass,latest observation 2026-10
 The Tableau export gives the same chance of growth as the dashboard,pass,4 series compared

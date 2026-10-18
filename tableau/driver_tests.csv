@@ -1,12 +1,13 @@
 id,driver,company,n,effective_n,r,raw_p,adjusted_p,lead,verdict
 GASREGW,U.S. regular gasoline price,Tesla,26,6.5,0.42,0.034,0.379,0,Suggestive
-GASREGW,U.S. regular gasoline price,BYD,33,2.8,-0.15,0.392,0.914,0,No
+GASREGW,U.S. regular gasoline price,BYD,45,3.8,-0.34,0.021,0.683,0,Suggestive
 TERMCBAUTO48NS,"New-car loan rate, 48 months",Tesla,26,6.5,0.19,0.355,0.702,0,No
+TERMCBAUTO48NS,"New-car loan rate, 48 months",BYD,15,1.2,0.4,0.136,0.912,0,No
 TOTALSA,U.S. light vehicle sales,Tesla,26,6.5,0.23,0.252,0.635,0,No
-TOTALSA,U.S. light vehicle sales,BYD,33,2.8,0.45,0.009,0.738,1,Suggestive
+TOTALSA,U.S. light vehicle sales,BYD,45,3.8,0.58,0.0,0.453,0,Suggestive
 CUSR0000SETA01,Consumer prices: new vehicles,Tesla,26,6.5,0.55,0.004,0.229,0,Suggestive
-CUSR0000SETA01,Consumer prices: new vehicles,BYD,33,2.8,-0.62,0.0,0.621,1,Suggestive
+CUSR0000SETA01,Consumer prices: new vehicles,BYD,45,3.8,0.42,0.004,0.612,1,Suggestive
 UMCSENT,Consumer sentiment,Tesla,26,6.5,-0.21,0.304,0.67,1,No
-UMCSENT,Consumer sentiment,BYD,32,2.7,0.42,0.017,0.77,1,Suggestive
+UMCSENT,Consumer sentiment,BYD,44,3.7,0.45,0.002,0.592,0,Suggestive
 FEDFUNDS,Federal funds rate,Tesla,26,6.5,0.23,0.263,0.643,0,No
-FEDFUNDS,Federal funds rate,BYD,33,2.8,0.15,0.395,0.915,1,No
+FEDFUNDS,Federal funds rate,BYD,45,3.8,0.58,0.0,0.457,1,Suggestive
