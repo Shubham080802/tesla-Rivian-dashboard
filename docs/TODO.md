@@ -1,7 +1,7 @@
 # To do
 
 ## Data
-- [ ] **Europe registrations after February 2026** (ACEA monthly press releases, EU plus EFTA plus UK) and a primary-source check of the typed-in table; ACEA's site could not be read directly here.
+- [ ] **Europe registrations:** add each new ACEA monthly press release (`Press_release_car_registrations_<Month>_2026.pdf`; ACEA skips July, so derive it from year-to-date totals) to `data/external/ev/acea_primary_rows.csv` and `europe_registrations.csv`. BYD January to June 2024 is not reported separately by ACEA.
 - [ ] **Tesla China monthly:** add each new month from the CPCA release (domestic deliveries and exports) to `data/external/ev/tesla_china_monthly.csv`.
 - [ ] **U.S. registrations** for Tesla and BYD's China retail (CPCA members-only) are not free; look for a legitimate public source.
 - [ ] **BYD monthly:** add the new month to `data/external/ev/byd_monthly_sales.csv` on the 1st (from the HKEX announcement or CnEVPost), then run the refresh. Parsing the HKEX PDF would automate it.

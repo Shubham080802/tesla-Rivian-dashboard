@@ -32,6 +32,7 @@ function renderRegions() {
     { x: em, y: EU.byd, mode: "lines+markers", name: "BYD", connectgaps: false, line: line(c1, 2.6), marker: { size: 7 }, hovertemplate: "%{y:,.0f}" },
   ], layout({ margin: { l: 8, r: 16, t: 28, b: 8 }, xaxis: { type: "date" }, yaxis: { tickformat: ".2s" } }));
   const miss = EU.byd.filter((v) => v == null).length;
-  $("rgEuSub").textContent = `Monthly ACEA registrations through ${fmt.month(EU.months.at(-1))}. BYD is missing in ${miss} months where ACEA did not report it separately, so its line has gaps.`;
+  const derived = EU.months.filter((_, i) => EU.basis[i].startsWith("derived")).map(fmt.month).join(", ");
+  $("rgEuSub").textContent = `Monthly ACEA registrations through ${fmt.month(EU.months.at(-1))}. BYD is missing in ${miss} months (all in 2024) where ACEA did not report it separately, so its line starts mid-2024.${derived ? ` ${derived} is derived from year-to-date totals.` : ""}`;
   $("rgNote").innerHTML = `${esc2(RG.meta.notes.china)} ${esc2(RG.meta.notes.europe)} Sources: <a href="${RG.meta.sources.cpca}">CPCA via CnEVPost</a>, <a href="${RG.meta.sources.acea}">ACEA</a> (<a href="${RG.meta.sources.europe_table}">table</a>), and BYD's own monthly announcements.`;
 }

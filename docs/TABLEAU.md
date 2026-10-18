@@ -49,6 +49,6 @@ Then arrange sheets 1 to 3 and 6 on a "Head to head" dashboard, and 4, 5 and 7 t
 |---|---|---|
 | `tesla_china_monthly.csv` | Month | domestic, exports, wholesale, export_share |
 | `byd_home_vs_overseas_monthly.csv` | Month | home_and_other, overseas, overseas_share |
-| `europe_registrations_monthly.csv` | Company and month | registrations (EU, EFTA and UK; BYD has gaps; stops February 2026) |
+| `europe_registrations_monthly.csv` | Company and month | registrations (EU, EFTA and UK, from ACEA; BYD not reported separately in early 2024) |
 
 Suggested sheets: stacked bars of domestic and exports for Tesla China; stacked bars of home and overseas for BYD; a line sheet of `export_share` and `overseas_share` on one axis; and Europe registrations as lines by `company`, with gaps left as gaps (Show Missing Values off).

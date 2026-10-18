@@ -13,7 +13,7 @@ function renderQuality() {
     ["Wikipedia attention", "Wikimedia page views API", fmt.month(VS.meta.pageviews_latest), monthsAgo(VS.meta.pageviews_latest)],
     ["Tesla charging stations", "U.S. federal station locator", String(VS.meta.charger_latest_year), monthsAgo(VS.meta.charger_latest_year + "-12")],
   ];
-  if (RG) { rows.push(["Tesla China (domestic and exports)", "CPCA, as tabulated by CnEVPost", fmt.month(RG.meta.tesla_china_latest), monthsAgo(RG.meta.tesla_china_latest)]); rows.push(["Europe registrations", "ACEA, as tabulated by CnEVPost", fmt.month(RG.meta.europe_latest), monthsAgo(RG.meta.europe_latest)]); }
+  if (RG) { rows.push(["Tesla China (domestic and exports)", "CPCA, as tabulated by CnEVPost", fmt.month(RG.meta.tesla_china_latest), monthsAgo(RG.meta.tesla_china_latest)]); rows.push(["Europe registrations", "ACEA press releases (earlier months via CnEVPost)", fmt.month(RG.meta.europe_latest), monthsAgo(RG.meta.europe_latest)]); }
   if (DR) rows.push(["Demand drivers", "FRED (EIA, BEA, BLS, Federal Reserve, Michigan)", fmt.month(DR.meta.latest), monthsAgo(DR.meta.latest)]);
   $("qFresh").innerHTML = `<thead><tr><th>Source</th><th>Publisher</th><th>Latest data</th><th>Age</th><th></th></tr></thead><tbody>` +
     rows.map(([n, p, l, a]) => `<tr><td><b>${n}</b></td><td>${p}</td><td>${l}</td><td>${ageText(a)}</td><td>${ageBadge(a)}</td></tr>`).join("") + "</tbody>";

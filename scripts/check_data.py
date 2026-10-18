@@ -75,7 +75,21 @@ if rg_path.exists():
     check("Tesla China data is current", months_old(tc["months"][-1]) <= 3, f"latest {tc['months'][-1]}", warn=True)
     eu = rg["europe"]; t24 = sum(v for m, v in zip(eu["months"], eu["tesla"]) if m.startswith("2024")); t25 = sum(v for m, v in zip(eu["months"], eu["tesla"]) if m.startswith("2025"))
     check("Europe registrations are plausible", 300000 < t24 < 350000 and 220000 < t25 < 260000 and all(v is None or v > 0 for v in eu["byd"]), f"Tesla Europe {t24:,} in 2024 and {t25:,} in 2025")
-    check("Europe data is current", months_old(eu["months"][-1]) <= 4, f"latest {eu['months'][-1]} (the source table stops there; see docs/TODO.md)", warn=True)
+    import csv as _csv
+    prim = list(_csv.DictReader(open(ROOT / "data" / "external" / "ev" / "acea_primary_rows.csv")))
+    key = {(r["release_month"], r["company"]): r for r in prim}
+    idx = {m: k for k, m in enumerate(eu["months"])}
+    bad = [f"{rm} {co}" for (rm, co), r in key.items() if (eu["tesla"] if co == "Tesla" else eu["byd"])[idx[rm]] != int(r["month_value"]) or (eu["tesla"] if co == "Tesla" else eu["byd"])[idx[str(int(rm[:4]) - 1) + rm[4:]]] != int(r["same_month_last_year"])]
+    check("Europe months equal the figures read from ACEA's press releases", not bad, f"{len(key)} release rows checked, including the restated 2025 months" if not bad else f"differences in: {bad}")
+    gaps = []
+    for co, arr in (("Tesla", eu["tesla"]), ("BYD", eu["byd"])):
+        for rm in ("2026-06", "2026-08"):
+            s = sum(v or 0 for m, v in zip(eu["months"], arr) if m.startswith("2026") and m <= rm)
+            ytd = int(key[(rm, co)]["year_to_date"])
+            if abs(s / ytd - 1) > 0.02:
+                gaps.append(f"{co} to {rm}: {s / ytd - 1:+.1%}")
+    check("Europe monthly sums stay within 2% of ACEA's year-to-date totals", not gaps, "revisions to earlier months explain the small difference (BYD about 1.5%)" if not gaps else "; ".join(gaps))
+    check("Europe data is current", months_old(eu["months"][-1]) <= 4, f"latest {eu['months'][-1]} (ACEA publishes about three weeks after month end; see docs/TODO.md)", warn=True)
 
 # the Tableau export must agree with the dashboard's own rule
 import subprocess

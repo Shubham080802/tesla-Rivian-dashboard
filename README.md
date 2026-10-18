@@ -9,7 +9,7 @@ A head-to-head dashboard for Tesla and BYD built only from public filings, annou
 |---|---|
 | **Head to head** | A scoreboard (volume, growth, revenue, margins, attention) with the leader on each row, a plain-language reading, revenue and profit by year, gross margin, attention, and Tesla's charging stations. |
 | **Sales & forecast** | Tesla deliveries by quarter and BYD NEV sales by month with forecasts and 80% ranges, production vs deliveries, Tesla revenue and margin, model mix, BYD home vs overseas sales. |
-| **Where they sell** | Tesla's China wholesale split into domestic deliveries and Shanghai exports, BYD's home market vs overseas, the share each sells abroad, and Europe registrations for both (Europe stops at February 2026 and has gaps for BYD). |
+| **Where they sell** | Tesla's China wholesale split into domestic deliveries and Shanghai exports, BYD's home market vs overseas, the share each sells abroad, and Europe registrations for both from ACEA's own press releases (BYD is not reported separately before mid-2024). |
 | **Forecast lab** | Ask the dashboard (suggested questions, answered from the same numbers), an outlook scorecard (Expanding, Contracting, Uncertain), a per-series lab with demand scenarios and a target tester, an on-track check and seasonality. |
 | **Drivers** | Gasoline price, loan rates, vehicle sales, new-car prices, sentiment and the fed funds rate, tested against Tesla and BYD growth with an overlap-corrected test. |
 | **About the data** | How current each source is, the 26 checks run on every refresh, and what is not here. |
@@ -20,7 +20,7 @@ A head-to-head dashboard for Tesla and BYD built only from public filings, annou
 | [Tesla 8-K releases](https://datahub.io/datapressr/tesla-quarterly-deliveries) and [SEC EDGAR](https://www.sec.gov/edgar/browse/?CIK=1318605) | deliveries, production, financials | Q3 2026 deliveries, Q2 2026 financials |
 | [BYD announcements](https://cnevpost.com/2026/10/01/byd-sept-2026-sales/) (HKEX) | NEV sales by month from Jan 2022 (passenger and overseas split from Jan 2023) | Sep 2026 |
 | [BYD annual reports](https://www.hkexnews.hk/) | revenue, gross profit, net profit | 2025 |
-| [CPCA](https://cnevpost.com/2026/08/12/tesla-jul-china-deliveries-shanghai-exports/) and [ACEA](https://www.acea.auto/) (as tabulated by CnEVPost) | Tesla China domestic and exports; Europe registrations | Sep 2026 / Feb 2026 |
+| [CPCA](https://cnevpost.com/2026/08/12/tesla-jul-china-deliveries-shanghai-exports/) (via CnEVPost) and [ACEA press releases](https://www.acea.auto/files/Press_release_car_registrations_August_2026.pdf) | Tesla China domestic and exports; Europe registrations (EU, EFTA, UK) | Sep 2026 / Aug 2026 |
 | [FRED](https://fred.stlouisfed.org/) | CNY/USD rate and U.S. demand drivers | Oct 2026 |
 | [Wikimedia page views](https://pageviews.wmcloud.org/) | attention | Sep 2026 |
 | [U.S. station locator](https://afdc.energy.gov/stations/) | Tesla charging stations | Oct 2026 |
