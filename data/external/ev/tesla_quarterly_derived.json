@@ -1,0 +1,215 @@
+{
+ "2010-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2010-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2011-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2011-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2011-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2012-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2012-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2012-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2013-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2013-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2013-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2014-04": {
+  "capex": "derived: 6-month total minus Q1"
+ },
+ "2014-07": {
+  "capex": "derived: 9-month total minus 6-month total"
+ },
+ "2014-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2015-04": {
+  "capex": "derived: 6-month total minus Q1"
+ },
+ "2015-07": {
+  "capex": "derived: 9-month total minus 6-month total"
+ },
+ "2015-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2016-04": {
+  "capex": "derived: 6-month total minus Q1"
+ },
+ "2016-07": {
+  "capex": "derived: 9-month total minus 6-month total"
+ },
+ "2016-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2017-04": {
+  "capex": "derived: 6-month total minus Q1"
+ },
+ "2017-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2017-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2018-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2018-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2018-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2019-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2019-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2019-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2020-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2020-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2020-10": {
+  "capex": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total"
+ },
+ "2021-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2021-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2021-10": {
+  "capex": "derived: full year minus 9-month total",
+  "gross_profit": "derived: full year minus 9-month total",
+  "net_income": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total",
+  "revenue": "derived: full year minus 9-month total"
+ },
+ "2022-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2022-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2022-10": {
+  "capex": "derived: full year minus 9-month total",
+  "gross_profit": "derived: full year minus 9-month total",
+  "net_income": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total",
+  "revenue": "derived: full year minus 9-month total"
+ },
+ "2023-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2023-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2023-10": {
+  "capex": "derived: full year minus 9-month total",
+  "gross_profit": "derived: full year minus 9-month total",
+  "net_income": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total",
+  "revenue": "derived: full year minus 9-month total"
+ },
+ "2024-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2024-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2024-10": {
+  "capex": "derived: full year minus 9-month total",
+  "gross_profit": "derived: full year minus 9-month total",
+  "net_income": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total",
+  "revenue": "derived: full year minus 9-month total"
+ },
+ "2025-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2025-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
+ },
+ "2025-10": {
+  "capex": "derived: full year minus 9-month total",
+  "gross_profit": "derived: full year minus 9-month total",
+  "net_income": "derived: full year minus 9-month total",
+  "operating_cash_flow": "derived: full year minus 9-month total",
+  "operating_income": "derived: full year minus 9-month total",
+  "revenue": "derived: full year minus 9-month total"
+ },
+ "2026-04": {
+  "capex": "derived: 6-month total minus Q1",
+  "operating_cash_flow": "derived: 6-month total minus Q1"
+ }
+}

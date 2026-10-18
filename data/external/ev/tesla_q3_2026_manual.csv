@@ -1,0 +1,2 @@
+period_start,period_end,deliveries,production,model_3y_deliveries,other_models_deliveries,storage_gwh,source
+2026-07-01,2026-09-30,486532,464391,478237,8295,13.7,"Tesla 8-K filed 2026-10-02, Exhibit 99.1 (accession 0001628280-26-064366); the datahub snapshot (2026-09-18) ends at Q2 2026"
