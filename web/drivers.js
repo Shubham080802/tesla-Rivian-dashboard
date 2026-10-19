@@ -1,4 +1,4 @@
-// Demand drivers: U.S. macro series and an exploratory test against Tesla and BYD volumes (drivers.json, scripts/build_drivers.py).
+// Demand drivers: U.S. macro series and an exploratory test against Tesla and Rivian volumes (drivers.json, scripts/build_drivers.py).
 let DR = null;
 function prepDrivers(d) { DR = d; }
 

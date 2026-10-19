@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tesla vs BYD vs Rivian</title>
-<meta name="description" content="Tesla and BYD head to head: vehicle volumes, financials, popularity and forecasts, from public filings and announcements through 2026.">
+<title>Tesla vs Rivian</title>
+<meta name="description" content="Tesla and Rivian head to head: two US-listed EV makers compared on vehicle volumes, financials, share price, popularity and forecasts, from SEC filings and company releases through 2026.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css">
 <script>
@@ -22,7 +22,7 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg>
       </span>
       <div>
-        <h1>Tesla vs BYD vs Rivian</h1>
+        <h1>Tesla vs Rivian</h1>
         <p id="subtitle">Public data through 2026</p>
       </div>
     </div>
@@ -48,7 +48,6 @@
       <button role="tab" data-tab="stocks">Stock vs business</button>
       <button role="tab" data-tab="lab">Forecast lab</button>
       <button role="tab" data-tab="drivers">Drivers</button>
-      <button role="tab" data-tab="tableau">Tableau</button>
       <button role="tab" data-tab="quality">About the data</button>
     </nav>
   </div>
@@ -65,25 +64,25 @@
     <section>
       <h2 class="sect">Money</h2>
       <div class="grid2">
-        <article class="card"><header><h3>Revenue by year</h3><p>US dollars. BYD is converted from RMB at each year's average rate.</p></header><div class="plot h-lg" id="c-vs-rev"></div></article>
-        <article class="card"><header><h3>Net income and margin</h3><p>Bars are profit attributable to shareholders; lines are net margin.</p></header><div class="plot h-lg" id="c-vs-net"></div></article>
+        <article class="card"><header><h3>Revenue by year</h3><p>US dollars, from each company's 10-K filings.</p></header><div class="plot h-lg" id="c-vs-rev"></div></article>
+        <article class="card"><header><h3>Net income by year</h3><p>Net income attributable to shareholders, US dollars.</p></header><div class="plot h-lg" id="c-vs-net"></div></article>
       </div>
-      <article class="card"><header><h3>Gross margin</h3><p>Gross profit as a share of revenue. BYD also makes phone components, which carry lower margins, so this is not a pure car-to-car comparison.</p></header><div class="plot sm" id="c-vs-gm"></div></article>
+      <article class="card"><header><h3>Gross and net margin</h3><p id="vsGmSub"></p></header><div class="plot h-lg" id="c-vs-gm"></div></article>
     </section>
     <section>
       <h2 class="sect">Attention</h2>
-      <article class="card"><header><h3>Wikipedia page views, 12-month average</h3><p>English Wikipedia articles for each company, monthly. Attention, not sales, and it understates BYD's mostly Chinese-speaking audience.</p></header><div class="plot h-lg" id="c-vs-pop"></div></article>
+      <article class="card"><header><h3>Wikipedia page views, 12-month average</h3><p>English Wikipedia articles for each company, monthly. Attention, not sales.</p></header><div class="plot h-lg" id="c-vs-pop"></div></article>
     </section>
     <section>
-      <h2 class="sect">Tesla's charging network (U.S.)</h2>
-      <article class="card"><header><h3>Tesla charging stations by opening year</h3><p id="vsChSub"></p></header><div class="plot h-lg" id="c-vs-ch"></div></article>
+      <h2 class="sect">Charging networks (U.S.)</h2>
+      <article class="card"><header><h3>Charging stations by opening year</h3><p id="vsChSub"></p></header><div class="plot h-lg" id="c-vs-ch"></div></article>
     </section>
     <p class="note" id="vsNote"></p>
   </div>
 
   <div class="panel" id="tab-ev">
     <article class="card">
-      <header><h3>Tesla and BYD, in one view</h3><p>Reported vehicle volumes through the latest release, with the same backtested forecasts as the rest of the dashboard. Volumes are what the companies report, not sales revenue.</p></header>
+      <header><h3>Tesla and Rivian, in one view</h3><p>Reported vehicle volumes through the latest quarterly release, with the same backtested forecasts as the rest of the dashboard. Both are battery-electric only.</p></header>
       <div class="tablewrap fresh" id="evFresh"></div>
     </article>
 
@@ -91,7 +90,7 @@
       <h2 class="sect">Head to head</h2>
       <div class="tiles tiles-4" id="evTiles"></div>
     </section>
-    <article class="card"><header><h3>Vehicles delivered, last 12 months rolling</h3><p>BYD's monthly NEV sales and Tesla's quarterly deliveries, each summed over the trailing 12 months so the two compare fairly. BYD counts new energy vehicles (battery and plug-in hybrid); Tesla is all battery-electric.</p></header><div class="plot h-lg" id="c-ev-h2h"></div></article>
+    <article class="card"><header><h3>Vehicles delivered, last 12 months rolling</h3><p>Quarterly deliveries summed over the trailing four quarters. Both share one axis, so the gap in scale is real.</p></header><div class="plot h-lg" id="c-ev-h2h"></div></article>
 
     <section>
       <h2 class="sect">Tesla</h2>
@@ -107,15 +106,6 @@
     </div>
 
     <section>
-      <h2 class="sect">BYD</h2>
-      <div class="tiles tiles-4" id="bydTiles"></div>
-    </section>
-    <div class="grid2">
-      <article class="card"><header><h3>NEV sales by month</h3><p id="bydSub"></p></header><div class="plot h-lg" id="c-byd-sales"></div></article>
-      <article class="card"><header><h3>Home market vs overseas</h3><p>Overseas sales as reported; the rest is mostly China. Definitions of "overseas" differ between sources.</p></header><div class="plot h-lg" id="c-byd-over"></div></article>
-    </div>
-    <article class="card"><header><h3>Overseas sales outlook</h3><p id="bydOverSub"></p></header><div class="plot" id="c-byd-overfc"></div></article>
-    <section>
       <h2 class="sect">Rivian</h2>
       <div class="tiles tiles-4" id="rivTiles"></div>
     </section>
@@ -128,14 +118,13 @@
 
   <div class="panel" id="tab-regions">
     <section>
-      <h2 class="sect">Home market vs abroad</h2>
+      <h2 class="sect">Tesla outside the U.S.</h2>
       <div class="tiles tiles-4" id="rgTiles"></div>
     </section>
     <div class="grid2">
       <article class="card"><header><h3>Tesla in China: domestic vs exports</h3><p>CPCA monthly figures. Exports are Shanghai plant shipments abroad; the two together are Tesla's China wholesale.</p></header><div class="plot h-lg" id="c-rg-tsl"></div></article>
-      <article class="card"><header><h3>BYD: home market vs overseas</h3><p>From BYD's own announcements, so "overseas" follows BYD's definition.</p></header><div class="plot h-lg" id="c-rg-byd"></div></article>
+      <article class="card"><header><h3>Share of Shanghai output exported</h3><p>Exports as a share of Tesla's China wholesale, by month, with a 3-month average.</p></header><div class="plot h-lg" id="c-rg-share"></div></article>
     </div>
-    <article class="card"><header><h3>Share sold outside the home market</h3><p>Tesla's Shanghai exports as a share of its China wholesale, vs BYD's overseas share of its sales. Different definitions, same direction of travel.</p></header><div class="plot" id="c-rg-share"></div></article>
     <section>
       <h2 class="sect">Europe</h2>
       <article class="card"><header><h3>New registrations in Europe (EU, EFTA and UK)</h3><p id="rgEuSub"></p></header><div class="plot h-lg" id="c-rg-eu"></div></article>
@@ -144,12 +133,11 @@
   </div>
 
   <div class="panel" id="tab-stocks">
-    <article class="card"><header><h3>How have the shares done next to the business?</h3><p>Calendar-year share price changes for Tesla (TSLA), BYD (H shares, 1211.HK) and Rivian (RIVN) beside revenue and vehicle volume growth. Prices are split-adjusted and exclude dividends.</p></header>
-      <div class="tiles tiles-3" id="skTiles"></div></article>
-    <article class="card"><header><h3>Share price change by year</h3><p>Each company's price at year end vs the year before, in its own currency.</p></header><div class="plot h-lg" id="c-sk-ret"></div></article>
+    <article class="card"><header><h3>How have the shares done next to the business?</h3><p>Calendar-year share price changes for Tesla (TSLA) and Rivian (RIVN), both on Nasdaq, beside revenue and vehicle volume growth. Prices are split-adjusted, in US dollars, and exclude dividends.</p></header>
+      <div class="tiles tiles-4" id="skTiles"></div></article>
+    <article class="card"><header><h3>Share price change by year</h3><p>Each company's price at year end vs the year before.</p></header><div class="plot h-lg" id="c-sk-ret"></div></article>
     <div class="grid2">
       <article class="card"><header><h3>Tesla: market vs business</h3><p>Price change, revenue growth and deliveries growth.</p></header><div class="plot h-lg" id="c-sk-tesla"></div></article>
-      <article class="card"><header><h3>BYD: market vs business</h3><p>Price change, revenue growth and NEV sales growth (volumes from 2023).</p></header><div class="plot h-lg" id="c-sk-byd"></div></article>
       <article class="card"><header><h3>Rivian: market vs business</h3><p>Price change, revenue growth and deliveries growth (listed since November 2021).</p></header><div class="plot h-lg" id="c-sk-rivian"></div></article>
     </div>
     <article class="card"><header><h3>Was the market ahead of or behind the business?</h3></header><div class="tablewrap"><table id="skTable"></table></div></article>
@@ -159,7 +147,7 @@
   <div class="panel" id="tab-lab">
     <article class="card ask" id="askCard">
       <header><h3>Ask the dashboard</h3><p>Pick a question or type one. Answers are built from the same numbers as the charts and say where they come from. No guessing.</p></header>
-      <input type="search" id="askInput" placeholder="Try “who is growing faster”, “overseas” or “gas prices”" aria-label="Ask a question" autocomplete="off">
+      <input type="search" id="askInput" placeholder="Try “who is growing faster”, “Rivian” or “gas prices”" aria-label="Ask a question" autocomplete="off">
       <div class="ask-chips" id="askChips"></div>
       <div class="ask-answer" id="askAnswer" hidden aria-live="polite"></div>
     </article>
@@ -170,8 +158,7 @@
     <section>
       <h2 class="sect">Forecast lab</h2>
       <div class="seg" id="labSeg" role="radiogroup" aria-label="Series">
-        <button type="button" role="radio" data-id="tsl_del">Tesla deliveries</button><button type="button" role="radio" data-id="tsl_rev">Tesla revenue</button>
-        <button type="button" role="radio" data-id="byd_total" class="on">BYD NEV sales</button><button type="button" role="radio" data-id="byd_over">BYD overseas</button>
+        <button type="button" role="radio" data-id="tsl_del" class="on">Tesla deliveries</button><button type="button" role="radio" data-id="tsl_rev">Tesla revenue</button>
         <button type="button" role="radio" data-id="riv_del">Rivian deliveries</button><button type="button" role="radio" data-id="riv_rev">Rivian revenue</button>
       </div>
       <div class="tiles tiles-4" id="labTiles"></div>
@@ -183,7 +170,7 @@
         <label class="lever" for="labShift">Demand vs the model: <b id="labShiftVal">+0%</b></label>
         <input type="range" id="labShift" min="-30" max="30" step="1" value="0" aria-label="Demand shift in percent">
         <label class="lever" for="labTarget" style="margin-top:14px">Target for the next 12 months</label>
-        <input type="text" id="labTarget" placeholder="e.g. 5000000" inputmode="decimal" autocomplete="off">
+        <input type="text" id="labTarget" placeholder="e.g. 1800000" inputmode="decimal" autocomplete="off">
         <p class="note" id="labTargetOut"></p>
       </article>
     </div>
@@ -194,25 +181,10 @@
   </div>
 
   <div class="panel" id="tab-drivers">
-    <article class="card"><header><h3>What moves EV demand?</h3><p>U.S. indicators that could plausibly drive demand, tested against Tesla and BYD growth. This is exploratory and honest about how little data there is.</p></header>
+    <article class="card"><header><h3>What moves EV demand?</h3><p>U.S. indicators that could plausibly drive demand, tested against Tesla and Rivian growth. This is exploratory and honest about how little data there is.</p></header>
       <div class="tablewrap"><table id="drTable"></table></div><p class="note" id="drNote"></p></article>
     <section><h2 class="sect">The indicators</h2><div class="tiles tiles-4" id="drTiles"></div></section>
     <div class="grid3" id="drGrid"></div>
-  </div>
-
-  <div class="panel" id="tab-tableau">
-    <article class="card">
-      <header class="row-head">
-        <div><h3>Tableau Public dashboards</h3><p id="tbSub">The same data, built in Tableau and published on Tableau Public. Pick a dashboard; it loads from Tableau, so it can take a few seconds.</p></div>
-        <div class="seg" id="tbSeg" role="radiogroup" aria-label="Tableau dashboard">
-          <button type="button" role="radio" data-v="TeslavsBYDheadtohead" class="on">Head to head</button>
-          <button type="button" role="radio" data-v="VolumesoutlookandTeslaChina">Volumes and outlook</button>
-          <button type="button" role="radio" data-v="Europestocksanddrivers">Europe, stocks, drivers</button>
-        </div>
-      </header>
-      <div class="tb-frame"><iframe id="tbFrame" title="Tesla vs BYD on Tableau Public" loading="lazy" allowfullscreen></iframe></div>
-      <p class="note">Tableau Public keeps a snapshot of the data from when the workbook was published, so it can lag this site, which refreshes daily. <a id="tbOpen" target="_blank" rel="noopener">Open in Tableau Public</a>.</p>
-    </article>
   </div>
 
   <div class="panel" id="tab-quality">
@@ -220,17 +192,17 @@
     <article class="card"><header><h3>Checks run on every refresh</h3><p id="qCheckSub"></p></header><ul class="plain" id="qChecks"></ul></article>
     <article class="card"><header><h3>What is not here, and why</h3></header>
       <ul class="plain">
-        <li><b>Customer reviews and ratings.</b> No open dataset exists for Tesla or BYD.</li>
-        <li><b>BYD monthly volumes before 2022, and the passenger and overseas split before 2023.</b> 2022 totals are included and reconcile to BYD's reported 1,863,494 for the year; earlier months and the 2022 split are on the roadmap.</li>
+        <li><b>Customer reviews and ratings.</b> No open dataset exists for Tesla or Rivian.</li>
+        <li><b>Companies listed outside the U.S.</b> BYD and other China-listed makers were dropped so every company here trades on a U.S. exchange, reports to the SEC in US dollars and follows the same accounting rules.</li>
         <li><b>Raw share prices.</b> No free source clearly allows republishing prices, so only derived yearly percentage changes are shown on the Stock vs business tab; the monthly prices themselves stay on the maintainer's machine.</li>
-        <li><b>Registrations by country.</b> Tesla's China domestic and export figures are included (CPCA). Europe runs to August 2026 (BYD not reported separately in early 2024); BYD's own China retail is not published separately; the U.S. is not included.</li>
-        <li><b>Sales as revenue.</b> Volumes are what the companies report; BYD's monthly figures are unaudited and its revenue includes phone components.</li>
+        <li><b>Registrations by country.</b> Tesla's China domestic and export figures are included (CPCA). Europe runs to August 2026. Rivian sells almost only in North America, so it has no regional split; Tesla's U.S. registrations are not public monthly.</li>
+        <li><b>Monthly volumes.</b> Both companies report deliveries quarterly, so the forecasts work in quarters.</li>
       </ul></article>
   </div>
 </main>
 
 <footer>
-  <p>Data: Tesla 8-K releases and SEC filings; BYD announcements to HKEX and annual reports; Wikimedia page views; U.S. station locator; FRED. Volumes are what the companies report, not revenue. Not investment advice.</p>
+  <p>Data: Tesla and Rivian 8-K releases and SEC filings; CPCA; ACEA; Wikimedia page views; U.S. station locator; FRED. Volumes are what the companies report, not revenue. Not investment advice.</p>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -245,6 +217,5 @@
 <script src="drivers.js"></script>
 <script src="quality.js"></script>
 <script src="ask.js"></script>
-<script src="tableau.js"></script>
 </body>
 </html>

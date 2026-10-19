@@ -1,8 +1,8 @@
 """Demand drivers for EVs (U.S. macro series from FRED) and an exploratory test of whether they line up with
-Tesla deliveries and BYD sales. Writes web/drivers.json (additive).
+Tesla and Rivian deliveries. Writes web/drivers.json (additive).
 
-Honest limits: Tesla has about 26 usable year-over-year quarters and BYD about 33 months, which is little data, and both
-are shaped by China and global conditions that these U.S. series do not capture. The test is therefore labelled exploratory:
+Honest limits: Tesla has about 26 usable year-over-year quarters and Rivian about 15, which is little data, and Tesla's
+volumes are also shaped by China and Europe, which these U.S. series do not capture. The test is therefore labelled exploratory:
 growth in the indicator vs growth in volumes (year over year), at lag 0 and at a one-period lead. Overlapping year-over-year
 windows inflate significance, so the headline p-value uses an effective sample (n/12 monthly, n/4 quarterly) and a Bonferroni
 correction. 'Yes' needs to pass both; a raw p below 0.05 alone is only 'Suggestive'; otherwise 'No'.
@@ -52,9 +52,9 @@ def main():
     ev = json.loads((ROOT / "web" / "ev.json").read_text())
     tq = pd.Series({q["q"]: q["deliveries"] for q in ev["tesla"]["quarters"]}, dtype=float)
     tq.index = pd.PeriodIndex([f"{q[:4]}Q{(int(q[5:7]) - 1) // 3 + 1}" for q in tq.index], freq="Q")
-    bm_ = pd.Series({m["m"]: m["total"] for m in ev["byd"]["months"]}, dtype=float)
-    bm_.index = pd.PeriodIndex(bm_.index, freq="M")
-    tg, bg = np.log(tq / tq.shift(4)).dropna(), np.log(bm_ / bm_.shift(12)).dropna()
+    rq = pd.Series({q["q"]: q["deliveries"] for q in ev["rivian"]["quarters"]}, dtype=float)
+    rq.index = pd.PeriodIndex([f"{q[:4]}Q{(int(q[5:7]) - 1) // 3 + 1}" for q in rq.index], freq="Q")
+    tg, rg = np.log(tq / tq.shift(4)).dropna(), np.log(rq / rq.shift(4)).dropna()
     alpha = 0.05 / (len(SERIES) * 2 * 2)                       # indicators x leads x companies
     out_series, rows = {}, []
     for sid, label, kind, unit, pub in SERIES:
@@ -69,7 +69,7 @@ def main():
         qv = s.copy(); qv.index = qv.index.to_period("Q"); qv = qv.groupby(level=0).mean()
         mv = s.copy(); mv.index = mv.index.to_period("M"); mv = mv.groupby(level=0).mean()
         for lead in (0, 1):
-            for co, g, v, lag in (("Tesla", tg, qv, 4), ("BYD", bg, mv, 12)):
+            for co, g, v, lag in (("Tesla", tg, qv, 4), ("Rivian", rg, qv, 4)):
                 res = test(g, yoy(v, kind, lag), lead, lag)
                 if res:
                     rows.append({"id": sid, "label": label, "company": co, **res})

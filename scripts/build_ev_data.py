@@ -1,13 +1,10 @@
-"""Tesla, BYD and Rivian: reported volumes, Tesla's SEC financials, and forecasts, written to web/ev.json (additive).
+"""Tesla and Rivian: reported volumes, Tesla's SEC financials, and forecasts, written to web/ev.json (additive).
 
 Sources (all public):
   * Tesla deliveries/production by quarter: Tesla's own 8-K Exhibit 99.1 releases, via the datahub.io
     "tesla-quarterly-deliveries" snapshot (Q2 2019 to Q2 2026), plus the latest quarter read by hand from the 8-K
     (data/external/ev/tesla_q3_2026_manual.csv, with its accession number).
   * Tesla financials: SEC EDGAR company facts (CIK 1318605), quarters filled only by accounting identities.
-  * BYD monthly NEV sales, passenger NEVs and overseas sales: BYD's monthly HKEX announcements as tabulated by CnEVPost
-    (data/external/ev/byd_monthly_sales.csv, Jan 2022 to Sep 2026). Spot-checked against HKEX filings for May, Jun, Aug 2026.
-    The figures are unaudited and BYD may adjust them; "overseas" definitions differ between sources.
 Forecasts use the same backtested engine as the rest of the dashboard.
 
 Usage: python scripts/build_ev_data.py       (network only needed to refresh the SEC cache)
@@ -120,21 +117,11 @@ def main():
         if q in rfin.index:
             row.update({k: nn(rfin.loc[q, k]) for k in rfin.columns})
         rq.append(row)
-    # BYD: monthly NEV sales forecast (season 12)
-    b = pd.read_csv(EV / "byd_monthly_sales.csv").set_index("month")
-    assert (b.passenger_nev.fillna(0) <= b.total_nev).all() and (b.overseas.fillna(0) <= b.total_nev).all() and b.index.is_monotonic_increasing
-    last_m = b.index[-1]
-    fc_b = forecast_series(b.total_nev.to_numpy(float), last_m, season=12, step=1, horizon=12, origins=(12, 9, 6), min_history=36, monitor=True, monitor_n=12)
-    fc_o = forecast_series(b.overseas.dropna().to_numpy(float), last_m, season=12, step=1, horizon=12, origins=(12, 9, 6), min_history=36, monitor=True, monitor_n=12)
     out = {
-        "meta": {"built": dt.date.today().isoformat(), "tesla_latest_quarter": last_q, "byd_latest_month": last_m, "rivian_latest_quarter": rv.index[-1],
+        "meta": {"built": dt.date.today().isoformat(), "tesla_latest_quarter": last_q, "rivian_latest_quarter": rv.index[-1],
                  "tesla_sources": {"deliveries": "https://datahub.io/datapressr/tesla-quarterly-deliveries", "q3_2026": "Tesla 8-K filed 2026-10-02, Exhibit 99.1", "sec": "https://www.sec.gov/edgar/browse/?CIK=1318605"},
-                 "byd_sources": {"monthly": "https://cnevpost.com/2026/10/01/byd-sept-2026-sales/", "filings": "https://www.hkexnews.hk/"},
-                 "notes": {"byd": "BYD's monthly figures are unaudited, reported in HKEX announcements, and may be adjusted. Overseas definitions differ between sources.",
-                           "tesla": "Deliveries are not sales revenue; quarterly financials come from SEC filings."}},
+                 "notes": {"tesla": "Deliveries are not sales revenue; quarterly financials come from SEC filings."}},
         "tesla": {"quarters": tq, "forecast_deliveries": fc_t, "forecast_revenue": fc_r, "revenue_latest_quarter": fr.index[-1], "financials_ahead": fin_extra},
-        "byd": {"months": [{"m": m_, "total": int(r.total_nev), "passenger": None if pd.isna(r.passenger_nev) else int(r.passenger_nev), "overseas": None if pd.isna(r.overseas) else int(r.overseas)} for m_, r in b.iterrows()],
-                "forecast_total": fc_b, "forecast_overseas": fc_o},
         "rivian": {"quarters": rq, "forecast_deliveries": fc_rv, "forecast_revenue": fc_rvr, "revenue_latest_quarter": rfr.index[-1],
                    "sources": {"deliveries": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1874178&type=8-K", "sec": "https://www.sec.gov/edgar/browse/?CIK=1874178"},
                    "note": "Rivian reports production and deliveries each quarter in an 8-K; financials come from its SEC filings. It does not break deliveries out by model."},
@@ -142,7 +129,7 @@ def main():
     path = ROOT / "web" / "ev.json"
     path.write_text(json.dumps(out, separators=(",", ":"), allow_nan=False))
     print(f"wrote {path} ({path.stat().st_size / 1024:.0f} KB)")
-    for name, fc in (("Tesla deliveries", fc_t), ("Tesla revenue ($M)", fc_r), ("BYD total", fc_b), ("BYD overseas", fc_o), ("Rivian deliveries", fc_rv), ("Rivian revenue ($M)", fc_rvr)):
+    for name, fc in (("Tesla deliveries", fc_t), ("Tesla revenue ($M)", fc_r), ("Rivian deliveries", fc_rv), ("Rivian revenue ($M)", fc_rvr)):
         print(name, "->", fc["model"], "wMAPE", fc["wmape"], "| next:", round(fc["fc"]["mean"][0]), f"({round(fc['fc']['p10'][0])}-{round(fc['fc']['p90'][0])})")
 
 

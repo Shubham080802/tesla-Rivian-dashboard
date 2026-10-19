@@ -1,33 +1,33 @@
-month,tesla,byd,basis
-2024-01,18161,,CnEVPost table of ACEA data
-2024-02,28182,,CnEVPost table of ACEA data
-2024-03,39684,,CnEVPost table of ACEA data
-2024-04,14228,,CnEVPost table of ACEA data
-2024-05,19227,,CnEVPost table of ACEA data
-2024-06,45087,,CnEVPost table of ACEA data
-2024-07,14769,4151,CnEVPost table of ACEA data
-2024-08,19136,3629,CnEVPost table of ACEA data
-2024-09,44502,5013,CnEVPost table of ACEA data
-2024-10,13519,5695,CnEVPost table of ACEA data
-2024-11,25840,6568,CnEVPost table of ACEA data
-2024-12,44190,8395,CnEVPost table of ACEA data
-2025-01,9733,6884,ACEA prior-year column in the 2026 release (latest revision)
-2025-02,15794,6844,ACEA prior-year column in the 2026 release (latest revision)
-2025-03,28544,15175,ACEA prior-year column in the 2026 release (latest revision)
-2025-04,7272,12593,ACEA prior-year column in the 2026 release (latest revision)
-2025-05,13760,13687,ACEA prior-year column in the 2026 release (latest revision)
-2025-06,35076,15750,ACEA prior-year column in the 2026 release (latest revision)
-2025-07,8837,13503,CnEVPost table of ACEA data
-2025-08,14831,11412,ACEA prior-year column in the 2026 release (latest revision)
-2025-09,39837,24963,CnEVPost table of ACEA data
-2025-10,6964,17470,CnEVPost table of ACEA data
-2025-11,22801,21133,CnEVPost table of ACEA data
-2025-12,35280,27678,CnEVPost table of ACEA data
-2026-01,8075,18242,ACEA press release
-2026-02,17664,17954,ACEA press release
-2026-03,52600,37580,ACEA press release
-2026-04,10654,27008,ACEA press release
-2026-05,28610,32380,ACEA press release
-2026-06,52563,38455,ACEA press release
-2026-07,6006,33948,derived: ACEA Jan-Aug year-to-date minus Jan-Jun minus August
-2026-08,15430,26007,ACEA press release
+month,tesla,basis
+2024-01,18161,CnEVPost table of ACEA data
+2024-02,28182,CnEVPost table of ACEA data
+2024-03,39684,CnEVPost table of ACEA data
+2024-04,14228,CnEVPost table of ACEA data
+2024-05,19227,CnEVPost table of ACEA data
+2024-06,45087,CnEVPost table of ACEA data
+2024-07,14769,CnEVPost table of ACEA data
+2024-08,19136,CnEVPost table of ACEA data
+2024-09,44502,CnEVPost table of ACEA data
+2024-10,13519,CnEVPost table of ACEA data
+2024-11,25840,CnEVPost table of ACEA data
+2024-12,44190,CnEVPost table of ACEA data
+2025-01,9733,ACEA prior-year column in the 2026 release (latest revision)
+2025-02,15794,ACEA prior-year column in the 2026 release (latest revision)
+2025-03,28544,ACEA prior-year column in the 2026 release (latest revision)
+2025-04,7272,ACEA prior-year column in the 2026 release (latest revision)
+2025-05,13760,ACEA prior-year column in the 2026 release (latest revision)
+2025-06,35076,ACEA prior-year column in the 2026 release (latest revision)
+2025-07,8837,CnEVPost table of ACEA data
+2025-08,14831,ACEA prior-year column in the 2026 release (latest revision)
+2025-09,39837,CnEVPost table of ACEA data
+2025-10,6964,CnEVPost table of ACEA data
+2025-11,22801,CnEVPost table of ACEA data
+2025-12,35280,CnEVPost table of ACEA data
+2026-01,8075,ACEA press release
+2026-02,17664,ACEA press release
+2026-03,52600,ACEA press release
+2026-04,10654,ACEA press release
+2026-05,28610,ACEA press release
+2026-06,52563,ACEA press release
+2026-07,6006,derived: ACEA Jan-Aug year-to-date minus Jan-Jun minus August
+2026-08,15430,ACEA press release

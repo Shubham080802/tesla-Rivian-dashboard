@@ -1,5 +1,5 @@
 # Daily refresh of the sources that publish new data (SEC, FRED, Wikimedia, the U.S. station locator).
-# BYD's monthly and annual figures are typed in by hand (see docs/TODO.md). If any check fails, nothing is
+# Tesla China and Europe figures are typed in by hand (see docs/TODO.md). If any check fails, nothing is
 # committed and the site keeps showing the last good data. A commit to main makes Vercel redeploy automatically.
 name: Refresh data
 
@@ -34,9 +34,6 @@ jobs:
           python scripts/build_versus_data.py
           python scripts/build_regions.py
           python scripts/build_drivers.py
-          python scripts/export_tableau.py
-          python scripts/check_data.py || true      # writes checks.json; the strict run below decides
-          python scripts/export_tableau.py
       - name: Check the refreshed data
         run: python scripts/check_data.py
       - name: Commit if the sources changed
@@ -44,11 +41,11 @@ jobs:
           # the "built" date changes every run, so only publish when a source file actually changed
           if git diff --quiet -- data/external; then
             echo "No new source data today; nothing to publish."
-            git checkout -- web tableau
+            git checkout -- web
             exit 0
           fi
           git config user.name "data-refresh-bot"
           git config user.email "data-refresh-bot@users.noreply.github.com"
-          git add data/external web tableau
+          git add data/external web
           git commit -m "data: scheduled refresh ($(date -u +%F))"
           git push

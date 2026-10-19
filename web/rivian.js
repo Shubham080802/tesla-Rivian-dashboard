@@ -1,7 +1,7 @@
 // Rivian section of the "Sales & forecast" tab: deliveries with forecast, revenue and margins (ev.json -> rivian).
 function renderRivian() {
   if (!EV || !EV.rivian) return;
-  const R = EV.rivian.quarters, fc = EV.rivian.forecast_deliveries, c = css("--c4");
+  const R = EV.rivian.quarters, fc = EV.rivian.forecast_deliveries, c = css("--c1");
   const l = R.at(-1), p = R.at(-5), fr = R.filter((r) => r.revenue != null), fl = fr.at(-1), fp = fr.at(-5);
   const gm = (r) => r.gross_profit / r.revenue;
   $("rivTiles").innerHTML = [
@@ -16,7 +16,7 @@ function renderRivian() {
   const q = fr.map((r) => evQ(r.q));
   draw("c-riv-fin", [
     { x: q, y: fr.map((r) => r.revenue / 1e3), type: "bar", name: "Revenue ($B)", marker: { color: rgba(c, 0.7) }, hovertemplate: "$%{y:.2f}B" },
-    { x: q, y: fr.map((r) => (r.revenue > 100 ? gm(r) : null)), mode: "lines+markers", name: "Gross margin (right)", yaxis: "y2", line: line(css("--c2"), 2.2), marker: { size: 5 }, hovertemplate: "%{y:.0%}" },
+    { x: q, y: fr.map((r) => (r.revenue > 100 ? gm(r) : null)), mode: "lines+markers", name: "Gross margin (right)", yaxis: "y2", line: line(css("--c3"), 2.2), marker: { size: 5 }, hovertemplate: "%{y:.0%}" },
     { x: q, y: fr.map((r) => (r.revenue > 100 ? r.net_income / r.revenue : null)), mode: "lines+markers", name: "Net margin (right)", yaxis: "y2", line: line(css("--muted"), 2), marker: { size: 4 }, hovertemplate: "%{y:.0%}" },
   ], layout({ bargap: 0.3, margin: { l: 8, r: 40, t: 40, b: 8 }, legend: { y: 1.25 }, xaxis: { type: "category", tickmode: "array", tickvals: q.filter((x) => x.startsWith("Q1")), ticktext: q.filter((x) => x.startsWith("Q1")).map((x) => x.slice(3)), tickangle: 0 },
     yaxis: { tickprefix: "$", ticksuffix: "B", tickformat: ".1f" }, yaxis2: { overlaying: "y", side: "right", tickformat: ".0%", showgrid: false, zeroline: true, range: [-2.5, 0.5] } }));
