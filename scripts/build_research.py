@@ -317,8 +317,9 @@ def gdelt_series(co, mode, waits=(20, 60, 120, 240)):
 
 def sentiment():
     res, cutoff = {}, date.today().strftime("%Y-%m")
+    tones = {co: gdelt_series(co, "timelinetone") for co in GDELT_Q}          # tone first: GDELT often allows only a few requests
     for co in GDELT_Q:
-        tone, vol = gdelt_series(co, "timelinetone"), gdelt_series(co, "timelinevolraw")
+        tone, vol = tones[co], gdelt_series(co, "timelinevolraw")
         if tone is None:
             continue
         for d in (tone, vol):

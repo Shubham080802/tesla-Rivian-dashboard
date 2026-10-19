@@ -41,9 +41,9 @@ jobs:
       - name: Commit if the sources changed
         run: |
           # the "built" date changes every run, so only publish when a source file actually changed
-          if git diff --quiet -- data/external; then
+          if [ -z "$(git status --porcelain -- data/external)" ]; then      # also catches newly cached files
             echo "No new source data today; nothing to publish."
-            git checkout -- web
+            git checkout -- web && git clean -fdq -- web
             exit 0
           fi
           git config user.name "data-refresh-bot"
