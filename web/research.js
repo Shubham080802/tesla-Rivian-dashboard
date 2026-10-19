@@ -214,29 +214,29 @@ function renderCustomers() {
 function renderSentiment() {
   if (!RS) return;
   const F = researchFacts(), S = RS.sentiment, C = RS.customers.complaints_monthly;
-  const tt = F.tone("tesla"), rt = F.tone("rivian"), cv = (co) => mean(S[co].share_per_million.slice(-12).filter(ok));
+  const tt = F.tone("tesla"), rt = F.tone("rivian"), cv = (co) => (S[co] ? mean(S[co].share_per_million.slice(-12).filter(ok)) : NaN);
+  const HAS = BR.filter(([k]) => S[k]), HASV = HAS.filter(([k]) => S[k].share_per_million.some(ok));
   draw("c-se-comp", BR.map(([k, nme, c]) => ({ x: C.months.map((m) => m + "-01"), y: C[k] || [], type: "bar", name: nme, marker: { color: c() }, hovertemplate: `${nme}: %{y}<extra></extra>` })),
     layout({ barmode: "group", bargap: 0.2, margin: M0, xaxis: { type: "date" }, yaxis: { rangemode: "tozero" } }));
-  const noTone = !tt || !rt;
-  $("c-se-tone").closest("article").hidden = noTone; $("c-se-vol").closest("article").hidden = noTone;
+  const noTone = !tt && !rt;
+  $("c-se-tone").closest("article").hidden = noTone; $("c-se-vol").closest("article").hidden = !HASV.length;
   if (noTone) {
     $("seTiles").innerHTML = tile({ label: "Owner complaints, last 12 months", value: `${fmt.intC(sum(C.tesla.slice(-12)))} / ${fmt.intC(sum(C.rivian.slice(-12)))}`, sub: "Tesla / Rivian, filed with NHTSA" });
     $("seNote").textContent = "News tone from GDELT could not be fetched at the last build; it will appear after the next successful refresh.";
     return;
   }
   $("seTiles").innerHTML = [
-    tile({ label: "Tesla news tone, last 12 months", value: tt.last.toFixed(2), delta: deltaChip(tt.last - tt.prev, numTxt("", 2)), sub: "vs prior 12 months; 0 is neutral" }),
-    tile({ label: "Rivian news tone, last 12 months", value: rt.last.toFixed(2), delta: deltaChip(rt.last - rt.prev, numTxt("", 2)), sub: "vs prior 12 months; 0 is neutral" }),
-    tile({ label: "News coverage, last 12 months", value: `${Math.round(cv("tesla") / cv("rivian"))}×`, sub: "Tesla articles per Rivian article" }),
+    ...[["Tesla", tt], ["Rivian", rt]].map(([n, x]) => tile({ label: `${n} news tone, last 12 months`, value: x ? x.last.toFixed(2) : "pending", delta: x ? deltaChip(x.last - x.prev, numTxt("", 2)) : "", sub: x ? "vs prior 12 months; 0 is neutral" : "GDELT not fetched yet" })),
+    tile({ label: "News coverage, last 12 months", value: ok(cv("tesla") / cv("rivian")) ? `${Math.round(cv("tesla") / cv("rivian"))}×` : "pending", sub: "Tesla articles per Rivian article" }),
     tile({ label: "Owner complaints, last 12 months", value: `${fmt.intC(sum(C.tesla.slice(-12)))} / ${fmt.intC(sum(C.rivian.slice(-12)))}`, sub: "Tesla / Rivian, filed with NHTSA" }),
   ].join("");
   draw("c-se-tone", [
-    ...BR.map(([k, nme, c]) => ({ x: S[k].months.map((m) => m + "-01"), y: S[k].tone, mode: "markers", name: `${nme} monthly`, showlegend: false, marker: { size: 5, color: rgba(c(), 0.35) }, hoverinfo: "skip" })),
-    ...BR.map(([k, nme, c]) => ({ x: S[k].months.map((m) => m + "-01"), y: rolling(S[k].tone, 3).map((v, i) => (i >= 2 ? v : null)), mode: "lines", name: nme, line: line(c(), 2.6), hovertemplate: `${nme}: %{y:.2f}<extra></extra>` })),
+    ...HAS.map(([k, nme, c]) => ({ x: S[k].months.map((m) => m + "-01"), y: S[k].tone, mode: "markers", name: `${nme} monthly`, showlegend: false, marker: { size: 5, color: rgba(c(), 0.35) }, hoverinfo: "skip" })),
+    ...HAS.map(([k, nme, c]) => ({ x: S[k].months.map((m) => m + "-01"), y: rolling(S[k].tone, 3).map((v, i) => (i >= 2 ? v : null)), mode: "lines", name: nme, line: line(c(), 2.6), hovertemplate: `${nme}: %{y:.2f}<extra></extra>` })),
   ], layout({ margin: M0, xaxis: { type: "date" }, yaxis: { zeroline: true, zerolinecolor: css("--axis"), title: { text: "average tone (negative to positive)", font: { size: 11, color: css("--muted") } } },
     shapes: [{ type: "line", xref: "paper", x0: 0, x1: 1, y0: 0, y1: 0, line: { color: css("--axis"), width: 1 } }] }));
   $("seToneSub").textContent = "GDELT scores the wording of every English-language online news article it monitors from very negative to very positive; this is the monthly average for articles mentioning each company, with a 3-month line. Most business news sits slightly below zero.";
-  draw("c-se-vol", BR.map(([k, nme, c]) => ({ x: S[k].months.map((m) => m + "-01"), y: S[k].share_per_million, mode: "lines", name: nme, line: line(c(), 2.4), hovertemplate: `${nme}: %{y:,.0f} per million<extra></extra>` })),
+  if (HASV.length) draw("c-se-vol", HASV.map(([k, nme, c]) => ({ x: S[k].months.map((m) => m + "-01"), y: S[k].share_per_million, mode: "lines", name: nme, line: line(c(), 2.4), hovertemplate: `${nme}: %{y:,.0f} per million<extra></extra>` })),
     layout({ margin: M0, xaxis: { type: "date" }, yaxis: { type: "log", tickformat: ",.0f" } }));
   $("seNote").innerHTML = `Sources: <a href="${RS.meta.sources.gdelt}">The GDELT Project</a> (DOC 2.0 API, English-language sources; Tesla articles must also mention cars, EVs, Musk or Cybertruck, to leave out Nikola Tesla), <a href="${RS.meta.sources.nhtsa}">NHTSA complaints</a>. Wikipedia attention is on the Head to head tab. Tone measures how the news is written, not what buyers think, and spikes with events such as earnings, recalls and political news about Tesla's chief executive.`;
 }
