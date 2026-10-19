@@ -15,6 +15,15 @@ function renderQuality() {
   ];
   if (RG) { rows.push(["Tesla China (domestic and exports)", "CPCA, as tabulated by CnEVPost", fmt.month(RG.meta.tesla_china_latest), monthsAgo(RG.meta.tesla_china_latest)]); rows.push(["Europe registrations", "ACEA press releases (earlier months via CnEVPost)", fmt.month(RG.meta.europe_latest), monthsAgo(RG.meta.europe_latest)]); }
   if (SK) rows.push(["Share prices (derived figures only)", "Yahoo Finance, personal-use data", fmt.month(SK.meta.through), monthsAgo(SK.meta.through)]);
+  if (RS) {
+    const M = RS.market, S = RS.sentiment, b = RS.meta.built;
+    rows.push(["U.S. EV sales by brand and model", "Cox Automotive / Kelley Blue Book quarterly estimates", evQ(M.quarters.at(-1)), monthsAgo(M.quarters.at(-1), 2)]);
+    rows.push(["Recalls, complaints, crash ratings", "NHTSA APIs", b, monthsAgo(b.slice(0, 7))]);
+    rows.push(["Range and efficiency", "EPA fueleconomy.gov", String(Math.max(...RS.customers.epa.map((e) => e.year))), 0]);
+    if (S.tesla) rows.push(["News tone and coverage", "GDELT DOC 2.0 API", fmt.month(S.tesla.months.at(-1)), monthsAgo(S.tesla.months.at(-1))]);
+    rows.push(["EV registrations (WA, NY)", "Washington DOL; New York DMV open data", b, monthsAgo(b.slice(0, 7))]);
+    rows.push(["Neighbourhood demographics", `U.S. Census Bureau, ${RS.owners.acs_release}`, RS.owners.acs_release.match(/\d{4}/)?.[0] ?? "", 0]);
+  }
   if (DR) rows.push(["Demand drivers", "FRED (EIA, BEA, BLS, Federal Reserve, Michigan)", fmt.month(DR.meta.latest), monthsAgo(DR.meta.latest)]);
   $("qFresh").innerHTML = `<thead><tr><th>Source</th><th>Publisher</th><th>Latest data</th><th>Age</th><th></th></tr></thead><tbody>` +
     rows.map(([n, p, l, a]) => `<tr><td><b>${n}</b></td><td>${p}</td><td>${l}</td><td>${ageText(a)}</td><td>${ageBadge(a)}</td></tr>`).join("") + "</tbody>";

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tesla vs Rivian</title>
-<meta name="description" content="Tesla and Rivian head to head: two US-listed EV makers compared on vehicle volumes, financials, share price, popularity and forecasts, from SEC filings and company releases through 2026.">
+<meta name="description" content="A research dashboard on Tesla and Rivian, two US-listed EV makers: market share, buyers, customer quality and safety, sentiment, profit and loss, cash and forecasts, from public data through 2026.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css">
 <script>
@@ -42,17 +42,42 @@
 <main class="wrap">
   <div class="toolbar">
     <nav class="tabs" id="tabs" role="tablist">
-      <button role="tab" data-tab="versus" class="active">Head to head</button>
+      <button role="tab" data-tab="overview" class="active">Research brief</button>
+      <button role="tab" data-tab="versus">Head to head</button>
+      <button role="tab" data-tab="market">Market share</button>
+      <button role="tab" data-tab="buyers">Who buys</button>
+      <button role="tab" data-tab="customers">Customer view</button>
+      <button role="tab" data-tab="sentiment">Sentiment</button>
+      <button role="tab" data-tab="investors">Investor view</button>
       <button role="tab" data-tab="ev">Sales &amp; forecast</button>
-      <button role="tab" data-tab="regions">Where they sell</button>
-      <button role="tab" data-tab="stocks">Stock vs business</button>
       <button role="tab" data-tab="lab">Forecast lab</button>
       <button role="tab" data-tab="drivers">Drivers</button>
       <button role="tab" data-tab="quality">About the data</button>
     </nav>
   </div>
 
-  <div class="panel active" id="tab-versus">
+  <div class="panel active" id="tab-overview">
+    <article class="card brief">
+      <header><h3>Research brief: Tesla and Rivian, two U.S.-listed EV makers</h3><p id="ovSub"></p></header>
+      <p class="lede" id="ovLede"></p>
+    </article>
+    <div class="tiles tiles-4" id="ovTiles"></div>
+    <div class="grid2">
+      <article class="card"><header><h3>For investors</h3><p>Scale, profit and loss, cash and dilution. Not investment advice.</p></header><ul class="plain" id="ovInv"></ul></article>
+      <article class="card"><header><h3>For customers</h3><p>Safety, quality, range, charging and what owners and the news say.</p></header><ul class="plain" id="ovCus"></ul></article>
+    </div>
+    <section>
+      <h2 class="sect">Research questions and what the data says</h2>
+      <article class="card"><div class="tablewrap"><table id="ovRQ"></table></div></article>
+    </section>
+    <div class="grid2">
+      <article class="card"><header><h3>Method in brief</h3></header><ul class="plain" id="ovMethod"></ul></article>
+      <article class="card"><header><h3>Limits to state in any write-up</h3></header><ul class="plain" id="ovLimits"></ul></article>
+    </div>
+    <article class="card"><header><h3>Sources and how to cite them</h3><p>Every figure on this site comes from one of these public sources. Accessed through the build date shown at the top.</p></header><ol class="cite" id="ovCite"></ol></article>
+  </div>
+
+  <div class="panel" id="tab-versus">
     <article class="card">
       <header><h3>Scoreboard</h3><p id="vsSub"></p></header>
       <div class="tablewrap"><table id="vsTable"></table></div>
@@ -78,6 +103,52 @@
       <article class="card"><header><h3>Charging stations by opening year</h3><p id="vsChSub"></p></header><div class="plot h-lg" id="c-vs-ch"></div></article>
     </section>
     <p class="note" id="vsNote"></p>
+  </div>
+
+  <div class="panel" id="tab-buyers">
+    <article class="card"><header><h3>Who buys Tesla and Rivian?</h3><p>No company or government publishes owners' age or income. The closest open evidence is where cars are registered: Washington and New York publish every registered EV with its census tract or ZIP code. Joining those to the Census Bureau's American Community Survey describes the neighbourhoods owners live in. Read it as "Rivians are registered in areas where...", not as facts about individual owners.</p></header>
+      <div class="seg" id="byState" role="radiogroup" aria-label="State"><button type="button" role="radio" data-s="wa" class="on">Washington</button><button type="button" role="radio" data-s="ny">New York</button></div>
+    </article>
+    <div class="tiles tiles-4" id="byTiles"></div>
+    <div class="grid2">
+      <article class="card"><header><h3>Where the cars are, by neighbourhood income</h3><p id="byBandSub"></p></header><div class="plot h-lg" id="c-by-band"></div></article>
+      <article class="card"><header><h3>Cars per 1,000 residents, by neighbourhood income</h3><p>Registered vehicles divided by the population of areas in each income band. A steeper climb means ownership is more concentrated in richer areas.</p></header><div class="plot h-lg" id="c-by-rate"></div></article>
+    </div>
+    <article class="card"><header><h3>The typical owner's neighbourhood</h3><p>Vehicle-weighted averages of each area's census figures, against the state's population as a whole.</p></header><div class="tablewrap"><table id="byProfile"></table></div></article>
+    <div class="grid2">
+      <article class="card"><header><h3>Washington counties with the most Teslas per resident</h3><p>Registered battery-electric vehicles per 1,000 residents.</p></header><div class="plot h-lg" id="c-by-cty"></div></article>
+      <article class="card"><header><h3>Share of Washington's electric cars, by model year</h3><p>Tesla and Rivian as a share of all battery-electric vehicles of each model year still registered in Washington.</p></header><div class="plot h-lg" id="c-by-my"></div></article>
+    </div>
+    <p class="note" id="byNote"></p>
+  </div>
+
+  <div class="panel" id="tab-customers">
+    <div class="tiles tiles-4" id="cuTiles"></div>
+    <article class="card"><header><h3>Range and efficiency by model</h3><p>EPA figures for each model's newest model year. Range shows the shortest to the longest version; efficiency is the best version, in kWh per 100 miles (lower is better).</p></header><div class="tablewrap"><table id="cuSpecs"></table></div></article>
+    <div class="grid2">
+      <article class="card"><header><h3>EPA range by model</h3><p>Miles on a full charge, shortest to longest version.</p></header><div class="plot h-lg" id="c-cu-range"></div></article>
+      <article class="card"><header><h3>Government crash-test ratings</h3><p>NHTSA five-star ratings for the latest model year rated. Models not yet tested are missing.</p></header><div class="tablewrap"><table id="cuNcap"></table></div></article>
+    </div>
+    <div class="grid2">
+      <article class="card"><header><h3>Owner complaints per 10,000 vehicles sold</h3><p id="cuRateSub"></p></header><div class="plot h-lg" id="c-cu-rate"></div></article>
+      <article class="card"><header><h3>Safety recalls by year</h3><p id="cuRecSub"></p></header><div class="plot h-lg" id="c-cu-rec"></div></article>
+    </div>
+    <div class="grid2">
+      <article class="card"><header><h3>What owners complain about</h3><p>Main component named in each NHTSA complaint, all model years.</p></header><div class="plot h-lg" id="c-cu-ccomp"></div></article>
+      <article class="card"><header><h3>What recalls fixed</h3><p>Main component in each recall campaign.</p></header><div class="plot h-lg" id="c-cu-rcomp"></div></article>
+    </div>
+    <p class="note" id="cuNote"></p>
+  </div>
+
+  <div class="panel" id="tab-sentiment">
+    <article class="card"><header><h3>How do people feel about Tesla and Rivian?</h3><p>Three independent signals: the tone of English-language news (GDELT), how much people look the companies up (Wikipedia), and how often owners file safety complaints with NHTSA. None is a survey of buyers; together they show direction and turning points.</p></header></article>
+    <div class="tiles tiles-4" id="seTiles"></div>
+    <article class="card"><header><h3>News tone, monthly average</h3><p id="seToneSub"></p></header><div class="plot h-lg" id="c-se-tone"></div></article>
+    <div class="grid2">
+      <article class="card"><header><h3>News coverage</h3><p>Articles mentioning each company per million articles GDELT monitored that month.</p></header><div class="plot h-lg" id="c-se-vol"></div></article>
+      <article class="card"><header><h3>Owner complaints filed with NHTSA, by month</h3><p>All Tesla and Rivian model years. Tesla has a far larger fleet, so compare the shape, not the level.</p></header><div class="plot h-lg" id="c-se-comp"></div></article>
+    </div>
+    <p class="note" id="seNote"></p>
   </div>
 
   <div class="panel" id="tab-ev">
@@ -116,7 +187,21 @@
     <p class="note" id="evNote"></p>
   </div>
 
-  <div class="panel" id="tab-regions">
+  <div class="panel" id="tab-market">
+    <section>
+      <h2 class="sect">U.S. electric vehicle market</h2>
+      <div class="tiles tiles-4" id="mkTiles"></div>
+    </section>
+    <div class="grid2">
+      <article class="card"><header><h3>Share of U.S. EV sales</h3><p id="mkShareSub"></p></header><div class="plot h-lg" id="c-mk-share"></div></article>
+      <article class="card"><header><h3>U.S. EV sales by quarter</h3><p>Tesla, Rivian and every other brand, stacked. The Q3 2025 spike is buyers beating the end of the federal tax credit on 30 September 2025.</p></header><div class="plot h-lg" id="c-mk-stack"></div></article>
+    </div>
+    <div class="grid2">
+      <article class="card"><header><h3>EVs as a share of all new light vehicles</h3><p id="mkEvSub"></p></header><div class="plot" id="c-mk-ev"></div></article>
+      <article class="card"><header><h3>Model mix, latest quarter</h3><p id="mkMixSub"></p></header><div class="plot" id="c-mk-mix"></div></article>
+    </div>
+    <article class="card"><header><h3>U.S. sales by model</h3><p>Cox Automotive estimates per quarter. Rivian's commercial van (EDV) goes mostly to Amazon.</p></header><div class="plot h-lg" id="c-mk-models"></div></article>
+    <p class="note" id="mkNote"></p>
     <section>
       <h2 class="sect">Tesla outside the U.S.</h2>
       <div class="tiles tiles-4" id="rgTiles"></div>
@@ -132,7 +217,27 @@
     <p class="note" id="rgNote"></p>
   </div>
 
-  <div class="panel" id="tab-stocks">
+  <div class="panel" id="tab-investors">
+    <section>
+      <h2 class="sect">Profit and loss scale, last four quarters</h2>
+      <div class="tiles tiles-4" id="ivTiles"></div>
+    </section>
+    <article class="card"><header><h3>From revenue to profit, last four quarters</h3><p id="ivWfSub"></p></header><div class="plot h-lg" id="c-iv-wf"></div></article>
+    <div class="grid2">
+      <article class="card"><header><h3>Per vehicle delivered</h3><p>Trailing four quarters of revenue, gross profit and net income divided by vehicles delivered. Revenue includes energy storage, services, credits and software.</p></header><div class="plot h-lg" id="c-iv-unit"></div></article>
+      <article class="card"><header><h3>Net income by quarter</h3><p>US dollars, from 10-Q and 10-K filings.</p></header><div class="plot h-lg" id="c-iv-ni"></div></article>
+    </div>
+    <div class="grid2">
+      <article class="card"><header><h3>Free cash flow by quarter</h3><p>Operating cash flow minus capital spending.</p></header><div class="plot h-lg" id="c-iv-fcf"></div></article>
+      <article class="card"><header><h3>Cash and short-term investments vs debt</h3><p id="ivCashSub"></p></header><div class="plot h-lg" id="c-iv-cash"></div></article>
+    </div>
+    <div class="grid2">
+      <article class="card"><header><h3>Spending as a share of revenue</h3><p>Research and development, selling and admin, and stock-based pay, trailing four quarters.</p></header><div class="plot h-lg" id="c-iv-opex"></div></article>
+      <article class="card"><header><h3>Shares outstanding</h3><p id="ivShSub"></p></header><div class="plot h-lg" id="c-iv-shares"></div></article>
+    </div>
+    <article class="card"><header><h3>Investor scorecard</h3><p>Figures from SEC filings. Public float is the market value of shares held by non-insiders, as each company states it on its annual 10-K cover page.</p></header><div class="tablewrap"><table id="ivTable"></table></div></article>
+    <p class="note" id="ivNote"></p>
+    <h2 class="sect">Shares vs the business</h2>
     <article class="card"><header><h3>How have the shares done next to the business?</h3><p>Calendar-year share price changes for Tesla (TSLA) and Rivian (RIVN), both on Nasdaq, beside revenue and vehicle volume growth. Prices are split-adjusted, in US dollars, and exclude dividends.</p></header>
       <div class="tiles tiles-4" id="skTiles"></div></article>
     <article class="card"><header><h3>Share price change by year</h3><p>Each company's price at year end vs the year before.</p></header><div class="plot h-lg" id="c-sk-ret"></div></article>
@@ -192,7 +297,8 @@
     <article class="card"><header><h3>Checks run on every refresh</h3><p id="qCheckSub"></p></header><ul class="plain" id="qChecks"></ul></article>
     <article class="card"><header><h3>What is not here, and why</h3></header>
       <ul class="plain">
-        <li><b>Customer reviews and ratings.</b> No open dataset exists for Tesla or Rivian.</li>
+        <li><b>Customer satisfaction surveys and reviews.</b> No open dataset exists for Tesla or Rivian. The Customer view and Sentiment tabs use NHTSA complaints, crash ratings, EPA figures and news tone instead.</li>
+        <li><b>Owners' personal demographics.</b> No source publishes buyers' age or income. The Who buys tab describes the neighbourhoods where cars are registered in Washington and New York, from the Census Bureau.</li>
         <li><b>Companies listed outside the U.S.</b> BYD and other China-listed makers were dropped so every company here trades on a U.S. exchange, reports to the SEC in US dollars and follows the same accounting rules.</li>
         <li><b>Raw share prices.</b> No free source clearly allows republishing prices, so only derived yearly percentage changes are shown on the Stock vs business tab; the monthly prices themselves stay on the maintainer's machine.</li>
         <li><b>Registrations by country.</b> Tesla's China domestic and export figures are included (CPCA). Europe runs to August 2026. Rivian sells almost only in North America, so it has no regional split; Tesla's U.S. registrations are not public monthly.</li>
@@ -217,5 +323,6 @@
 <script src="drivers.js"></script>
 <script src="quality.js"></script>
 <script src="ask.js"></script>
+<script src="research.js"></script>
 </body>
 </html>

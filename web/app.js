@@ -1,10 +1,13 @@
 // Start-up, tabs and URL state. Each tab's logic lives in its own file; helpers are in core.js.
 let EV = null, VS = null, RG = null;
-const state = { tab: "versus" };
-const TABS = ["versus", "ev", "regions", "stocks", "lab", "drivers", "quality"];
+const state = { tab: "overview" };
+const TABS = ["overview", "versus", "market", "buyers", "customers", "sentiment", "investors", "ev", "lab", "drivers", "quality"];
+const OLD_TABS = { regions: "market", stocks: "investors" };          // links shared before the research tabs
 const renderers = {
+  overview: () => renderOverview(), market: () => { renderMarket(); renderRegions(); }, buyers: () => renderBuyers(), customers: () => renderCustomers(),
+  sentiment: () => renderSentiment(), investors: () => { renderInvestors(); renderStocks(); },
   versus: () => typeof renderVersus === "function" && renderVersus(), ev: () => typeof renderEv === "function" && renderEv(),
-  regions: () => typeof renderRegions === "function" && renderRegions(), stocks: () => typeof renderStocks === "function" && renderStocks(), lab: () => renderLab(), drivers: () => renderDrivers(), quality: () => renderQuality(),
+  lab: () => renderLab(), drivers: () => renderDrivers(), quality: () => renderQuality(),
 };
 function prepEv(d) { EV = d; }
 function prepVersus(d) { VS = d; }
@@ -18,14 +21,15 @@ function syncUI() {
 }
 function writeHash() {
   const p = new URLSearchParams();
-  if (state.tab !== "versus") p.set("tab", state.tab);
+  if (state.tab !== "overview") p.set("tab", state.tab);
   labWriteHash(p);
   const s = p.toString();
   if (location.hash.slice(1) !== s) history.replaceState(null, "", s ? "#" + s : location.pathname + location.search);
 }
 function readHash() {
   const p = new URLSearchParams(location.hash.slice(1));
-  if (TABS.includes(p.get("tab"))) state.tab = p.get("tab");
+  const t = OLD_TABS[p.get("tab")] || p.get("tab");
+  if (TABS.includes(t)) state.tab = t;
   labReadHash(p);
 }
 function renderAll() { try { renderers[state.tab](); } catch (e) { console.error(e); } }
@@ -43,8 +47,8 @@ function renderChips() {
 
 function start() {
   const get = (u, opt) => fetch(u).then((r) => (r.ok ? r.json() : Promise.reject(u))).catch((e) => (opt ? null : Promise.reject(e)));
-  Promise.all([get("ev.json"), get("versus.json"), get("drivers.json", true), get("checks.json", true), get("regions.json", true), get("stocks.json", true)]).then(([ev, vs, dr, ck, rg, sk]) => {
-    prepEv(ev); prepVersus(vs); if (rg) prepRegions(rg); if (sk) prepStocks(sk); if (dr) prepDrivers(dr); if (ck) prepChecks(ck);
+  Promise.all([get("ev.json"), get("versus.json"), get("drivers.json", true), get("checks.json", true), get("regions.json", true), get("stocks.json", true), get("research.json", true)]).then(([ev, vs, dr, ck, rg, sk, rs]) => {
+    prepEv(ev); prepVersus(vs); if (rg) prepRegions(rg); if (sk) prepStocks(sk); if (dr) prepDrivers(dr); if (ck) prepChecks(ck); if (rs) prepResearch(rs);
     $("subtitle").textContent = `Two U.S.-listed EV makers, from SEC filings and company releases through ${evQ(ev.tesla.quarters.at(-1).q)}`;
     readHash(); renderChips(); initLab(); initAsk();
     $("tabs").onclick = (e) => { const b = e.target.closest("button"); if (b) goTab(b.dataset.tab); };

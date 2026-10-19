@@ -105,6 +105,31 @@ if sk_path.exists():
     check("Share price data is current", months_old(sk["meta"]["through"]) <= 3, f"through {sk['meta']['through']} (refreshed by hand; not part of the daily job)", warn=True)
     check("No raw prices are published", all(set(r) <= {"company", "year", "stock_return", "revenue_growth", "volume_growth"} for r in sk["years"]) and all(set(v) <= {"symbol", "ytd_return", "ytd_through", "volatility_36m"} for v in sk["companies"].values()), "only percentage figures appear in stocks.json")
 
+rs_path = W / "research.json"
+if rs_path.exists():
+    rs = json.loads(rs_path.read_text())
+    check("research.json has no missing or infinite numbers", finite(rs), "all values are finite")
+    M = rs["market"]; qi = {q: i for i, q in enumerate(M["quarters"])}
+    check("U.S. market quarters are consecutive", all((int(b[:4]) * 12 + int(b[5:])) - (int(a[:4]) * 12 + int(a[5:])) == 3 for a, b in zip(M["quarters"], M["quarters"][1:])), f"{len(M['quarters'])} quarters, {M['quarters'][0]} to {M['quarters'][-1]}")
+    check("Cox figures match the published reports", M["tesla"][qi["2026-07"]] == 144094 and M["rivian"][qi["2026-07"]] == 19239 and M["total_ev"][qi["2026-07"]] == 266630 and M["total_ev"][qi["2025-10"]] == 234171,
+          "Q3 2026: Tesla 144,094, Rivian 19,239, all EVs 266,630; Q4 2025 all EVs 234,171")
+    check("Tesla and Rivian never exceed the whole EV market", all(t + r <= v for t, r, v in zip(M["tesla"], M["rivian"], M["total_ev"])), "holds in every quarter")
+    mods = M["models"]
+    check("Cox model rows add up to the brand totals", all(abs(sum(mods[k][i] or 0 for k in mods if k.startswith(co)) - M[co.lower()][i]) <= 0.02 * M[co.lower()][i] for co in ("Tesla", "Rivian") for i in range(len(M["quarters"]))), "within 2% every quarter")
+    I = rs["investors"]
+    tq = {q: v for q, v in zip(I["tesla"]["quarters"], I["tesla"]["revenue"])}
+    check("Investor figures agree with the annual filings", abs(sum(tq[f"2023-{m}"] for m in ("01", "04", "07", "10")) - 96773) < 5 and abs(sum(v for q, v in zip(I["rivian"]["quarters"], I["rivian"]["revenue"]) if q.startswith("2024")) - 4970) < 2,
+          "Tesla 2023 revenue $96,773M and Rivian 2024 revenue $4,970M rebuilt from quarters")
+    check("Cash and share counts are present for both companies", all(I[c]["liquidity"][-1] and I[c]["shares"][-1] for c in I), f"latest quarter {I['tesla']['latest']}")
+    O = rs["owners"]
+    check("Registration totals are plausible", O["totals"]["wa"]["tesla"] > 80000 and O["totals"]["ny"]["tesla"] > 80000 and O["totals"]["wa"]["rivian"] > 3000, f"WA Tesla {O['totals']['wa']['tesla']:,}, Rivian {O['totals']['wa']['rivian']:,}; NY Tesla {O['totals']['ny']['tesla']:,}, Rivian {O['totals']['ny']['rivian']:,}")
+    check("Income-band shares add up to 100%", all(abs(sum(v) - 1) < 1e-3 for st in ("wa", "ny") for v in O[st]["share_by_band"].values()), "every group in both states")
+    C = rs["customers"]
+    check("Crash ratings are between one and five stars", all(1 <= x["overall"] <= 5 for x in C["ncap"]) and len(C["ncap"]) >= 3, f"{len(C['ncap'])} models rated")
+    check("EPA ranges are plausible", all(100 < e["range_max"] < 600 for e in C["epa"]), f"{len(C['epa'])} models")
+    se = rs["sentiment"]
+    check("News tone covers both companies and is current", set(se) == {"tesla", "rivian"} and all(months_old(v["months"][-1]) <= 2 for v in se.values()), "latest " + ", ".join(f"{k} {v['months'][-1]}" for k, v in se.items()) if se else "GDELT not yet fetched", warn=True)
+
 out = {"built": date.today().isoformat(), "checks": checks}
 (W / "checks.json").write_text(json.dumps(out, separators=(",", ":")))
 for c in checks:

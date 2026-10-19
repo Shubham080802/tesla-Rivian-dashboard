@@ -1,4 +1,5 @@
-# Daily refresh of the sources that publish new data (SEC, FRED, Wikimedia, the U.S. station locator).
+# Daily refresh of the sources that publish new data (SEC, FRED, Wikimedia, the U.S. station locator, NHTSA, EPA,
+# GDELT, Washington and New York registrations, Census ACS).
 # Tesla China and Europe figures are typed in by hand (see docs/TODO.md). If any check fails, nothing is
 # committed and the site keeps showing the last good data. A commit to main makes Vercel redeploy automatically.
 name: Refresh data
@@ -18,7 +19,7 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -34,6 +35,7 @@ jobs:
           python scripts/build_versus_data.py
           python scripts/build_regions.py
           python scripts/build_drivers.py
+          python scripts/build_research.py
       - name: Check the refreshed data
         run: python scripts/check_data.py
       - name: Commit if the sources changed
