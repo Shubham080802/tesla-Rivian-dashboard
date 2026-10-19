@@ -5,6 +5,7 @@ const ASK_Q = [
   { id: "profit", q: "Who makes more money?", kw: ["profit", "money", "margin", "earn", "income", "revenue"] },
   { id: "over", q: "How big is BYD's overseas business?", kw: ["overseas", "export", "abroad", "international", "outside china"] },
   { id: "where", q: "Where do they sell?", kw: ["where", "china", "europe", "regions", "domestic", "home market", "registrations", "markets"] },
+  { id: "riv", q: "How is Rivian doing?", kw: ["rivian", "r2", "r1s", "r1t"] },
   { id: "tsl", q: "What is the outlook for Tesla deliveries?", kw: ["tesla outlook", "tesla forecast", "tesla deliveries", "tesla next"] },
   { id: "byd", q: "What is the outlook for BYD sales?", kw: ["byd outlook", "byd forecast", "byd next", "byd sales"] },
   { id: "track", q: "Is the latest month on track?", kw: ["on track", "latest month", "latest quarter", "pulse", "behind", "ahead"] },
@@ -15,7 +16,7 @@ const ASK_Q = [
 const ASK_OUT = [
   { re: /\b(stock|share price|shares|invest|buy|sell|trade|price target|worth buying|dividend)\b/i, why: "I can't give investment advice or stock forecasts. The dashboard covers vehicle volumes, financials, attention and forecasts of volumes and revenue." },
   { re: /\b(review|rating|satisf|complain|reliab|quality|nps|owner)/i, why: "There is no open customer-review or satisfaction dataset for Tesla or BYD, so the dashboard has none. The 'What data is missing?' answer lists the other gaps." },
-  { re: /\b(nvidia|google|apple|ford|toyota|volkswagen|gm|rivian|nio|xpeng|waymo|amazon)\b/i, why: "This dashboard compares Tesla and BYD only." },
+  { re: /\b(nvidia|google|apple|ford|toyota|volkswagen|gm|nio|xpeng|waymo|amazon)\b/i, why: "This dashboard compares Tesla, BYD and Rivian only." },
   { re: /\b(202[7-9]|20[3-9]\d)\b/, why: "Forecasts here run about a year (twelve months for BYD, six quarters for Tesla). Use the Forecast lab for the horizon each series supports." },
 ];
 const askNorm = (t) => t.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
@@ -32,6 +33,8 @@ function askAnswer(id) {
     over: () => { const l = B.at(-1), p = B.at(-13); return [`BYD's overseas sales were <b>${fmt.intC(l.overseas)}</b> in ${fmt.month(l.m)}, ${fmt.pct(l.overseas / l.total, 0)} of its total, up from ${fmt.pct(p.overseas / p.total, 0)} a year earlier. "Overseas" is defined differently across sources.`, "Sales & forecast", "ev"]; },
     where: () => { if (!RG) return ["Regional data is not loaded.", "About the data", "quality"]; const tc = RG.tesla_china, n = tc.months.length - 1, ex = tc.exports[n] / (tc.exports[n] + tc.domestic[n]), bh = RG.byd_home, bn = bh.months.length - 1, bo = bh.overseas[bn] / (bh.overseas[bn] + bh.home[bn]), eu = RG.europe, last = eu.months.length - 1;
       return [`In ${fmt.month(tc.months[n])}, <b>${fmt.pct(ex, 0)}</b> of Tesla's China wholesale was exported; BYD's overseas share in ${fmt.month(bh.months[bn])} was <b>${fmt.pct(bo, 0)}</b>. In Europe (EU, EFTA and UK), ${fmt.month(eu.months[last])} registrations were Tesla <b>${fmt.int(eu.tesla[last])}</b> and BYD <b>${fmt.int(eu.byd[last])}</b>, from ACEA.`, "Where they sell", "regions"]; },
+    riv: () => { const s = LAB.find((x) => x.id === "riv_del"), R = EV.rivian.quarters, l = R.at(-1), p = R.at(-5), f = R.filter((r) => r.revenue != null).at(-1);
+      return [`Rivian delivered <b>${fmt.intC(l.deliveries)}</b> vehicles in ${evQ(l.q)} (${pctTxt(l.deliveries / p.deliveries - 1)} vs a year earlier) and is expected to deliver about <b>${fmt.intC(s.d.fc12)}</b> over the next 4 quarters (range ${fmt.intC(s.d.lo)} to ${fmt.intC(s.d.hi)}; reliability ${s.d.grade.toLowerCase()}). Revenue in ${evQ(f.q)} was ${fmt.usdB(f.revenue)} with a ${fmt.pct(f.net_income / f.revenue)} net margin: it is still loss-making.`, "Sales & forecast", "ev"]; },
     tsl: () => { const s = L("tsl_del"); return [`Tesla is expected to deliver about <b>${fmt.intC(s.d.fc12)}</b> over the next 4 quarters (range ${fmt.intC(s.d.lo)} to ${fmt.intC(s.d.hi)}), vs ${fmt.intC(s.d.last12)} in the last 4. Chance of growth: ${fmt.pct(s.d.pGrowth, 0)}. Reliability: ${s.d.grade.toLowerCase()}.`, "Forecast lab", "lab", "tsl_del"]; },
     byd: () => { const s = L("byd_total"); return [`BYD is expected to sell about <b>${fmt.intC(s.d.fc12)}</b> over the next 12 months (range ${fmt.intC(s.d.lo)} to ${fmt.intC(s.d.hi)}), vs ${fmt.intC(s.d.last12)} in the last 12. Chance of growth: ${fmt.pct(s.d.pGrowth, 0)}. Reliability: ${s.d.grade.toLowerCase()}.`, "Forecast lab", "lab", "byd_total"]; },
     track: () => [LAB.filter((s) => s.id !== "tsl_rev").map((s) => { const m = s.fc.monitor.at(-1), ins = m.actual >= m.lo && m.actual <= m.hi; return `<b>${s.label}</b>: ${labLabel(s, m.month)} was ${fmt.pct(Math.abs(m.actual / m.expected - 1))} ${m.actual >= m.expected ? "above" : "below"} what was expected, ${ins ? "inside" : "outside"} the normal range.`; }).join("<br>"), "Forecast lab", "lab"],

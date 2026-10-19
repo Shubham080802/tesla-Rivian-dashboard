@@ -7,11 +7,14 @@ const labState = { id: "byd_total", shift: 0, target: "" };
 function buildLab() {
   const T = EV.tesla, B = EV.byd;
   const tq = T.quarters, rq = tq.filter((r) => r.revenue != null);
-  const mk = (id, co, label, unit, step, x, y, fc, f, rev) => ({ id, co, label, unit, step, n12: step === 3 ? 4 : 12, x, y, fc, f, color: co === "Tesla" ? css("--c2") : css("--c1") });
+  const mk = (id, co, label, unit, step, x, y, fc, f, rev) => ({ id, co, label, unit, step, n12: step === 3 ? 4 : 12, x, y, fc, f, color: co === "Tesla" ? css("--c2") : co === "Rivian" ? css("--c4") : css("--c1") });
+  const RV = EV.rivian.quarters, RVr = RV.filter((r) => r.revenue != null && r.revenue > 0);
   LAB = [
     mk("tsl_del", "Tesla", "Tesla deliveries", "vehicles", 3, tq.map((r) => r.q), tq.map((r) => r.deliveries), T.forecast_deliveries, fmt.intC),
     mk("tsl_rev", "Tesla", "Tesla revenue", "$ millions", 3, rq.map((r) => r.q), rq.map((r) => r.revenue), T.forecast_revenue, fmt.usdB),
     mk("byd_total", "BYD", "BYD NEV sales", "vehicles", 1, B.months.map((r) => r.m), B.months.map((r) => r.total), B.forecast_total, fmt.intC),
+    mk("riv_del", "Rivian", "Rivian deliveries", "vehicles", 3, RV.map((r) => r.q), RV.map((r) => r.deliveries), EV.rivian.forecast_deliveries, fmt.intC),
+    mk("riv_rev", "Rivian", "Rivian revenue", "$ millions", 3, RVr.map((r) => r.q), RVr.map((r) => r.revenue), EV.rivian.forecast_revenue, fmt.usdB),
     mk("byd_over", "BYD", "BYD overseas sales", "vehicles", 1, B.months.filter((r) => r.overseas != null).map((r) => r.m), B.months.filter((r) => r.overseas != null).map((r) => r.overseas), B.forecast_overseas, fmt.intC),
   ];
   LAB.forEach((s) => {
@@ -30,7 +33,7 @@ function initLab() {
   $("labScoreBody").onclick = (e) => { const r = e.target.closest("[data-id]"); if (r) { labState.id = r.dataset.id; syncUI(); renderLab(); } };
 }
 
-function labReadHash(p) { if (p.get("ls") && ["tsl_del", "tsl_rev", "byd_total", "byd_over"].includes(p.get("ls"))) labState.id = p.get("ls"); const v = parseInt(p.get("lsh")); if (Number.isFinite(v) && v >= -30 && v <= 30) labState.shift = v; }
+function labReadHash(p) { if (p.get("ls") && ["tsl_del", "tsl_rev", "byd_total", "byd_over", "riv_del", "riv_rev"].includes(p.get("ls"))) labState.id = p.get("ls"); const v = parseInt(p.get("lsh")); if (Number.isFinite(v) && v >= -30 && v <= 30) labState.shift = v; }
 function labWriteHash(p) { if (labState.id !== "byd_total") p.set("ls", labState.id); if (labState.shift) p.set("lsh", labState.shift); }
 
 function renderLab() {

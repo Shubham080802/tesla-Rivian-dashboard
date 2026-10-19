@@ -6,14 +6,14 @@ function prepStocks(d) { SK = d; }
 function renderStocks() {
   if (!SK) { $("skNote").textContent = "Stock data is not available."; return; }
   const C = SK.companies, Y = SK.years, c2 = css("--c2"), c1 = css("--c1");
-  const yrs = [...new Set(Y.map((r) => r.year))].sort(), col = (co) => (co === "Tesla" ? c2 : c1);
+  const yrs = [...new Set(Y.map((r) => r.year))].sort(), col = (co) => (co === "Tesla" ? c2 : co === "Rivian" ? css("--c4") : c1);
   const row = (co, y) => Y.find((r) => r.company === co && r.year === y);
   const pctSigned = (v) => (v == null ? "n/a" : pctTxt(v));
-  $("skTiles").innerHTML = ["Tesla", "BYD"].map((co) => tile({ label: `${co} share price, 2026 to ${fmt.month(C[co].ytd_through)}`, value: pctTxt(C[co].ytd_return), sub: `${C[co].symbol}, price change only` })).join("") +
-    ["Tesla", "BYD"].map((co) => tile({ label: `${co} volatility (3 years)`, value: fmt.pct(C[co].volatility_36m, 0), sub: "annualised, from monthly moves" })).join("");
-  draw("c-sk-ret", ["Tesla", "BYD"].map((co) => ({ x: yrs.map(String), y: yrs.map((y) => row(co, y)?.stock_return ?? null), type: "bar", name: co, marker: { color: col(co) }, hovertemplate: "%{y:.0%}" })),
+  $("skTiles").innerHTML = ["Tesla", "BYD", "Rivian"].map((co) => tile({ label: `${co} share price, 2026 to ${fmt.month(C[co].ytd_through)}`, value: pctTxt(C[co].ytd_return), sub: `${C[co].symbol}, price change only` })).join("") +
+    ["Tesla", "BYD", "Rivian"].map((co) => tile({ label: `${co} volatility (3 years)`, value: fmt.pct(C[co].volatility_36m, 0), sub: "annualised, from monthly moves" })).join("");
+  draw("c-sk-ret", ["Tesla", "BYD", "Rivian"].map((co) => ({ x: yrs.map(String), y: yrs.map((y) => row(co, y)?.stock_return ?? null), type: "bar", name: co, marker: { color: col(co) }, hovertemplate: "%{y:.0%}" })),
     layout({ barmode: "group", bargap: 0.25, margin: { l: 8, r: 16, t: 28, b: 8 }, xaxis: { type: "category" }, yaxis: { tickformat: ".0%" } }));
-  ["Tesla", "BYD"].forEach((co) => {
+  ["Tesla", "BYD", "Rivian"].forEach((co) => {
     const ys = yrs.filter((y) => row(co, y)?.revenue_growth != null), vols = ys.filter((y) => row(co, y).volume_growth != null);
     draw(`c-sk-${co.toLowerCase()}`, [
       { x: ys.map(String), y: ys.map((y) => row(co, y).stock_return), type: "bar", name: "Share price", marker: { color: col(co) }, hovertemplate: "%{y:.0%}" },

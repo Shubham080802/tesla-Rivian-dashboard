@@ -1,4 +1,4 @@
-"""Stock performance vs the business: calendar-year price returns for Tesla (TSLA) and BYD (1211.HK, H shares), set against
+"""Stock performance vs the business: calendar-year price returns for Tesla (TSLA), BYD (1211.HK, H shares) and Rivian (RIVN), set against
 revenue and volume growth -> web/stocks.json (additive).
 
 DATA TERMS, PLEASE READ: no free monthly price source clearly allows republishing prices. Monthly closes are fetched from Yahoo
@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 EV = ROOT / "data" / "external" / "ev"
 LOCAL = EV / "stock_monthly_local.csv"             # git-ignored raw closes
 DERIVED = EV / "stock_derived.json"                 # committed: only percentage figures
-SYMS = {"Tesla": "TSLA", "BYD": "1211.HK"}
+SYMS = {"Tesla": "TSLA", "BYD": "1211.HK", "Rivian": "RIVN"}
 
 
 def fetch():
@@ -63,7 +63,7 @@ def main():
         print("Yahoo fetch failed, using the committed derived file:", e)
         derived = json.loads(DERIVED.read_text())
     ev = json.loads((ROOT / "web" / "ev.json").read_text()); vs = json.loads((ROOT / "web" / "versus.json").read_text())
-    Y = vs["fin"]["years"]; rev_t, rev_b = vs["fin"]["tesla"]["revenue"], vs["fin"]["byd_rmb"]["revenue"]
+    Y = vs["fin"]["years"]; rev_t, rev_b, rev_r = vs["fin"]["tesla"]["revenue"], vs["fin"]["byd_rmb"]["revenue"], vs["fin"]["rivian"]["revenue"]
     ann_t = {}
     for q in ev["tesla"]["quarters"]:
         ann_t.setdefault(int(q["q"][:4]), []).append(q["deliveries"])
@@ -72,14 +72,18 @@ def main():
     for m in ev["byd"]["months"]:
         ann_b.setdefault(int(m["m"][:4]), []).append(m["total"])
     ann_b = {y: sum(v) for y, v in ann_b.items() if len(v) == 12}
-    g = lambda d, y: (d[y] / d[y - 1] - 1) if y in d and y - 1 in d else None
+    ann_r = {}
+    for q in ev["rivian"]["quarters"]:
+        ann_r.setdefault(int(q["q"][:4]), []).append(q["deliveries"])
+    ann_r = {y: sum(v) for y, v in ann_r.items() if len(v) == 4}
+    g = lambda d, y: (d[y] / d[y - 1] - 1) if y in d and y - 1 in d and d[y - 1] else None
     rows = []
-    for co, rev, vol in (("Tesla", dict(zip(Y, rev_t)), ann_t), ("BYD", dict(zip(Y, rev_b)), ann_b)):
+    for co, rev, vol in (("Tesla", dict(zip(Y, rev_t)), ann_t), ("BYD", dict(zip(Y, rev_b)), ann_b), ("Rivian", {y: v for y, v in zip(Y, rev_r) if v}, ann_r)):
         for y in sorted(derived[co]["annual_return"], key=int):
             y = int(y)
-            rows.append({"company": co, "year": y, "stock_return": derived[co]["annual_return"][str(y)], "revenue_growth": None if g(rev, y) is None else round(g(rev, y), 4), "volume_growth": None if g(vol, y) is None else round(g(vol, y), 4)})
+            rows.append({"company": co, "year": y, "stock_return": derived[co]["annual_return"][str(y)], "revenue_growth": None if g(rev, y) is None or rev.get(y - 1, 0) < 100 else round(g(rev, y), 4), "volume_growth": None if g(vol, y) is None else round(g(vol, y), 4)})
     out = {"meta": {"built": dt.date.today().isoformat(), "through": derived["Tesla"]["ytd_through"],
-                    "notes": {"terms": "Prices come from Yahoo Finance, which limits its data to personal use, so only derived percentage figures are published here: calendar-year price changes, year-to-date change and annualised volatility. Split-adjusted closes in each share's own currency (TSLA in USD, BYD H-shares in HKD), without dividends.",
+                    "notes": {"terms": "Prices come from Yahoo Finance, which limits its data to personal use, so only derived percentage figures are published here: calendar-year price changes, year-to-date change and annualised volatility. Split-adjusted closes in each share's own currency (TSLA and RIVN in USD, BYD H-shares in HKD), without dividends.",
                               "reading": "Five or six yearly points cannot show that stock returns follow revenue or volume; they show whether the market was ahead of or behind the business in each year."}},
            "companies": {co: {k: derived[co][k] for k in ("symbol", "ytd_return", "ytd_through", "volatility_36m")} for co in SYMS}, "years": rows}
     path = ROOT / "web" / "stocks.json"

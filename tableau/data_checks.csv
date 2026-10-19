@@ -16,6 +16,11 @@ BYD sales forecast is ordered and non-negative,pass,"12 periods, backtest error 
 BYD sales 80% range held up in backtests,pass,coverage 78% (target 80%)
 BYD overseas forecast is ordered and non-negative,pass,"12 periods, backtest error 28%"
 BYD overseas 80% range held up in backtests,pass,coverage 78% (target 80%)
+Rivian volumes match its reported annual totals,pass,"deliveries 20,332 / 50,122 / 51,579 / 42,247 and production 24,337 / 57,232 / 49,476 / 42,284 for 2022-2025"
+Rivian quarters are consecutive and recent,pass,"19 quarters, latest 2026-07"
+Rivian 2024 revenue matches the filing,pass,"$4,970 million"
+Rivian deliveries forecast is ordered and non-negative,pass,"6 periods, backtest error 22%"
+Rivian revenue forecast is ordered and non-negative,pass,"6 periods, backtest error 20%"
 Annual financials cover consecutive years to last year,pass,2020 to 2025
 Tesla 2023 revenue matches the filing,pass,$96.77B
 BYD revenue converts back to the reported RMB,pass,USD x rate equals the report within 0.1%
@@ -33,8 +38,9 @@ Europe months equal the figures read from ACEA's press releases,pass,"14 release
 Europe monthly sums stay within 2% of ACEA's year-to-date totals,pass,revisions to earlier months explain the small difference (BYD about 1.5%)
 Europe data is current,pass,latest 2026-08 (ACEA publishes about three weeks after month end; see docs/TODO.md)
 stocks.json has no missing or infinite numbers,pass,all values are finite
+Rivian yearly share price changes match the published record,pass,"2022 -82%, 2023 +27% (price only)"
 Tesla yearly share price changes match the published record,pass,"2020 +743%, 2021 +50%, 2022 -65%, 2023 +102%, 2024 +63% (split-adjusted, price only)"
 BYD revenue growth in the stock table matches the annual reports,pass,"2022 +96.2%, 2025 +3.5%"
 Share price data is current,pass,through 2026-09 (refreshed by hand; not part of the daily job)
 No raw prices are published,pass,only percentage figures appear in stocks.json
-The Tableau export gives the same chance of growth as the dashboard,pass,4 series compared
+The Tableau export gives the same chance of growth as the dashboard,pass,6 series compared

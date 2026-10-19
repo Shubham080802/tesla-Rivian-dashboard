@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 EV = ROOT / "data" / "external" / "ev"
 UA = {"User-Agent": "tesla-byd-dashboard personal-research-project"}
 WIKI = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/{}/monthly/2015070100/{}"
-GROUPS = {"tesla": ["Tesla,_Inc.", "Tesla_Motors"], "byd": ["BYD_Company", "BYD_Auto"]}
+GROUPS = {"tesla": ["Tesla,_Inc.", "Tesla_Motors"], "byd": ["BYD_Company", "BYD_Auto"], "rivian": ["Rivian"]}
 
 
 def get(url, tries=3):
@@ -70,10 +70,11 @@ def fx():
     return pd.read_csv(path, index_col=0).cny_per_usd
 
 
-def chargers():
-    path = EV / "tesla_chargers_by_year.csv"
+def chargers(network="Tesla", name="tesla"):
+    """Public stations of one charging network that are open today, counted by opening year."""
+    path = EV / f"{name}_chargers_by_year.csv"
     try:
-        q = urllib.parse.urlencode({"fuel_type": "ELEC", "ev_network": "Tesla", "access": "public", "status": "E", "limit": "all", "api_key": "DEMO_KEY"})
+        q = urllib.parse.urlencode({"fuel_type": "ELEC", "ev_network": network, "access": "public", "status": "E", "limit": "all", "api_key": "DEMO_KEY"})
         st = json.loads(get("https://developer.nlr.gov/api/alt-fuel-stations/v1.json?" + q))["fuel_stations"]
         yr = defaultdict(lambda: [0, 0])
         for s in st:
@@ -83,18 +84,24 @@ def chargers():
             w = csv.writer(f); w.writerow(["year", "stations", "fast_ports"])
             for y in sorted(yr):
                 w.writerow([y, *yr[y]])
-        print("Tesla chargers:", len(st), "stations, latest open date", max(s["open_date"] for s in st if s.get("open_date")))
+        print(f"{network} chargers:", len(st), "stations, latest open date", max(s["open_date"] for s in st if s.get("open_date")))
     except Exception as e:
-        print("Charger fetch failed, using cache:", e)
+        print(f"Charger fetch failed for {network}, using cache:", e)
     return pd.read_csv(path)
+
+
+def annual(name):
+    """Calendar-year sums of a company's quarterly SEC figures, complete years only."""
+    fin = pd.read_csv(EV / f"{name}_quarterly_financials.csv", index_col=0)
+    fin["year"] = fin.index.str[:4].astype(int)
+    full = fin.groupby("year").filter(lambda g: len(g) == 4 and g.revenue.notna().all())
+    return full.groupby("year")[["revenue", "gross_profit", "operating_income", "net_income"]].sum()
 
 
 def main():
     pv, fxr, ch = pageviews(), fx(), chargers()
-    fin = pd.read_csv(EV / "tesla_quarterly_financials.csv", index_col=0)
-    fin["year"] = fin.index.str[:4].astype(int)
-    full = fin.groupby("year").filter(lambda g: len(g) == 4 and g.revenue.notna().all())
-    ty = full.groupby("year")[["revenue", "gross_profit", "operating_income", "net_income"]].sum()
+    rch = chargers("RIVIAN_ADVENTURE", "rivian")
+    ty, ry = annual("tesla"), annual("rivian")
     by = pd.read_csv(EV / "byd_annual_financials.csv").set_index("year")
     rate = fxr.reindex(by.index)
     if rate.isna().any():
@@ -112,9 +119,11 @@ def main():
         "fin": {"years": [int(y) for y in years],
                 "tesla": {k: [rnd(ty.loc[y, k]) for y in years] for k in ty.columns},
                 "byd_usd": {k: [rnd(byd_usd.loc[y, k]) for y in years] for k in byd_usd.columns},
+                "rivian": {k: [rnd(ry.loc[y, k]) if y in ry.index else None for y in years] for k in ry.columns},
                 "byd_rmb": {"revenue": [rnd(by.loc[y, "revenue_rmb_m"]) for y in years], "net_income": [rnd(by.loc[y, "net_profit_rmb_m"]) for y in years]},
                 "cny_per_usd": [round(float(rate[y]), 3) for y in years]},
         "chargers": {"years": ch.year.astype(int).tolist(), "stations": ch.stations.astype(int).tolist(), "fast_ports": ch.fast_ports.astype(int).tolist()},
+        "chargers_rivian": {"years": rch.year.astype(int).tolist(), "stations": rch.stations.astype(int).tolist(), "fast_ports": rch.fast_ports.astype(int).tolist()},
     }
     path = ROOT / "web" / "versus.json"
     path.write_text(json.dumps(out, separators=(",", ":"), allow_nan=False))

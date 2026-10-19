@@ -8,6 +8,7 @@ function renderQuality() {
   const rows = [
     ["Tesla deliveries and production", "Tesla 8-K releases (via datahub.io snapshot, latest quarter from the filing)", evQ(T.at(-1).q), monthsAgo(T.at(-1).q, 2)],
     ["Tesla financials", "SEC EDGAR 10-Q and 10-K", evQ(fin.q), monthsAgo(fin.q, 2)],
+    ["Rivian deliveries and production", "Rivian 8-K releases", evQ(EV.rivian.quarters.at(-1).q), monthsAgo(EV.rivian.quarters.at(-1).q, 2)],
     ["BYD monthly sales", "BYD announcements to HKEX, tabulated by CnEVPost", fmt.month(B.at(-1).m), monthsAgo(B.at(-1).m)],
     ["BYD annual financials", "BYD annual reports (HKEXnews)", String(VS.fin.years.at(-1)), monthsAgo(VS.fin.years.at(-1) + "-12")],
     ["Wikipedia attention", "Wikimedia page views API", fmt.month(VS.meta.pageviews_latest), monthsAgo(VS.meta.pageviews_latest)],

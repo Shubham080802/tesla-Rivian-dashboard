@@ -44,6 +44,8 @@ B = pd.DataFrame(ev["byd"]["months"])
 save("volumes_monthly.csv", pd.concat([B.assign(company="BYD", metric=m_, value=B[k], month=B.m + "-01")[["company", "month", "metric", "value"]].dropna() for m_, k in (("NEV sales", "total"), ("Passenger NEV sales", "passenger"), ("Overseas sales", "overseas"))]))
 T = pd.DataFrame(ev["tesla"]["quarters"])
 vol = pd.concat([T.assign(company="Tesla", metric=m_, value=T[k], quarter_start=T.q.map(qd))[["company", "quarter_start", "metric", "value"]].dropna() for m_, k in (("Deliveries", "deliveries"), ("Production", "production"), ("Model 3/Y deliveries", "model_3y"))])
+RVq = pd.DataFrame(ev["rivian"]["quarters"])
+vol = pd.concat([vol] + [RVq.assign(company="Rivian", metric=m_, value=RVq[k], quarter_start=RVq.q.map(qd))[["company", "quarter_start", "metric", "value"]] for m_, k in (("Deliveries", "deliveries"), ("Production", "production"))])
 save("volumes_quarterly.csv", vol)
 fin_cols = {"revenue": "Revenue", "gross_profit": "Gross profit", "operating_income": "Operating income", "net_income": "Net income", "operating_cash_flow": "Operating cash flow", "capex": "Capital spending"}
 save("tesla_financials_quarterly.csv", pd.concat([T.assign(company="Tesla", metric=lab, value_usd_m=T[k], quarter_start=T.q.map(qd))[["company", "quarter_start", "metric", "value_usd_m"]].dropna() for k, lab in fin_cols.items() if k in T]))
@@ -54,18 +56,21 @@ for k, lab in (("revenue", "Revenue"), ("gross_profit", "Gross profit"), ("net_i
     for i, y in enumerate(Y):
         rows.append({"company": "Tesla", "year": y, "metric": lab, "value_usd_m": F["tesla"][k][i], "value_local_m": F["tesla"][k][i], "currency": "USD", "cny_per_usd": None})
         rows.append({"company": "BYD", "year": y, "metric": lab, "value_usd_m": F["byd_usd"][k][i], "value_local_m": (F["byd_rmb"].get(k) or [None] * len(Y))[i], "currency": "RMB", "cny_per_usd": F["cny_per_usd"][i]})
+        if F.get("rivian") and F["rivian"][k][i] is not None:
+            rows.append({"company": "Rivian", "year": y, "metric": lab, "value_usd_m": F["rivian"][k][i], "value_local_m": F["rivian"][k][i], "currency": "USD", "cny_per_usd": None})
 ann = pd.DataFrame(rows)
 bydfull = pd.read_csv(ROOT / "data" / "external" / "ev" / "byd_annual_financials.csv").set_index("year")
 m = (ann.company == "BYD") & (ann.metric == "Gross profit"); ann.loc[m, "value_local_m"] = ann.loc[m, "year"].map(bydfull.gross_profit_rmb_m)
 save("annual_financials.csv", ann)
 
 # attention and charging
-save("attention_monthly.csv", pd.concat([pd.DataFrame({"company": co.title() if co == "tesla" else "BYD", "month": [x + "-01" for x in v["months"]], "wikipedia_views": v["views"]}) for co, v in vs["pageviews"].items()]))
+save("attention_monthly.csv", pd.concat([pd.DataFrame({"company": {"tesla": "Tesla", "byd": "BYD", "rivian": "Rivian"}[co], "month": [x + "-01" for x in v["months"]], "wikipedia_views": v["views"]}) for co, v in vs["pageviews"].items()]))
 save("tesla_chargers_by_year.csv", pd.DataFrame({"year": vs["chargers"]["years"], "stations_opened": vs["chargers"]["stations"], "fast_ports_opened": vs["chargers"]["fast_ports"]}).assign(cumulative_stations=lambda d: d.stations_opened.cumsum()))
 
 # forecasts and outlook
 SER = [("tsl_del", "Tesla deliveries", "Tesla", ev["tesla"]["forecast_deliveries"], tuple(T.deliveries), 3), ("tsl_rev", "Tesla revenue ($M)", "Tesla", ev["tesla"]["forecast_revenue"], tuple(T.revenue.dropna()), 3),
-       ("byd_total", "BYD NEV sales", "BYD", ev["byd"]["forecast_total"], tuple(B.total), 1), ("byd_over", "BYD overseas sales", "BYD", ev["byd"]["forecast_overseas"], tuple(B.overseas), 1)]
+       ("byd_total", "BYD NEV sales", "BYD", ev["byd"]["forecast_total"], tuple(B.total), 1), ("byd_over", "BYD overseas sales", "BYD", ev["byd"]["forecast_overseas"], tuple(B.overseas.dropna()), 1),
+       ("riv_del", "Rivian deliveries", "Rivian", ev["rivian"]["forecast_deliveries"], tuple(RVq.deliveries), 3), ("riv_rev", "Rivian revenue ($M)", "Rivian", ev["rivian"]["forecast_revenue"], tuple(RVq.revenue[RVq.revenue > 0].dropna()), 3)]
 fc_rows, out_rows = [], []
 for sid, label, co, fc, hist, step in SER:
     f = fc["fc"]

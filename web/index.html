@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tesla vs BYD Dashboard</title>
+<title>Tesla vs BYD vs Rivian</title>
 <meta name="description" content="Tesla and BYD head to head: vehicle volumes, financials, popularity and forecasts, from public filings and announcements through 2026.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css">
@@ -22,7 +22,7 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg>
       </span>
       <div>
-        <h1>Tesla vs BYD</h1>
+        <h1>Tesla vs BYD vs Rivian</h1>
         <p id="subtitle">Public data through 2026</p>
       </div>
     </div>
@@ -115,6 +115,14 @@
       <article class="card"><header><h3>Home market vs overseas</h3><p>Overseas sales as reported; the rest is mostly China. Definitions of "overseas" differ between sources.</p></header><div class="plot h-lg" id="c-byd-over"></div></article>
     </div>
     <article class="card"><header><h3>Overseas sales outlook</h3><p id="bydOverSub"></p></header><div class="plot" id="c-byd-overfc"></div></article>
+    <section>
+      <h2 class="sect">Rivian</h2>
+      <div class="tiles tiles-4" id="rivTiles"></div>
+    </section>
+    <div class="grid2">
+      <article class="card"><header><h3>Rivian deliveries by quarter</h3><p id="rivSub"></p></header><div class="plot h-lg" id="c-riv-del"></div></article>
+      <article class="card"><header><h3>Rivian revenue and margin</h3><p>Quarterly, from Rivian's SEC filings. Gross margin turned positive only recently; the company is still loss-making.</p></header><div class="plot h-lg" id="c-riv-fin"></div></article>
+    </div>
     <p class="note" id="evNote"></p>
   </div>
 
@@ -136,12 +144,13 @@
   </div>
 
   <div class="panel" id="tab-stocks">
-    <article class="card"><header><h3>How have the shares done next to the business?</h3><p>Calendar-year share price changes for Tesla (TSLA) and BYD (H shares, 1211.HK) beside revenue and vehicle volume growth. Prices are split-adjusted and exclude dividends.</p></header>
-      <div class="tiles tiles-4" id="skTiles"></div></article>
+    <article class="card"><header><h3>How have the shares done next to the business?</h3><p>Calendar-year share price changes for Tesla (TSLA), BYD (H shares, 1211.HK) and Rivian (RIVN) beside revenue and vehicle volume growth. Prices are split-adjusted and exclude dividends.</p></header>
+      <div class="tiles tiles-3" id="skTiles"></div></article>
     <article class="card"><header><h3>Share price change by year</h3><p>Each company's price at year end vs the year before, in its own currency.</p></header><div class="plot h-lg" id="c-sk-ret"></div></article>
     <div class="grid2">
       <article class="card"><header><h3>Tesla: market vs business</h3><p>Price change, revenue growth and deliveries growth.</p></header><div class="plot h-lg" id="c-sk-tesla"></div></article>
       <article class="card"><header><h3>BYD: market vs business</h3><p>Price change, revenue growth and NEV sales growth (volumes from 2023).</p></header><div class="plot h-lg" id="c-sk-byd"></div></article>
+      <article class="card"><header><h3>Rivian: market vs business</h3><p>Price change, revenue growth and deliveries growth (listed since November 2021).</p></header><div class="plot h-lg" id="c-sk-rivian"></div></article>
     </div>
     <article class="card"><header><h3>Was the market ahead of or behind the business?</h3></header><div class="tablewrap"><table id="skTable"></table></div></article>
     <p class="note" id="skNote"></p>
@@ -163,6 +172,7 @@
       <div class="seg" id="labSeg" role="radiogroup" aria-label="Series">
         <button type="button" role="radio" data-id="tsl_del">Tesla deliveries</button><button type="button" role="radio" data-id="tsl_rev">Tesla revenue</button>
         <button type="button" role="radio" data-id="byd_total" class="on">BYD NEV sales</button><button type="button" role="radio" data-id="byd_over">BYD overseas</button>
+        <button type="button" role="radio" data-id="riv_del">Rivian deliveries</button><button type="button" role="radio" data-id="riv_rev">Rivian revenue</button>
       </div>
       <div class="tiles tiles-4" id="labTiles"></div>
     </section>
@@ -227,6 +237,7 @@
 <script src="core.js"></script>
 <script src="app.js"></script>
 <script src="ev.js"></script>
+<script src="rivian.js"></script>
 <script src="versus.js"></script>
 <script src="regions.js"></script>
 <script src="stocks.js"></script>

@@ -1,6 +1,6 @@
-# Tesla vs BYD Dashboard
+# Tesla vs BYD vs Rivian Dashboard
 
-A head-to-head dashboard for Tesla and BYD built only from public filings, announcements and open data through 2026: vehicle volumes with backtested forecasts, annual financials in a common currency, English Wikipedia attention, Tesla's U.S. charging build-out, and U.S. demand drivers. It began as an Amazon Appliances review analysis; that project lives in its own repository.
+A head-to-head dashboard for Tesla, BYD and Rivian built only from public filings, announcements and open data through 2026: vehicle volumes with backtested forecasts, annual financials in a common currency, English Wikipedia attention, Tesla's U.S. charging build-out, and U.S. demand drivers. It began as an Amazon Appliances review analysis; that project lives in its own repository.
 
 **Live site:** https://tesla-byd-dashboard.vercel.app. **Tableau Public:** [Tesla vs BYD](https://public.tableau.com/app/profile/shubham.kumar6508/viz/TeslavsBYD_17923592165710/TeslavsBYDheadtohead) (9 sheets, 3 dashboards, built from the CSVs in `tableau/`; see [docs/TABLEAU.md](docs/TABLEAU.md)).
 
@@ -19,6 +19,7 @@ A head-to-head dashboard for Tesla and BYD built only from public filings, annou
 | Source | Covers | Latest |
 |---|---|---|
 | [Tesla 8-K releases](https://datahub.io/datapressr/tesla-quarterly-deliveries) and [SEC EDGAR](https://www.sec.gov/edgar/browse/?CIK=1318605) | deliveries, production, financials | Q3 2026 deliveries, Q2 2026 financials |
+| [Rivian 8-K releases](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1874178&type=8-K) and [SEC EDGAR](https://www.sec.gov/edgar/browse/?CIK=1874178) | Rivian deliveries, production, financials | Q3 2026 deliveries, Q2 2026 financials |
 | [BYD announcements](https://cnevpost.com/2026/10/01/byd-sept-2026-sales/) (HKEX) | NEV sales by month from Jan 2022 (passenger and overseas split from Jan 2023) | Sep 2026 |
 | [BYD annual reports](https://www.hkexnews.hk/) | revenue, gross profit, net profit | 2025 |
 | [CPCA](https://cnevpost.com/2026/08/12/tesla-jul-china-deliveries-shanghai-exports/) (via CnEVPost) and [ACEA press releases](https://www.acea.auto/files/Press_release_car_registrations_August_2026.pdf) | Tesla China domestic and exports; Europe registrations (EU, EFTA, UK) | Sep 2026 / Aug 2026 |

@@ -3,35 +3,50 @@ Tesla,2020,Revenue,31536.0,31536.0,USD,
 BYD,2020,Revenue,22681.5,156597.7,RMB,6.904
 Tesla,2021,Revenue,53823.0,53823.0,USD,
 BYD,2021,Revenue,33506.3,216142.4,RMB,6.451
+Rivian,2021,Revenue,55.0,55.0,USD,
 Tesla,2022,Revenue,81462.0,81462.0,USD,
 BYD,2022,Revenue,63019.9,424060.6,RMB,6.729
+Rivian,2022,Revenue,1658.0,1658.0,USD,
 Tesla,2023,Revenue,96773.0,96773.0,USD,
 BYD,2023,Revenue,85062.0,602315.4,RMB,7.081
+Rivian,2023,Revenue,4434.0,4434.0,USD,
 Tesla,2024,Revenue,97690.0,97690.0,USD,
 BYD,2024,Revenue,107995.4,777102.5,RMB,7.196
+Rivian,2024,Revenue,4970.0,4970.0,USD,
 Tesla,2025,Revenue,94827.0,94827.0,USD,
 BYD,2025,Revenue,111856.0,803965.0,RMB,7.188
+Rivian,2025,Revenue,5387.0,5387.0,USD,
 Tesla,2020,Gross profit,6630.0,6630.0,USD,
 BYD,2020,Gross profit,4277.6,29533.505,RMB,6.904
 Tesla,2021,Gross profit,13606.0,13606.0,USD,
 BYD,2021,Gross profit,4172.5,26916.097,RMB,6.451
+Rivian,2021,Gross profit,-465.0,-465.0,USD,
 Tesla,2022,Gross profit,20853.0,20853.0,USD,
 BYD,2022,Gross profit,9768.3,65731.123,RMB,6.729
+Rivian,2022,Gross profit,-3123.0,-3123.0,USD,
 Tesla,2023,Gross profit,17660.0,17660.0,USD,
 BYD,2023,Gross profit,15805.4,111916.409,RMB,7.081
+Rivian,2023,Gross profit,-2030.0,-2030.0,USD,
 Tesla,2024,Gross profit,17450.0,17450.0,USD,
 BYD,2024,Gross profit,20992.5,151055.839,RMB,7.196
+Rivian,2024,Gross profit,-1200.0,-1200.0,USD,
 Tesla,2025,Gross profit,17094.0,17094.0,USD,
 BYD,2025,Gross profit,19848.3,142659.797,RMB,7.188
+Rivian,2025,Gross profit,144.0,144.0,USD,
 Tesla,2020,Net income,721.0,721.0,USD,
 BYD,2020,Net income,613.3,4234.3,RMB,6.904
 Tesla,2021,Net income,5644.0,5644.0,USD,
 BYD,2021,Net income,472.1,3045.2,RMB,6.451
+Rivian,2021,Net income,-4688.0,-4688.0,USD,
 Tesla,2022,Net income,12587.0,12587.0,USD,
 BYD,2022,Net income,2470.3,16622.4,RMB,6.729
+Rivian,2022,Net income,-6752.0,-6752.0,USD,
 Tesla,2023,Net income,14974.0,14974.0,USD,
 BYD,2023,Net income,4242.5,30040.8,RMB,7.081
+Rivian,2023,Net income,-5432.0,-5432.0,USD,
 Tesla,2024,Net income,7153.0,7153.0,USD,
 BYD,2024,Net income,5594.2,40254.3,RMB,7.196
+Rivian,2024,Net income,-4747.0,-4747.0,USD,
 Tesla,2025,Net income,3855.0,3855.0,USD,
 BYD,2025,Net income,4538.3,32619.0,RMB,7.188
+Rivian,2025,Net income,-3646.0,-3646.0,USD,

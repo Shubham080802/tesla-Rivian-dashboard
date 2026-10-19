@@ -1,4 +1,4 @@
-"""Tesla and BYD: reported volumes, Tesla's SEC financials, and forecasts, written to web/ev.json (additive).
+"""Tesla, BYD and Rivian: reported volumes, Tesla's SEC financials, and forecasts, written to web/ev.json (additive).
 
 Sources (all public):
   * Tesla deliveries/production by quarter: Tesla's own 8-K Exhibit 99.1 releases, via the datahub.io
@@ -38,23 +38,37 @@ TAGS = {
 qkey = lambda end: f"{end[:4]}-{int(end[5:7]) - 2:02d}"        # quarter label = first month, as elsewhere in the project
 
 
-def tesla_financials():
-    path = EV / "tesla_quarterly_financials.csv"
+def sec_financials(cik, name):
+    """Quarterly SEC figures ($ millions) for one company, cached as data/external/ev/<name>_quarterly_financials.csv."""
+    path = EV / f"{name}_quarterly_financials.csv"
     try:
-        facts = json.loads(bm.get(TSLA_URL, {"User-Agent": bm.SEC_UA}))["facts"]["us-gaap"]
+        url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json"
+        facts = json.loads(bm.get(url, {"User-Agent": bm.SEC_UA}))["facts"]["us-gaap"]
         table, derived = {}, {}
-        for name, tags in TAGS.items():
+        for col, tags in TAGS.items():
             vals, how = bm.quarterly_from_facts(facts, tags)
             for end, v in vals.items():
-                table.setdefault(qkey(end), {})[name] = v / 1e6
+                table.setdefault(qkey(end), {})[col] = v / 1e6
                 if how[end] != "reported":
-                    derived.setdefault(qkey(end), {})[name] = how[end]
+                    derived.setdefault(qkey(end), {})[col] = how[end]
         df = pd.DataFrame(table).T.sort_index(); df.index.name = "quarter"
-        df.to_csv(path); (EV / "tesla_quarterly_derived.json").write_text(json.dumps(derived, indent=1, sort_keys=True))
-        print("SEC (Tesla):", len(df), "quarters, latest", df.index[-1])
+        df.to_csv(path); (EV / f"{name}_quarterly_derived.json").write_text(json.dumps(derived, indent=1, sort_keys=True))
+        print(f"SEC ({name}):", len(df), "quarters, latest", df.index[-1])
     except Exception as e:
-        print("SEC fetch failed, using cache:", e)
+        print(f"SEC fetch failed for {name}, using cache:", e)
     return pd.read_csv(path, index_col=0)
+
+
+def tesla_financials():
+    return sec_financials(1318605, "tesla")
+
+
+def contiguous(series):
+    """The latest unbroken run of quarters (forecasts need evenly spaced history)."""
+    s = series.dropna()
+    qi = [int(q[:4]) * 4 + (int(q[5:7]) - 1) // 3 for q in s.index]
+    start = max([k for k in range(1, len(qi)) if qi[k] - qi[k - 1] != 1] + [0])
+    return s.iloc[start:]
 
 
 def tesla_volumes():
@@ -91,11 +105,21 @@ def main():
         tq.append(row)
     fin_extra = [{"q": q, **{k: nn(v) for k, v in r.items()}} for q, r in fin.iterrows() if q > last_q]   # SEC may be ahead of the delivery release
     # Tesla revenue: quarterly forecast on the SEC series (contiguous quarters only)
-    fr = fin["revenue"].dropna()
-    qi = [int(q[:4]) * 4 + (int(q[5:7]) - 1) // 3 for q in fr.index]
-    start = max([k for k in range(1, len(qi)) if qi[k] - qi[k - 1] != 1] + [0])
-    fr = fr.iloc[start:]
+    fr = contiguous(fin["revenue"])
     fc_r = forecast_series(fr.to_numpy(float), fr.index[-1], season=4, step=3, horizon=6, origins=(8, 6, 4), min_history=16, monitor=True, monitor_n=8)
+    # Rivian: quarterly volumes from its 8-K releases, financials from SEC (CIK 1874178)
+    rv = pd.read_csv(EV / "rivian_quarterly.csv", parse_dates=["quarter_start"])
+    rv["q"] = rv.quarter_start.dt.strftime("%Y-%m"); rv = rv.set_index("q")
+    rfin = sec_financials(1874178, "rivian")
+    fc_rv = forecast_series(rv.deliveries.to_numpy(float), rv.index[-1], season=4, step=3, horizon=6, origins=(8, 6, 4), min_history=16, monitor=True, monitor_n=8)
+    rfr = contiguous(rfin["revenue"][rfin["revenue"] > 0])
+    fc_rvr = forecast_series(rfr.to_numpy(float), rfr.index[-1], season=4, step=3, horizon=6, origins=(8, 6, 4), min_history=12, monitor=True, monitor_n=8)
+    rq = []
+    for q, r in rv.iterrows():
+        row = {"q": q, "deliveries": int(r.deliveries), "production": int(r.production)}
+        if q in rfin.index:
+            row.update({k: nn(rfin.loc[q, k]) for k in rfin.columns})
+        rq.append(row)
     # BYD: monthly NEV sales forecast (season 12)
     b = pd.read_csv(EV / "byd_monthly_sales.csv").set_index("month")
     assert (b.passenger_nev.fillna(0) <= b.total_nev).all() and (b.overseas.fillna(0) <= b.total_nev).all() and b.index.is_monotonic_increasing
@@ -103,7 +127,7 @@ def main():
     fc_b = forecast_series(b.total_nev.to_numpy(float), last_m, season=12, step=1, horizon=12, origins=(12, 9, 6), min_history=36, monitor=True, monitor_n=12)
     fc_o = forecast_series(b.overseas.dropna().to_numpy(float), last_m, season=12, step=1, horizon=12, origins=(12, 9, 6), min_history=36, monitor=True, monitor_n=12)
     out = {
-        "meta": {"built": dt.date.today().isoformat(), "tesla_latest_quarter": last_q, "byd_latest_month": last_m,
+        "meta": {"built": dt.date.today().isoformat(), "tesla_latest_quarter": last_q, "byd_latest_month": last_m, "rivian_latest_quarter": rv.index[-1],
                  "tesla_sources": {"deliveries": "https://datahub.io/datapressr/tesla-quarterly-deliveries", "q3_2026": "Tesla 8-K filed 2026-10-02, Exhibit 99.1", "sec": "https://www.sec.gov/edgar/browse/?CIK=1318605"},
                  "byd_sources": {"monthly": "https://cnevpost.com/2026/10/01/byd-sept-2026-sales/", "filings": "https://www.hkexnews.hk/"},
                  "notes": {"byd": "BYD's monthly figures are unaudited, reported in HKEX announcements, and may be adjusted. Overseas definitions differ between sources.",
@@ -111,11 +135,14 @@ def main():
         "tesla": {"quarters": tq, "forecast_deliveries": fc_t, "forecast_revenue": fc_r, "revenue_latest_quarter": fr.index[-1], "financials_ahead": fin_extra},
         "byd": {"months": [{"m": m_, "total": int(r.total_nev), "passenger": None if pd.isna(r.passenger_nev) else int(r.passenger_nev), "overseas": None if pd.isna(r.overseas) else int(r.overseas)} for m_, r in b.iterrows()],
                 "forecast_total": fc_b, "forecast_overseas": fc_o},
+        "rivian": {"quarters": rq, "forecast_deliveries": fc_rv, "forecast_revenue": fc_rvr, "revenue_latest_quarter": rfr.index[-1],
+                   "sources": {"deliveries": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1874178&type=8-K", "sec": "https://www.sec.gov/edgar/browse/?CIK=1874178"},
+                   "note": "Rivian reports production and deliveries each quarter in an 8-K; financials come from its SEC filings. It does not break deliveries out by model."},
     }
     path = ROOT / "web" / "ev.json"
     path.write_text(json.dumps(out, separators=(",", ":"), allow_nan=False))
     print(f"wrote {path} ({path.stat().st_size / 1024:.0f} KB)")
-    for name, fc in (("Tesla deliveries", fc_t), ("Tesla revenue ($M)", fc_r), ("BYD total", fc_b), ("BYD overseas", fc_o)):
+    for name, fc in (("Tesla deliveries", fc_t), ("Tesla revenue ($M)", fc_r), ("BYD total", fc_b), ("BYD overseas", fc_o), ("Rivian deliveries", fc_rv), ("Rivian revenue ($M)", fc_rvr)):
         print(name, "->", fc["model"], "wMAPE", fc["wmape"], "| next:", round(fc["fc"]["mean"][0]), f"({round(fc['fc']['p10'][0])}-{round(fc['fc']['p90'][0])})")
 
 

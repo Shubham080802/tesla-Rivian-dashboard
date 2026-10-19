@@ -52,6 +52,17 @@ for name, fc in (("Tesla deliveries", ev["tesla"]["forecast_deliveries"]), ("Tes
     check(f"{name} forecast is ordered and non-negative", all(0 <= lo <= m <= hi for lo, m, hi in zip(f["p10"], f["mean"], f["p90"])) and all(a <= b for q in fc["cumq"] for a, b in zip(q, q[1:])), f"{len(f['mean'])} periods, backtest error {fc['wmape']:.0%}")
     check(f"{name} 80% range held up in backtests", 0.6 <= fc["coverage80"] <= 0.97, f"coverage {fc['coverage80']:.0%} (target 80%)", warn=True)
 
+RV = ev["rivian"]["quarters"]
+rsum = lambda y, k: sum(r[k] for r in RV if r["q"].startswith(y))
+check("Rivian volumes match its reported annual totals",
+      [rsum(y, "deliveries") for y in ("2022", "2023", "2024", "2025")] == [20332, 50122, 51579, 42247] and [rsum(y, "production") for y in ("2022", "2023", "2024", "2025")] == [24337, 57232, 49476, 42284],
+      "deliveries 20,332 / 50,122 / 51,579 / 42,247 and production 24,337 / 57,232 / 49,476 / 42,284 for 2022-2025")
+check("Rivian quarters are consecutive and recent", months_old(RV[-1]["q"]) <= 6 and all((int(b["q"][:4]) * 12 + int(b["q"][5:7])) - (int(a["q"][:4]) * 12 + int(a["q"][5:7])) == 3 for a, b in zip(RV, RV[1:])), f"{len(RV)} quarters, latest {RV[-1]['q']}")
+check("Rivian 2024 revenue matches the filing", abs(sum(r["revenue"] for r in RV if r["q"].startswith("2024")) - 4970) < 2, "$4,970 million")
+for name, fc in (("Rivian deliveries", ev["rivian"]["forecast_deliveries"]), ("Rivian revenue", ev["rivian"]["forecast_revenue"])):
+    f = fc["fc"]
+    check(f"{name} forecast is ordered and non-negative", all(0 <= lo <= m <= hi for lo, m, hi in zip(f["p10"], f["mean"], f["p90"])), f"{len(f['mean'])} periods, backtest error {fc['wmape']:.0%}")
+
 fin = vs["fin"]; yrs = fin["years"]; i23 = yrs.index(2023)
 check("Annual financials cover consecutive years to last year", yrs == list(range(yrs[0], yrs[-1] + 1)) and yrs[-1] >= date.today().year - 2, f"{yrs[0]} to {yrs[-1]}")
 check("Tesla 2023 revenue matches the filing", abs(fin["tesla"]["revenue"][i23] - 96773) < 5, f"${fin['tesla']['revenue'][i23] / 1e3:.2f}B")
@@ -96,12 +107,14 @@ if sk_path.exists():
     sk = json.loads(sk_path.read_text())
     check("stocks.json has no missing or infinite numbers", finite(sk), "all values are finite")
     t = {r["year"]: r["stock_return"] for r in sk["years"] if r["company"] == "Tesla"}
+    rv_ = {r["year"]: r["stock_return"] for r in sk["years"] if r["company"] == "Rivian"}
+    check("Rivian yearly share price changes match the published record", abs(rv_[2022] + 0.822) < 0.01 and abs(rv_[2023] - 0.273) < 0.01, "2022 -82%, 2023 +27% (price only)")
     check("Tesla yearly share price changes match the published record", abs(t[2020] - 7.434) < 0.01 and abs(t[2021] - 0.498) < 0.01 and abs(t[2022] + 0.650) < 0.01 and abs(t[2023] - 1.017) < 0.01 and abs(t[2024] - 0.625) < 0.01,
           "2020 +743%, 2021 +50%, 2022 -65%, 2023 +102%, 2024 +63% (split-adjusted, price only)")
     byd = {r["year"]: r["revenue_growth"] for r in sk["years"] if r["company"] == "BYD"}
     check("BYD revenue growth in the stock table matches the annual reports", abs(byd[2022] - (424060.635 / 216142.395 - 1)) < 0.001 and abs(byd[2025] - (803964.958 / 777102.455 - 1)) < 0.001, "2022 +96.2%, 2025 +3.5%")
     check("Share price data is current", months_old(sk["meta"]["through"]) <= 3, f"through {sk['meta']['through']} (refreshed by hand; not part of the daily job)", warn=True)
-    check("No raw prices are published", all(set(r) <= {"company", "year", "stock_return", "revenue_growth", "volume_growth"} for r in sk["years"]) and set(sk["companies"]["Tesla"]) <= {"symbol", "ytd_return", "ytd_through", "volatility_36m"}, "only percentage figures appear in stocks.json")
+    check("No raw prices are published", all(set(r) <= {"company", "year", "stock_return", "revenue_growth", "volume_growth"} for r in sk["years"]) and all(set(v) <= {"symbol", "ytd_return", "ytd_through", "volatility_36m"} for v in sk["companies"].values()), "only percentage figures appear in stocks.json")
 
 # the Tableau export must agree with the dashboard's own rule
 import subprocess

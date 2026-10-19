@@ -103,4 +103,5 @@ function renderEv() {
   $("bydOverSub").textContent = `Overseas sales are growing fast and unevenly, so this model is the least reliable here (backtest error ${fmt.pct(fo.wmape, 0)}). Read the range, not the line.`;
 
   $("evNote").innerHTML = `${EV.meta.notes.byd} ${EV.meta.notes.tesla} Sources: <a href="${EV.meta.tesla_sources.deliveries}">Tesla deliveries (datahub, from Tesla's 8-Ks)</a>, <a href="${EV.meta.tesla_sources.sec}">SEC EDGAR</a>, <a href="${EV.meta.byd_sources.monthly}">BYD monthly sales (CnEVPost, from HKEX announcements)</a>. These companies do not publish product or customer-level open data, so there are no product, rating or lifecycle views here.`;
+  if (typeof renderRivian === "function") renderRivian();
 }

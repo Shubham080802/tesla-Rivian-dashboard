@@ -6,6 +6,8 @@
 * **Attention:** English Wikipedia monthly page views (Tesla = "Tesla, Inc." plus "Tesla Motors"; BYD = "BYD Company" plus "BYD Auto"), complete months only.
 * **Charging:** public Tesla-network stations open today, by opening year, from the U.S. federal station locator, so closed stations are missing and older years are understated.
 
+* **Rivian:** production and deliveries by quarter from its 8-K releases (Q1 2022 onward; every year's quarters sum exactly to the reported annual totals, and Q3 2026 was read from the 2 October 2026 8-K). Financials from SEC EDGAR, filled only by accounting identities, like Tesla. Its charging stations are the public Rivian Adventure Network sites in the U.S. federal station locator; attention is the English Wikipedia "Rivian" article; share price changes use RIVN (derived percentages only). Rivian's forecasts rest on 19 quarters, so their ranges are wide and labelled that way; revenue growth is not shown for 2022 because 2021 revenue was only $55 million.
+
 ## Forecasts (`forecast_engine.py`)
 Four exponential-smoothing candidates (level, damped trend, seasonality, trend plus seasonality) are chosen by rolling-origin backtest. Volumes are modelled on a log scale; 1,000 simulated paths use seeded bootstrap shocks; the 80% range is calibrated to its backtest coverage (scale 0.6 to 3.0). The engine also stores one-step-ahead forecasts for the last periods (the "on track" chart), a seasonal index, and 19 cumulative quantiles used for "chance of growth" and "chance of reaching a target". Tesla is quarterly (season 4), BYD monthly (season 12). The BYD overseas model has a much larger backtest error than the others and is labelled that way.
 
