@@ -294,6 +294,10 @@ def gdelt_series(co, mode, waits=(20, 60, 120, 240)):
     path = R / f"gdelt_{co}_{mode}.csv"
     if (CACHE_ONLY or os.environ.get("RESEARCH_SKIP_GDELT") == "1") and (path.exists() or os.environ.get("RESEARCH_SKIP_GDELT") == "1"):
         return pd.read_csv(path, dtype={"date": str}) if path.exists() else None
+    if path.exists():                                   # monthly charts: a series less than a week old needs no request,
+        last = pd.read_csv(path, dtype={"date": str}).date.max()   # which leaves GDELT's small allowance for missing ones
+        if pd.Timestamp(last) >= pd.Timestamp(date.today()) - pd.Timedelta(days=7):
+            return pd.read_csv(path, dtype={"date": str})
     url = "https://api.gdeltproject.org/api/v2/doc/doc?" + urllib.parse.urlencode({"query": GDELT_Q[co], "mode": mode, "format": "json", "startdatetime": "20200101000000", "enddatetime": date.today().strftime("%Y%m%d000000")})
     for w in waits:
         time.sleep(w)                                    # GDELT allows one request every few seconds and throttles busy clients
