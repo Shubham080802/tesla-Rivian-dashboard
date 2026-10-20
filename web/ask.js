@@ -21,7 +21,7 @@ const ASK_Q = [
 const ASK_OUT = [
   { re: /\b(stock|share price|shares|invest|should i (buy|sell)|trade|price target|worth buying|dividend)\b/i, why: "I can't give investment advice or stock forecasts. The Investor view shows the companies' profit, cash and dilution from their filings, which is evidence, not advice." },
   { re: /\b(review|rating|satisf|complain|reliab|quality|nps|owner)/i, why: "There is no open customer-review or satisfaction dataset for Tesla or Rivian, so the dashboard has none. The 'What data is missing?' answer lists the other gaps." },
-  { re: /\b(byd|nvidia|google|apple|ford|toyota|volkswagen|gm|nio|xpeng|lucid|waymo|amazon)\b/i, why: "This dashboard compares Tesla and Rivian only, two U.S.-listed EV makers that report to the SEC. Companies listed outside the U.S. are not covered." },
+  { re: /\b(nvidia|google|apple|ford|toyota|volkswagen|gm|nio|xpeng|lucid|waymo|amazon)\b/i, why: "This dashboard compares Tesla and Rivian only, two U.S.-listed EV makers that report to the SEC. Companies listed outside the U.S. are not covered." },
   { re: /\b(202[7-9]|20[3-9]\d)\b/, why: "Forecasts here run about a year (four to six quarters ahead). Use the Forecast lab for the horizon each series supports." },
 ];
 const askNorm = (t) => t.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();

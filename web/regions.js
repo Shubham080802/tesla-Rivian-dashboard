@@ -30,5 +30,5 @@ function renderRegions() {
   }), layout({ margin: { l: 8, r: 16, t: 28, b: 8 }, xaxis: { type: "category", categoryorder: "array", categoryarray: MN }, yaxis: { tickformat: ".2s", rangemode: "tozero" } }));
   const derived = EU.months.filter((_, i) => EU.basis[i].startsWith("derived")).map(fmt.month).join(", ");
   $("rgEuSub").textContent = `Tesla's monthly ACEA registrations, one line per year, through ${fmt.month(EU.months.at(-1))}. The darkest line is the latest year.${derived ? ` ${derived} is derived from year-to-date totals.` : ""}`;
-  $("rgNote").innerHTML = `${esc2(RG.meta.notes.china)} ${esc2(RG.meta.notes.europe)} Sources: <a href="${RG.meta.sources.cpca}">CPCA via CnEVPost</a>, <a href="${RG.meta.sources.acea}">ACEA</a> (<a href="${RG.meta.sources.europe_table}">table</a>).`;
+  $("rgNote").innerHTML = `${esc2(RG.meta.notes.china)} ${esc2(RG.meta.notes.europe)} Sources: <a href="${RG.meta.sources.cpca}">CPCA via CnEVPost</a>, <a href="${RG.meta.sources.acea}">ACEA</a> (earlier months from <a href="${RG.meta.sources.europe_table}">CnEVPost</a>'s table of ACEA data).`;
 }

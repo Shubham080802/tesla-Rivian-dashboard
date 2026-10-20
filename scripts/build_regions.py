@@ -26,7 +26,7 @@ out = {
     "meta": {"built": dt.date.today().isoformat(), "tesla_china_latest": tc.month.iloc[-1], "europe_latest": eu.month.iloc[-1],
              "notes": {"china": "Tesla's China figures are CPCA data: domestic deliveries plus exports from the Shanghai plant (together, wholesale).",
                        "europe": "Europe means EU, EFTA and the UK. These are Tesla registrations (cars put on the road), from ACEA, not sales or deliveries. 2026 months are as first published by ACEA, which later revises them slightly; July 2026 is derived from year-to-date totals."},
-             "sources": {"cpca": "https://cnevpost.com/2026/08/12/tesla-jul-china-deliveries-shanghai-exports/", "acea": "https://www.acea.auto/files/Press_release_car_registrations_August_2026.pdf", "europe_table": "https://cnevpost.com/2026/03/24/byd-tesla-registrations-europe-feb-2026/"}},
+             "sources": {"cpca": "https://cnevpost.com/2026/08/12/tesla-jul-china-deliveries-shanghai-exports/", "acea": "https://www.acea.auto/files/Press_release_car_registrations_August_2026.pdf", "europe_table": "https://cnevpost.com/"}},
     "tesla_china": {"months": tc.month.tolist(), "domestic": tc.domestic.astype(int).tolist(), "exports": tc.exports.astype(int).tolist()},
     "europe": {"months": eu.month.tolist(), "tesla": [nn(v) for v in eu.tesla], "basis": eu.basis.tolist()},
 }

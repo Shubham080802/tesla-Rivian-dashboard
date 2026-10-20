@@ -358,18 +358,24 @@ def census(level, state):
 
 def wa_regs():
     def fetch():
-        d = jget("https://data.wa.gov/resource/f6w7-q2d2.json?" + urllib.parse.urlencode({"$select": "_2020_census_tract as tract,county,make,count(*) as n", "$group": "tract,county,make", "$limit": 500000}))
-        return pd.DataFrame(d)
+        d = pd.DataFrame(jget("https://data.wa.gov/resource/f6w7-q2d2.json?" + urllib.parse.urlencode({"$select": "_2020_census_tract as tract,county,make,count(*) as n", "$group": "tract,county,make", "$limit": 500000})))
+        d["make"] = d.make.where(d.make.isin(["TESLA", "RIVIAN"]), "OTHER")
+        d["n"] = d.n.astype(int)
+        return d.groupby(["tract", "county", "make"], as_index=False).n.sum()
     def fetch_my():
-        d = jget("https://data.wa.gov/resource/f6w7-q2d2.json?" + urllib.parse.urlencode({"$select": "model_year,make,count(*) as n", "$group": "model_year,make", "$where": "ev_type like 'Battery%'", "$limit": 50000}))
-        return pd.DataFrame(d)
+        d = pd.DataFrame(jget("https://data.wa.gov/resource/f6w7-q2d2.json?" + urllib.parse.urlencode({"$select": "model_year,make,count(*) as n", "$group": "model_year,make", "$where": "ev_type like 'Battery%'", "$limit": 50000})))
+        d["make"] = d.make.where(d.make.isin(["TESLA", "RIVIAN"]), "OTHER")
+        d["n"] = d.n.astype(int)
+        return d.groupby(["model_year", "make"], as_index=False).n.sum()
     return cached("wa_tract_make.csv", fetch), cached("wa_model_year_make_bev.csv", fetch_my)
 
 
 def ny_regs():
     def fetch():
-        d = jget("https://data.ny.gov/resource/w4pv-hbkt.json?" + urllib.parse.urlencode({"$select": "zip,make,count(*) as n", "$where": "fuel_type='ELECTRIC' AND record_type='VEH'", "$group": "zip,make", "$limit": 500000}))
-        return pd.DataFrame(d)
+        d = pd.DataFrame(jget("https://data.ny.gov/resource/w4pv-hbkt.json?" + urllib.parse.urlencode({"$select": "zip,make,count(*) as n", "$where": "fuel_type='ELECTRIC' AND record_type='VEH'", "$group": "zip,make", "$limit": 500000})))
+        d["make"] = d.make.where(d.make.isin(["TESLA", "RIVIA", "RIVIAN"]), "OTHER")      # only Tesla, Rivian and everyone else are used
+        d["n"] = d.n.astype(int)
+        return d.groupby(["zip", "make"], as_index=False).n.sum()
     return cached("ny_zip_make.csv", fetch)
 
 
