@@ -397,8 +397,12 @@ body[data-tab="versus"] .range, body[data-tab="ev"] .range, body[data-tab="versu
 
 
 /* research tabs */
-.brief .lede { font-size: 15.5px; line-height: 1.6; color: var(--ink); max-width: 980px; margin: 4px 0 8px; }
+.tile.duo { gap: 6px; min-width: 0; }
+@media (max-width: 560px) { #ovTiles, #ovTiles2 { grid-template-columns: 1fr; } }
+.duo-r { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.duo-n { font-size: 13px; color: var(--ink2); min-width: 46px; }
+.duo-v { font-size: 22px; font-weight: 720; letter-spacing: -.02em; line-height: 1.2; margin-right: auto; }
+article.card .row-head .linkbtn { font-size: 13px; color: var(--ink2); text-decoration: none; white-space: nowrap; }
+article.card .row-head .linkbtn:hover { color: var(--ink); }
 .cite { margin: 4px 0 8px; padding-left: 22px; display: grid; gap: 6px; font-size: 13.5px; color: var(--ink2); }
 .stars { color: var(--c4); letter-spacing: 1px; white-space: nowrap; } .stars .muted, .muted { color: var(--grid); }
-#ovRQ td:last-child { white-space: nowrap; }
-@media (max-width: 700px) { #ovRQ td:last-child { white-space: normal; } }

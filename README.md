@@ -1,15 +1,15 @@
 # Tesla vs Rivian Dashboard
 
-A head-to-head dashboard for two U.S.-listed electric-vehicle makers, Tesla (TSLA) and Rivian (RIVN), built only from SEC filings, company releases and open data through 2026: vehicle volumes with backtested forecasts, quarterly and annual financials in US dollars, share price changes beside the business, Tesla's sales in China and Europe, English Wikipedia attention, both U.S. charging networks, and U.S. demand drivers. Every chart and KPI is drawn natively on the site (Plotly), from the same JSON files, and the Research brief tab turns it into findings for investors and customers with methods, limits and citations. It began as an Amazon Appliances review analysis; that project lives in its own repository.
+A head-to-head dashboard for two U.S.-listed electric-vehicle makers, Tesla (TSLA) and Rivian (RIVN), built only from SEC filings, company releases and open data through 2026: vehicle volumes with backtested forecasts, quarterly and annual financials in US dollars, share price changes beside the business, Tesla's sales in China and Europe, English Wikipedia attention, both U.S. charging networks, and U.S. demand drivers. Every chart and KPI is drawn natively on the site (Plotly), from the same JSON files. It began as an Amazon Appliances review analysis; that project lives in its own repository.
 
 **Live site:** https://tesla-rivian-dashboard.vercel.app
 
 ## What's in it
-The site is laid out like a research paper: a brief with findings for investors and for customers, then one tab per research question, each with its evidence, method notes and sources.
+An analytical dashboard: an Overview of headline KPIs and trends, then one tab per area with detailed charts, tables and source notes.
 
 | Tab | Answers |
 |---|---|
-| **Research brief** | The headline findings, written for an investor and for a buyer, a research-question table linking to the evidence, the method, the limits to state in any write-up, and a citation list. |
+| **Overview** | Side-by-side KPIs (U.S. market share, deliveries, revenue, net margin, free cash flow, cash, gross profit per vehicle, news tone) and four trend charts linking to the detail tabs. |
 | **Head to head** | A scoreboard (deliveries, growth, revenue, net income, margins, revenue per vehicle, attention) with the leader on each row, revenue and net income by year, margins, attention, and both charging networks. |
 | **Market share** | Tesla and Rivian's share of U.S. EV sales by quarter, sales stacked against every other brand, EVs as a share of all new vehicles, sales by model, plus Tesla's China wholesale and Europe registrations. |
 | **Who buys** | Every Tesla and Rivian registered in Washington (by census tract) and New York (by ZIP code) joined to Census ACS income, age, education and home-ownership: where the cars sit by neighbourhood income, ownership per 1,000 residents, the typical owner's neighbourhood, top counties and share by model year. |
@@ -19,7 +19,7 @@ The site is laid out like a research paper: a brief with findings for investors 
 | **Sales & forecast** | Tesla and Rivian deliveries side by side, then each company's deliveries with forecasts and 80% ranges, production vs deliveries, revenue and margins, and Tesla's model mix. |
 | **Forecast lab** | Ask the dashboard, an outlook scorecard, a per-series lab with demand scenarios and a target tester, an on-track check and seasonality. |
 | **Drivers** | Gasoline price, loan rates, vehicle sales, new-car prices, sentiment and the fed funds rate, tested against Tesla and Rivian growth with an overlap-corrected test. |
-| **About the data** | How current each source is, the checks run on every refresh, and what is not here. |
+| **About the data** | How current each source is, the checks run on every refresh, the source list, and what is not here. |
 
 ## Data sources
 | Source | Covers | Latest |

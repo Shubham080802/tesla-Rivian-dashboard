@@ -25,6 +25,21 @@ function renderQuality() {
     rows.push(["Neighbourhood demographics", `U.S. Census Bureau, ${RS.owners.acs_release}`, RS.owners.acs_release.match(/\d{4}/)?.[0] ?? "", 0]);
   }
   if (DR) rows.push(["Demand drivers", "FRED (EIA, BEA, BLS, Federal Reserve, Michigan)", fmt.month(DR.meta.latest), monthsAgo(DR.meta.latest)]);
+  if (RS) {
+    const S = RS.meta.sources;
+    $("qSources").innerHTML = [
+      `U.S. SEC, EDGAR company facts: Tesla, Inc. (CIK 1318605) and Rivian Automotive, Inc. (CIK 1874178). <a href="${S.sec}">sec.gov</a>`,
+      `Tesla and Rivian quarterly production and delivery releases (8-K).`,
+      `Cox Automotive / Kelley Blue Book, Electric Vehicle Sales Report, quarterly. ${S.cox.map((u, i) => `<a href="${u}">[${i + 1}]</a>`).join(" ")}`,
+      `U.S. BEA light-vehicle sales (LTOTALNSA) and U.S. demand indicators, via <a href="${S.fred}">FRED</a>.`,
+      `NHTSA recalls, complaints and NCAP ratings. <a href="${S.nhtsa}">nhtsa.gov</a>`,
+      `EPA / DOE vehicle data. <a href="${S.epa}">fueleconomy.gov</a>`,
+      `The GDELT Project, DOC 2.0 API. <a href="${S.gdelt}">gdeltproject.org</a>`,
+      `Washington State DOL, <a href="${S.wa}">Electric Vehicle Population Data</a>; New York State DMV, <a href="${S.ny}">Vehicle, Snowmobile, and Boat Registrations</a>.`,
+      `U.S. Census Bureau, ${esc2(RS.owners.acs_release)}, via <a href="${S.acs}">Census Reporter</a>.`,
+      `Wikimedia page views; U.S. DOE station locator; CPCA via CnEVPost; ACEA press releases; Yahoo Finance (derived percentages only).`,
+    ].map((x) => `<li>${x}</li>`).join("");
+  }
   $("qFresh").innerHTML = `<thead><tr><th>Source</th><th>Publisher</th><th>Latest data</th><th>Age</th><th></th></tr></thead><tbody>` +
     rows.map(([n, p, l, a]) => `<tr><td><b>${n}</b></td><td>${p}</td><td>${l}</td><td>${ageText(a)}</td><td>${ageBadge(a)}</td></tr>`).join("") + "</tbody>";
   if (CK) {

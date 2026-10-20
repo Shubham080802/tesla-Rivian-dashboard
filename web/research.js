@@ -1,4 +1,4 @@
-// Research tabs: brief, market share, who buys, customer view, sentiment and investor view (research.json, scripts/build_research.py).
+// Overview, market share, who buys, customer view, sentiment and investor view (research.json, scripts/build_research.py).
 let RS = null;
 function prepResearch(d) { RS = d; }
 const cT = () => css("--c2"), cR = () => css("--c1"), cO = () => css("--muted");
@@ -10,7 +10,6 @@ const pp = (v) => (v >= 0 ? "+" : "−") + Math.abs(v * 100).toFixed(1) + " pts"
 const qTicks = (qs) => ({ type: "category", tickmode: "array", tickvals: qs.filter((q) => q.endsWith("-01")).map(evQ), ticktext: qs.filter((q) => q.endsWith("-01")).map((q) => q.slice(0, 4)), tickangle: 0 });
 const nn = (a) => a.map((v) => (v == null ? null : v));
 const ttmOf = (a, i) => (i >= 3 && a.slice(i - 3, i + 1).every((v) => v != null) ? sum(a.slice(i - 3, i + 1)) : null);
-const linkTab = (t, label) => `<button type="button" class="linkbtn" data-go-tab="${t}">${label} →</button>`;
 
 // ---------------------------------------------------------------- shared numbers used by several tabs
 function researchFacts() {
@@ -24,79 +23,48 @@ function researchFacts() {
   return { M, n, y, share, I, C, S, O, tone, rate, best, q: evQ(M.quarters[n]), qy: evQ(M.quarters[y]) };
 }
 
-// ---------------------------------------------------------------- research brief
+// ---------------------------------------------------------------- overview
+// One tile, both companies: each row is a coloured key, the value and an optional change chip.
+function duoTile(label, rows, sub) {
+  return `<div class="tile duo"><div class="l">${label}</div>${rows.map(([nme, c, v, d]) => `<div class="duo-r"><span class="dotk" style="background:${c}"></span><span class="duo-n">${nme}</span><span class="duo-v">${v}</span>${d || ""}</div>`).join("")}${sub ? `<div class="sub"><span>${sub}</span></div>` : ""}</div>`;
+}
+
 function renderOverview() {
   if (!RS || !EV) return;
-  const F = researchFacts(), { M, n, y, I, C, O } = F, t = I.tesla, r = I.rivian;
-  const ts = F.share("tesla", n), rs = F.share("rivian", n), tsy = F.share("tesla", y), rsy = F.share("rivian", y);
+  const F = researchFacts(), { M, n, y, I } = F, t = I.tesla, r = I.rivian;
+  const sh = (k, i) => M[k][i] / M.total_ev[i];
+  const T = EV.tesla.quarters, Rv = EV.rivian.quarters, d4 = (Q, a, b) => sum(Q.slice(a, b).map((x) => x.deliveries));
   const nm = (x) => x.ttm.net_income / x.ttm.revenue;
-  const tt = F.tone("tesla"), rt = F.tone("rivian"), r24 = F.rate("rivian", 2024), t24 = F.rate("tesla", 2024);
-  const wa = O.wa.profile;
-  $("ovSub").textContent = `Built ${RS.meta.built} from SEC filings, Cox Automotive, NHTSA, EPA, GDELT, Wikipedia, U.S. Census and state registration records. Latest quarter: ${F.q}.`;
-  $("ovLede").innerHTML = `Tesla is the incumbent: it sold <b>${fmt.pct(ts, 0)}</b> of all new electric vehicles in the U.S. in ${F.q} and earned <b>${usd(t.ttm.net_income)}</b> over the last four reported quarters. Rivian is the challenger: <b>${fmt.pct(rs, 1)}</b> of U.S. EV sales, a share that ${rs > rsy ? "is rising" : "is not rising"} (${fmt.pct(rsy, 1)} a year earlier), but still losing <b>${usd(-r.ttm.net_income)}</b> a year with about <b>${r.runway_quarters ?? "n/a"}</b> quarters of cash at the current burn. The rest of this brief sets out what that means for an investor and for a buyer, with the evidence behind each point.`;
+  const row = (k, c, v, d) => [k === "tesla" ? "Tesla" : "Rivian", c, v, d];
+  const tt = F.tone("tesla"), rt = F.tone("rivian");
   $("ovTiles").innerHTML = [
-    tile({ label: `Tesla share of U.S. EV sales, ${F.q}`, value: fmt.pct(ts, 1), delta: deltaChip(ts - tsy, pp), sub: `vs ${F.qy}` }),
-    tile({ label: `Rivian share of U.S. EV sales, ${F.q}`, value: fmt.pct(rs, 1), delta: deltaChip(rs - rsy, pp), sub: `vs ${F.qy}` }),
-    tile({ label: "Net margin, last 4 quarters", value: `${fmt.pct(nm(t), 1)} / ${fmt.pct(nm(r), 0)}`, sub: "Tesla / Rivian" }),
-    tile({ label: "Median income where cars are registered (WA)", value: `${usdK(wa.tesla.income_median)} / ${usdK(wa.rivian.income_median)}`, sub: `Tesla / Rivian; state ${usdK(wa.population.income_median)}` }),
+    duoTile(`U.S. EV market share, ${F.q}`, [row("tesla", cT(), fmt.pct(sh("tesla", n), 1), deltaChip(sh("tesla", n) - sh("tesla", y), pp)), row("rivian", cR(), fmt.pct(sh("rivian", n), 1), deltaChip(sh("rivian", n) - sh("rivian", y), pp))], `vs ${F.qy}`),
+    duoTile("Deliveries, last 4 quarters", [row("tesla", cT(), fmt.intC(d4(T, -4)), deltaChip(d4(T, -4) / d4(T, -8, -4) - 1, pctTxt)), row("rivian", cR(), fmt.intC(d4(Rv, -4)), deltaChip(d4(Rv, -4) / d4(Rv, -8, -4) - 1, pctTxt))], `to ${evQ(T.at(-1).q)}, vs prior 4 quarters`),
+    duoTile("Revenue, last 4 quarters", [row("tesla", cT(), usd(t.ttm.revenue)), row("rivian", cR(), usd(r.ttm.revenue))], `to ${evQ(t.latest)}`),
+    duoTile("Net margin, last 4 quarters", [row("tesla", cT(), fmt.pct(nm(t))), row("rivian", cR(), fmt.pct(nm(r)))], `net income ${usd(t.ttm.net_income)} / ${usd(r.ttm.net_income)}`),
   ].join("");
-  const inv = [
-    `<b>Scale.</b> Over the last four quarters Tesla booked ${usd(t.ttm.revenue)} of revenue to Rivian's ${usd(r.ttm.revenue)}, about ${Math.round(t.ttm.revenue / r.ttm.revenue)}×. Tesla's net margin is ${fmt.pct(nm(t))}; Rivian's is ${fmt.pct(nm(r))}.`,
-    `<b>Unit economics.</b> Tesla made ${usdK(t.gp_per_vehicle)} of gross profit per vehicle delivered; Rivian ${usdK(r.gp_per_vehicle)}. At that level Rivian would need about <b>${r.breakeven_deliveries ? fmt.intC(r.breakeven_deliveries) : "n/a"}</b> deliveries a year to cover its operating costs, vs ${fmt.intC(r.ttm.deliveries)} in the last four quarters.`,
-    `<b>Cash.</b> Rivian held ${usd(r.liquidity.at(-1))} in cash and short-term investments at ${evQ(r.latest)} and burned ${usd(-r.ttm.fcf)} of free cash flow in four quarters${r.runway_quarters ? `, about ${r.runway_quarters} quarters of runway before new funding` : ""}. Tesla generated ${usd(t.ttm.fcf)}.`,
-    `<b>Dilution.</b> Shares outstanding grew ${r.share_growth_3y != null ? pctTxt(r.share_growth_3y) : "n/a"} at Rivian and ${t.share_growth_3y != null ? pctTxt(t.share_growth_3y) : "n/a"} at Tesla over three years.`,
-    `<b>Valuation.</b> On the 10-K cover-page public float, Tesla was valued at about ${t.float_to_sales ?? "n/a"}× trailing sales and Rivian at ${r.float_to_sales ?? "n/a"}×: the market prices Tesla on more than cars. ${linkTab("investors", "Investor view")}`,
-  ];
-  const tb = F.best("tesla"), rb = F.best("rivian");
-  const cus = [
-    `<b>Range.</b> The longest-range Tesla (${tb ? `${tb.model}, ${tb.range_max} miles` : "n/a"}) vs the longest-range Rivian (${rb ? `${rb.model}, ${rb.range_max} miles` : "n/a"}), EPA. Tesla's sedans are the most efficient; Rivian builds larger trucks and SUVs.`,
-    `<b>Safety ratings.</b> ${C.ncap.filter((x) => x.overall === 5).map((x) => `${x.model} (${x.model_year})`).join(", ") || "No"} hold NHTSA's top five-star overall rating.`,
-    `<b>Quality signal.</b> Owners filed ${t24 != null ? t24.toFixed(1) : "n/a"} NHTSA complaints per 10,000 model-year-2024 Teslas sold and ${r24 != null ? r24.toFixed(1) : "n/a"} per 10,000 Rivians. ${fmt.pct(C.recall_ota_share.tesla ?? 0, 0)} of Tesla's and ${fmt.pct(C.recall_ota_share.rivian ?? 0, 0)} of Rivian's recall campaigns were fixable over the air.`,
-    `<b>Charging.</b> Tesla's Supercharger network is far larger in the U.S.; Rivian's own network is small, though Rivian drivers can now use Superchargers. ${linkTab("versus", "Charging chart")}`,
-    tt && rt ? `<b>Mood.</b> News tone over the last 12 months averaged ${tt.last.toFixed(2)} for Tesla (${tt.last > tt.prev ? "warmer" : "cooler"} than the year before) and ${rt.last.toFixed(2)} for Rivian (${rt.last > rt.prev ? "warmer" : "cooler"}). ${linkTab("sentiment", "Sentiment")}` : `<b>Mood.</b> Owner complaints and attention are on the Sentiment tab. ${linkTab("sentiment", "Sentiment")}`,
-  ];
-  $("ovInv").innerHTML = inv.map((x) => `<li>${x}</li>`).join("");
-  $("ovCus").innerHTML = cus.map((x) => `<li>${x}</li>`).join("");
-  const rm = Object.keys(M.models).filter((k) => k.startsWith("Rivian")).map((k) => [k, (M.models[k][n] || 0) - (M.models[k][y] || 0)]).sort((a, b) => b[1] - a[1]);
-  const riv = rm.length ? `Rivian's biggest gain was ${rm[0][0].replace("Rivian ", "")} (${rm[0][1] >= 0 ? "+" : "−"}${fmt.int(Math.abs(rm[0][1]))} units)${rm[1] && rm[1][1] > 0 ? `, then ${rm[1][0].replace("Rivian ", "")} (+${fmt.int(rm[1][1])})` : ""}.` : "";
-  const rq = [
-    ["How do they share the U.S. EV market?", `Tesla ${fmt.pct(ts, 0)}, Rivian ${fmt.pct(rs, 1)}, everyone else ${fmt.pct(1 - ts - rs, 0)} in ${F.q}. The whole market was ${pctTxt(M.total_ev[n] / M.total_ev[y] - 1)} on a year earlier while Tesla was ${pctTxt(M.tesla[n] / M.tesla[y] - 1)} and Rivian ${pctTxt(M.rivian[n] / M.rivian[y] - 1)}, so both gained share. ${riv}`, "market", "Market share"],
-    ["What is the profit and loss scale?", `Tesla: ${usd(t.ttm.revenue)} revenue, ${usd(t.ttm.net_income)} net income. Rivian: ${usd(r.ttm.revenue)} revenue, ${usd(r.ttm.net_income)} net income (last four quarters).`, "investors", "Investor view"],
-    ["Who buys them?", `In Washington the median household income of the tracts where Rivians are registered is ${usdK(O.wa.profile.rivian.income_median)}, Teslas ${usdK(O.wa.profile.tesla.income_median)}, the state ${usdK(O.wa.profile.population.income_median)}. ${fmt.pct(O.wa.top10pct_income_share.rivian, 0)} of Rivians sit in the richest tenth of tracts.`, "buyers", "Who buys"],
-    ["How do people feel about them?", tt && rt ? `News tone: Tesla ${tt.last.toFixed(2)}, Rivian ${rt.last.toFixed(2)} (GDELT, last 12 months; 0 is neutral). Owner complaints and Wikipedia attention give the other two signals.` : "Owner complaints and Wikipedia attention; news tone appears once GDELT data is loaded.", "sentiment", "Sentiment"],
-    ["Is the product good for a buyer?", `Five-star crash ratings where tested, ${C.recall_campaigns.tesla ?? 0} Tesla and ${C.recall_campaigns.rivian ?? 0} Rivian recall campaigns since 2019 (${fmt.pct(C.recall_ota_share.tesla ?? 0, 0)} and ${fmt.pct(C.recall_ota_share.rivian ?? 0, 0)} fixable over the air), EPA range up to ${tb?.range_max ?? "n/a"} and ${rb?.range_max ?? "n/a"} miles.`, "customers", "Customer view"],
-    ["What comes next?", "Backtested forecasts of deliveries and revenue with 80% ranges, and a scorecard of where each series is heading.", "lab", "Forecast lab"],
-  ];
-  $("ovRQ").innerHTML = `<thead><tr><th>Question</th><th>Finding</th><th></th></tr></thead><tbody>` + rq.map(([qq, a, tab, l]) => `<tr><td><b>${qq}</b></td><td>${a}</td><td>${linkTab(tab, l)}</td></tr>`).join("") + "</tbody>";
-  $("ovMethod").innerHTML = [
-    "Financials come from SEC company facts (10-Q and 10-K XBRL). Missing quarters are filled only by accounting identities, never estimated.",
-    "U.S. market share uses Cox Automotive / Kelley Blue Book quarterly sales estimates, with each quarter taken from the newest report that covers it; the EV share of the whole market divides by BEA light-vehicle sales (FRED LTOTALNSA).",
-    "Buyer profiles join every registered Tesla and Rivian in Washington (by census tract) and New York (by ZIP) to the Census Bureau's ACS 5-year estimates and weight each area by its vehicles.",
-    "Complaint rates divide NHTSA owner complaints for a model year by Cox's U.S. sales of that model in the same calendar year.",
-    "News tone is GDELT's average tone of English-language online articles mentioning each company, averaged by month.",
-    "Forecasts are exponential-smoothing models chosen and calibrated by rolling-origin backtests.",
-  ].map((x) => `<li>${x}</li>`).join("");
-  $("ovLimits").innerHTML = [
-    "Area statistics describe neighbourhoods, not owners (the ecological fallacy). Two states are not the U.S.",
-    "Cox figures are modelled estimates and differ slightly from company-reported deliveries.",
-    "NHTSA complaints are unverified reports from owners and scale with fleet size, publicity and model age.",
-    "GDELT tone measures the wording of coverage, not consumer opinion; Wikipedia views measure attention, not demand.",
-    "Rivian has a short history (public since November 2021), so its trends and forecasts carry wide uncertainty.",
-    "Only U.S.-listed companies are compared. Nothing here is investment advice.",
-  ].map((x) => `<li>${x}</li>`).join("");
-  const S = RS.meta.sources;
-  $("ovCite").innerHTML = [
-    `U.S. Securities and Exchange Commission, EDGAR company facts API, Tesla, Inc. (CIK 1318605) and Rivian Automotive, Inc. (CIK 1874178). <a href="${S.sec}">sec.gov</a>`,
-    `Cox Automotive / Kelley Blue Book, Electric Vehicle Sales Report, quarterly, Q1 2025 to ${F.q}. ${S.cox.map((u, i) => `<a href="${u}">[${i + 1}]</a>`).join(" ")}`,
-    `U.S. Bureau of Economic Analysis, Light Weight Vehicle Sales (LTOTALNSA), via FRED. <a href="${S.fred}">fred.stlouisfed.org</a>`,
-    `National Highway Traffic Safety Administration, recalls, complaints and NCAP ratings APIs. <a href="${S.nhtsa}">nhtsa.gov</a>`,
-    `U.S. EPA and DOE, fueleconomy.gov vehicle data. <a href="${S.epa}">fueleconomy.gov</a>`,
-    `The GDELT Project, DOC 2.0 API (timelinetone, timelinevolraw). <a href="${S.gdelt}">gdeltproject.org</a>`,
-    `Washington State Department of Licensing, Electric Vehicle Population Data. <a href="${S.wa}">data.wa.gov</a>`,
-    `New York State DMV, Vehicle, Snowmobile, and Boat Registrations. <a href="${S.ny}">data.ny.gov</a>`,
-    `U.S. Census Bureau, ${esc2(O.acs_release)}, tables B19013, B01003, B01002, B15003, B25003, via <a href="${S.acs}">Census Reporter</a>.`,
-    `Wikimedia Foundation page views; U.S. DOE Alternative Fuels Data Center station locator; CPCA via CnEVPost; ACEA press releases (see Head to head and Market share tabs).`,
-  ].map((x) => `<li>${x}</li>`).join("");
+  $("ovTiles2").innerHTML = [
+    duoTile("Free cash flow, last 4 quarters", [row("tesla", cT(), usd(t.ttm.fcf)), row("rivian", cR(), usd(r.ttm.fcf))], "operating cash flow minus capex"),
+    duoTile("Cash and short-term investments", [row("tesla", cT(), usd(t.liquidity.at(-1))), row("rivian", cR(), usd(r.liquidity.at(-1)))], r.runway_quarters ? `Rivian runway ${r.runway_quarters} quarters at current burn` : `at ${evQ(t.latest)}`),
+    duoTile("Gross profit per vehicle", [row("tesla", cT(), usdK(t.gp_per_vehicle)), row("rivian", cR(), usdK(r.gp_per_vehicle))], "last 4 quarters"),
+    duoTile("News tone, last 12 months", [row("tesla", cT(), tt ? tt.last.toFixed(2) : "–", tt ? deltaChip(tt.last - tt.prev, numTxt("", 2)) : ""), row("rivian", cR(), rt ? rt.last.toFixed(2) : "–", rt ? deltaChip(rt.last - rt.prev, numTxt("", 2)) : "")], "GDELT average tone; 0 is neutral"),
+  ].join("");
+  const q = M.quarters, ql = q.map(evQ), m0 = { l: 8, r: 16, t: 28, b: 8 };
+  draw("c-ov-share", BR.map(([k, nme, c]) => ({ x: ql, y: q.map((_, i) => sh(k, i)), mode: "lines+markers", name: nme, line: line(c(), 2.6), marker: { size: 6 }, hovertemplate: `${nme}: %{y:.1%}<extra></extra>` })),
+    layout({ margin: m0, xaxis: qTicks(q), yaxis: { tickformat: ".0%", rangemode: "tozero" } }));
+  const yoy = (Q) => Q.map((x, i) => (i >= 4 && Q[i - 4].deliveries ? x.deliveries / Q[i - 4].deliveries - 1 : null));
+  const gq = T.map((x) => x.q).filter((x) => x >= "2024-01");
+  const pick = (Q) => gq.map((x) => { const i = Q.findIndex((z) => z.q === x); return i < 0 ? null : yoy(Q)[i]; });
+  draw("c-ov-growth", BR.map(([k, nme, c]) => ({ x: gq.map(evQ), y: pick(k === "tesla" ? T : Rv), type: "bar", name: nme, marker: { color: c() }, hovertemplate: `${nme}: %{y:+.0%}<extra></extra>` })),
+    layout({ barmode: "group", bargap: 0.25, margin: m0, xaxis: qTicks(gq), yaxis: { tickformat: "+.0%", zeroline: true, zerolinecolor: css("--axis") } }));
+  const fq = [...new Set([...t.quarters, ...r.quarters])].filter((x) => x >= "2024-01").sort();
+  const qv = (x, f) => fq.map((z) => { const i = x.quarters.indexOf(z); return i < 0 ? null : x[f][i]; });
+  const marg = (x) => fq.map((z) => { const i = x.quarters.indexOf(z); return i < 0 || !x.revenue[i] ? null : x.net_income[i] / x.revenue[i]; });
+  draw("c-ov-margin", BR.map(([k, nme, c]) => ({ x: fq.map(evQ), y: marg(I[k]), mode: "lines+markers", name: nme, line: line(c(), 2.6), marker: { size: 6 }, hovertemplate: `${nme}: %{y:.1%}<extra></extra>` })),
+    layout({ margin: m0, xaxis: qTicks(fq), yaxis: { tickformat: ".0%", zeroline: true, zerolinecolor: css("--axis") } }));
+  draw("c-ov-fcf", BR.map(([k, nme, c]) => ({ x: fq.map(evQ), y: qv(I[k], "fcf").map((v) => (v == null ? null : v / 1e3)), type: "bar", name: nme, marker: { color: c() }, hovertemplate: `${nme}: $%{y:.2f}B<extra></extra>` })),
+    layout({ barmode: "group", bargap: 0.25, margin: m0, xaxis: qTicks(fq), yaxis: { tickprefix: "$", ticksuffix: "B", tickformat: ".0f", zeroline: true, zerolinecolor: css("--axis") } }));
+  $("ovNote").textContent = `Sources: SEC filings, company delivery releases, Cox Automotive, GDELT. Updated ${RS.meta.built}. Not investment advice.`;
 }
 
 // ---------------------------------------------------------------- market share
