@@ -1,4 +1,4 @@
-// "Sales & forecast" tab: Tesla and Rivian reported volumes, SEC financials and forecasts (Rivian's section is in rivian.js).
+// "Sales" tab: Tesla and Rivian reported volumes, SEC financials and forecasts (Rivian's section is in rivian.js).
 // Optional and additive: reads ev.json (scripts/build_ev_data.py); the app is unchanged if it is missing.
 
 

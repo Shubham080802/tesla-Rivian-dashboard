@@ -83,5 +83,5 @@ function renderVersus() {
     { x: allY.map(String), y: cumOf(rS), mode: "lines+markers", name: "Rivian", line: line(RIVc(), 2.6), marker: { size: 6 }, customdata: rS, hovertemplate: "Rivian %{x}: %{y:,} open (+%{customdata:,} that year)<extra></extra>" },
   ], layout({ margin: m0, xaxis: { type: "category" }, yaxis: { tickformat: ",.0f", rangemode: "tozero" } }));
 
-  $("vsNote").innerHTML = `${esc2(VS.meta.notes.fin)} ${esc2(VS.meta.notes.pageviews)} Sources: <a href="${VS.meta.sources.sec}">SEC EDGAR (Tesla)</a>, <a href="${VS.meta.sources.sec_rivian}">SEC EDGAR (Rivian)</a>, <a href="${VS.meta.sources.pageviews}">Wikimedia page views</a>, <a href="${VS.meta.sources.chargers}">U.S. station locator</a>, plus the volume sources on the Sales &amp; forecast tab.`;
+  $("vsNote").innerHTML = `${esc2(VS.meta.notes.fin)} ${esc2(VS.meta.notes.pageviews)} Sources: <a href="${VS.meta.sources.sec}">SEC EDGAR (Tesla)</a>, <a href="${VS.meta.sources.sec_rivian}">SEC EDGAR (Rivian)</a>, <a href="${VS.meta.sources.pageviews}">Wikimedia page views</a>, <a href="${VS.meta.sources.chargers}">U.S. station locator</a>, plus the volume sources on the Sales tab.`;
 }

@@ -122,8 +122,11 @@ if rs_path.exists():
           "Tesla 2023 revenue $96,773M and Rivian 2024 revenue $4,970M rebuilt from quarters")
     check("Cash and share counts are present for both companies", all(I[c]["liquidity"][-1] and I[c]["shares"][-1] for c in I), f"latest quarter {I['tesla']['latest']}")
     O = rs["owners"]
-    check("Registration totals are plausible", O["totals"]["wa"]["tesla"] > 80000 and O["totals"]["ny"]["tesla"] > 80000 and O["totals"]["wa"]["rivian"] > 3000, f"WA Tesla {O['totals']['wa']['tesla']:,}, Rivian {O['totals']['wa']['rivian']:,}; NY Tesla {O['totals']['ny']['tesla']:,}, Rivian {O['totals']['ny']['rivian']:,}")
-    check("Income-band shares add up to 100%", all(abs(sum(v) - 1) < 1e-3 for st in ("wa", "ny") for v in O[st]["share_by_band"].values()), "every group in both states")
+    T_ = O["totals"]
+    check("Registration totals are plausible", T_["ca"]["tesla"] > 500000 and T_["wa"]["tesla"] > 80000 and T_["ny"]["tesla"] > 80000 and T_["ct"]["tesla"] > 10000 and min(T_[s]["rivian"] for s in T_) > 500,
+          "; ".join(f"{s.upper()} Tesla {T_[s]['tesla']:,}, Rivian {T_[s]['rivian']:,}" for s in ("ca", "wa", "ny", "ct")))
+    check("Income-band shares add up to 100%", all(abs(sum(v) - 1) < 1e-3 for st in ("wa", "ny", "ca", "ct", "all") for v in O[st]["share_by_band"].values()), "every group in every state and combined")
+    check("Connecticut towns match the Census list", O["ct_town_match"] >= 0.85, f"{O['ct_town_match']:.0%} of registrations matched to a Census town", warn=True)
     C = rs["customers"]
     check("Crash ratings are between one and five stars", all(1 <= x["overall"] <= 5 for x in C["ncap"]) and len(C["ncap"]) >= 3, f"{len(C['ncap'])} models rated")
     check("EPA ranges are plausible", all(100 < e["range_max"] < 600 for e in C["epa"]), f"{len(C['epa'])} models")

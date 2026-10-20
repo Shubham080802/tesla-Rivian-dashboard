@@ -7,19 +7,21 @@ A head-to-head dashboard for two U.S.-listed electric-vehicle makers, Tesla (TSL
 ## What's in it
 An analytical dashboard: an Overview of headline KPIs and trends, then one tab per area with detailed charts, tables and source notes. Time charts mark the events behind big moves (Rivian's IPO, the Cybertruck launch, the end of the federal EV tax credit, the R2 launch), and every chart has a **Download CSV** link with the data as plotted.
 
+Tabs are grouped: **Overview**; business (**Head to head**, **Market share**, **Investors**, **Sales**); customers (**Who buys**, **Quality & safety**, **Sentiment**); outlook (**Forecast lab**, **Drivers**); and **About**.
+
 | Tab | Answers |
 |---|---|
 | **Overview** | Near-live TSLA and RIVN share prices (TradingView widgets), side-by-side KPIs (U.S. market share, deliveries, revenue, net margin, free cash flow, cash, gross profit per vehicle, news tone) and four trend charts linking to the detail tabs. |
 | **Head to head** | A scoreboard (deliveries, growth, revenue, net income, margins, revenue per vehicle, attention) with the leader on each row, revenue and net income by year, margins, attention, and both charging networks. |
 | **Market share** | Tesla and Rivian's share of U.S. EV sales by quarter, sales stacked against every other brand, EVs as a share of all new vehicles, sales by model, plus Tesla's China wholesale and Europe registrations. |
-| **Who buys** | Every Tesla and Rivian registered in Washington (by census tract) and New York (by ZIP code) joined to Census ACS income, age, education and home-ownership: where the cars sit by neighbourhood income, ownership per 1,000 residents, the typical owner's neighbourhood, top counties and share by model year. |
-| **Customer view** | EPA range and efficiency by model, NHTSA crash-test stars, owner complaints per 10,000 vehicles sold, recalls by year and how many were fixable over the air, and what complaints and recalls were about. |
+| **Investors** | Margins from gross to free cash flow, per-vehicle economics, quarterly net income and free cash flow, cash vs debt, cash runway, R&D, SG&A and stock-based pay, dilution, public float to sales, a scorecard, live valuation (market cap, P/E, P/S and key ratios) and a near-live price chart from TradingView, and share price changes beside the business. Not investment advice. |
+| **Sales** | Tesla and Rivian deliveries side by side, then each company's deliveries with forecasts and 80% ranges, production vs deliveries, revenue and margins, and Tesla's model mix. |
+| **Who buys** | Every Tesla and Rivian registered in California and New York (by ZIP code), Washington (by census tract) and Connecticut (by town), joined to Census ACS income, age, education and home ownership, for each state and all four combined: where the cars sit by neighbourhood income, ownership per 1,000 residents, the typical owner's neighbourhood, top Washington counties and share by model year. |
+| **Quality & safety** | EPA range and efficiency by model, NHTSA crash-test stars, owner complaints per 10,000 vehicles sold, recalls by year and how many were fixable over the air, and what complaints and recalls were about. |
 | **Sentiment** | GDELT news tone and coverage by month, and owner complaints filed with NHTSA (Wikipedia attention is on Head to head). |
-| **Investor view** | Margins from gross to free cash flow, per-vehicle economics, quarterly net income and free cash flow, cash vs debt, cash runway, R&D, SG&A and stock-based pay, dilution, public float to sales, a scorecard, live valuation (market cap, P/E, P/S and key ratios) and a near-live price chart from TradingView, and share price changes beside the business. Not investment advice. |
-| **Sales & forecast** | Tesla and Rivian deliveries side by side, then each company's deliveries with forecasts and 80% ranges, production vs deliveries, revenue and margins, and Tesla's model mix. |
 | **Forecast lab** | Ask the dashboard, an outlook scorecard, a per-series lab with demand scenarios and a target tester, an on-track check and seasonality. |
 | **Drivers** | Gasoline price, loan rates, vehicle sales, new-car prices, sentiment and the fed funds rate, tested against Tesla and Rivian growth with an overlap-corrected test. |
-| **About the data** | How current each source is, the checks run on every refresh, the source list, and what is not here. |
+| **About** | How current each source is, the checks run on every refresh, the source list, and what is not here. |
 
 ## Data sources
 | Source | Covers | Latest |
@@ -34,7 +36,7 @@ An analytical dashboard: an Overview of headline KPIs and trends, then one tab p
 | [NHTSA APIs](https://www.nhtsa.gov/nhtsa-datasets-and-apis) | recalls, owner complaints, NCAP crash ratings | daily |
 | [EPA fueleconomy.gov](https://www.fueleconomy.gov/feg/ws/) | range and efficiency by model | model year 2026 |
 | [GDELT DOC 2.0](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/) | news tone and coverage | last full month |
-| [Washington DOL](https://data.wa.gov/Transportation/Electric-Vehicle-Population-Data/f6w7-q2d2) and [New York DMV](https://data.ny.gov/Transportation/Vehicle-Snowmobile-and-Boat-Registrations/w4pv-hbkt) | registered EVs by census tract / ZIP | Oct 2026 |
+| [California DMV](https://data.ca.gov/dataset/vehicle-fuel-type-count-by-zip-code), [Washington DOL](https://data.wa.gov/Transportation/Electric-Vehicle-Population-Data/f6w7-q2d2), [New York DMV](https://data.ny.gov/Transportation/Vehicle-Snowmobile-and-Boat-Registrations/w4pv-hbkt) and [Connecticut DMV](https://data.ct.gov/Environment-and-Natural-Resources/Electric-Vehicle-Registration-Data/y7ky-5wcz) | registered EVs by ZIP / census tract / town | CA Dec 2025, WA and NY Oct 2026, CT Dec 2024 |
 | [Census ACS 5-year](https://censusreporter.org/) (via Census Reporter) | income, age, education, home ownership by area | 2020-2024 |
 | [Wikimedia page views](https://pageviews.wmcloud.org/) | attention | Sep 2026 |
 | [U.S. station locator](https://afdc.energy.gov/stations/) | Tesla and Rivian Adventure Network stations | Oct 2026 |
@@ -55,4 +57,4 @@ python -m http.server -d web 8000      # open http://localhost:8000
 A GitHub Action (`.github/workflows/refresh-data.yml`) runs the same steps daily (except share prices) and commits only when a source changed; Vercel redeploys on every push to `main`. Tesla China, Europe and new Rivian quarters are typed in by hand (see [docs/TODO.md](docs/TODO.md)).
 
 ## Caveats
-Owner demographics are neighbourhood averages from two states, not facts about individual owners; Cox sales are modelled estimates; NHTSA complaints are unverified owner reports; GDELT tone measures news wording, not buyer opinion. Only U.S.-listed companies are covered, so both report to the SEC in US dollars under the same accounting rules. Volumes are what the companies report, not revenue. There are no customer-review or satisfaction views because neither company publishes that data. Attention is English Wikipedia only. This is not investment advice. Method notes: [docs/MODEL.md](docs/MODEL.md).
+Owner demographics are neighbourhood averages from four states, not facts about individual owners; Cox sales are modelled estimates; NHTSA complaints are unverified owner reports; GDELT tone measures news wording, not buyer opinion. Only U.S.-listed companies are covered, so both report to the SEC in US dollars under the same accounting rules. Volumes are what the companies report, not revenue. There are no customer-review or satisfaction views because neither company publishes that data. Attention is English Wikipedia only. This is not investment advice. Method notes: [docs/MODEL.md](docs/MODEL.md).

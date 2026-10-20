@@ -103,10 +103,12 @@ function renderMarket() {
 }
 
 // ---------------------------------------------------------------- who buys
-let byState = "wa";
+let byState = "all";
+const ST_NAME = { all: "the four states", ca: "California", wa: "Washington", ny: "New York", ct: "Connecticut" };
+const ST_UNIT = { all: "areas", ca: "ZIP code areas", wa: "census tracts", ny: "ZIP code areas", ct: "towns" };
 function renderBuyers() {
   if (!RS) return;
-  const O = RS.owners, P = O[byState], prof = P.profile, st = byState === "wa" ? "Washington" : "New York";
+  const O = RS.owners, P = O[byState], prof = P.profile, st = ST_NAME[byState];
   $("byState").onclick = (e) => { const b = e.target.closest("[data-s]"); if (!b) return; byState = b.dataset.s; [...$("byState").children].forEach((x) => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); }); renderBuyers(); };
   $("byTiles").innerHTML = [
     tile({ label: `Teslas registered in ${st}`, value: fmt.intC(prof.tesla.count), sub: `${fmt.pct(prof.tesla.count / (prof.tesla.count + prof.rivian.count + prof.other_ev.count), 0)} of all battery and plug-in EVs` }),
@@ -119,7 +121,7 @@ function renderBuyers() {
     ...grp.map(([k, nme, c]) => ({ x: P.bands, y: P.share_by_band[k], type: "bar", name: nme, marker: { color: c() }, hovertemplate: `${nme}: %{y:.1%}<extra></extra>` })),
     { x: P.bands, y: P.share_by_band.population, mode: "lines+markers", name: "All residents", line: { color: css("--ink2"), width: 2, dash: "dot" }, marker: { size: 7, symbol: "diamond" }, hovertemplate: "Residents: %{y:.1%}<extra></extra>" },
   ], layout({ barmode: "group", bargap: 0.25, margin: M0, xaxis: { type: "category", tickangle: 0 }, yaxis: { tickformat: ".0%" } }));
-  $("byBandSub").textContent = `Share of each group living in ${byState === "wa" ? "census tracts" : "ZIP code areas"} at each level of median household income. Bars above the dotted line mean the group is over-represented there. ${P.areas.toLocaleString()} areas.`;
+  $("byBandSub").textContent = `Share of each group living in ${ST_UNIT[byState]} at each level of median household income. Bars above the dotted line mean the group is over-represented there. ${P.areas.toLocaleString()} areas.`;
   draw("c-by-rate", grp.map(([k, nme, c]) => ({ x: P.bands, y: P.per1k_by_band[k], mode: "lines+markers", name: nme, line: line(c(), 2.6), marker: { size: 7 }, hovertemplate: `${nme}: %{y:.1f} per 1,000<extra></extra>` })),
     layout({ margin: M0, xaxis: { type: "category", tickangle: 0 }, yaxis: { type: "log", tickformat: ",.1f", title: { text: "per 1,000 residents (log scale)", font: { size: 11, color: css("--muted") } } } }));
   const cols = [["tesla", "Tesla"], ["rivian", "Rivian"], ["other_ev", "Other EVs"], ["population", "All residents"]];
@@ -138,7 +140,7 @@ function renderBuyers() {
   const Y = O.wa_bev_share_by_model_year;
   draw("c-by-my", BR.map(([k, nme, c]) => ({ x: Y.years.map(String), y: Y[k], mode: "lines+markers", name: nme, line: line(c(), 2.6), marker: { size: 7 }, hovertemplate: `${nme}: %{y:.1%}<extra></extra>` })),
     layout({ margin: M0, xaxis: { type: "category", tickangle: 0 }, yaxis: { tickformat: ".0%", rangemode: "tozero" } }));
-  $("byNote").innerHTML = `Registrations: <a href="${RS.meta.sources.wa}">Washington DOL</a> (current EV registrations by census tract) and <a href="${RS.meta.sources.ny}">New York DMV</a> (electric registrations by ZIP code, matched to ZIP code tabulation areas). Area statistics: U.S. Census Bureau, ${esc2(O.acs_release)}, via <a href="${RS.meta.sources.acs}">Census Reporter</a>. These are neighbourhood averages, so they cannot say how old or rich an individual owner is. Leased and fleet vehicles are registered where the lessor or fleet is based.`;
+  $("byNote").innerHTML = `Registrations: <a href="${RS.meta.sources.ca}">California DMV</a> (light-duty battery-electric and plug-in hybrid vehicles by ZIP, as of ${O.snapshots.ca}), <a href="${RS.meta.sources.wa}">Washington DOL</a> (current, by census tract), <a href="${RS.meta.sources.ny}">New York DMV</a> (current, by ZIP) and <a href="${RS.meta.sources.ct}">Connecticut DMV</a> (by town, as of ${O.snapshots.ct}; ${fmt.pct(O.ct_town_match, 0)} of registrations name a town that matches a Census town, the rest use village names). ZIP codes are matched to ZIP code tabulation areas. Area statistics: U.S. Census Bureau, ${esc2(O.acs_release)}, via <a href="${RS.meta.sources.acs}">Census Reporter</a>. These are neighbourhood averages, so they cannot say how old or rich an individual owner is. Leased and fleet vehicles are registered where the lessor or fleet is based.`;
 }
 
 // ---------------------------------------------------------------- customer view

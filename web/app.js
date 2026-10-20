@@ -41,7 +41,7 @@ function renderChips() {
   const T = EV.tesla.quarters, R = EV.rivian.quarters;
   const items = [["Tesla", evQ(T.at(-1).q), monthsAgo(T.at(-1).q, 2)], ["Rivian", evQ(R.at(-1).q), monthsAgo(R.at(-1).q, 2)], ["Financials", String(VS.fin.years.at(-1)), monthsAgo(VS.fin.years.at(-1) + "-12")]];
   const cls = (a) => (a <= 4 ? "good" : a <= 12 ? "warn" : "bad"), worst = items.some(([, , a]) => a > 12) ? "bad" : items.some(([, , a]) => a > 4) ? "warn" : "good";
-  $("freshChips").innerHTML = `<button type="button" class="fchip all ${worst}" data-go-tab="quality" title="About the data"><span class="fdot"></span>Data</button>` +
+  $("freshChips").innerHTML = `<button type="button" class="fchip all ${worst}" data-go-tab="quality" title="About"><span class="fdot"></span>Data</button>` +
     items.map(([n, v, a]) => `<button type="button" class="fchip ${cls(a)}" data-go-tab="quality" title="${n}: latest ${v} (${ageText(a)}). Click for details."><span class="fdot"></span><b>${n}</b> ${v}</button>`).join("");
 }
 

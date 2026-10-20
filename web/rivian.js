@@ -1,4 +1,4 @@
-// Rivian section of the "Sales & forecast" tab: deliveries with forecast, revenue and margins (ev.json -> rivian).
+// Rivian section of the "Sales" tab: deliveries with forecast, revenue and margins (ev.json -> rivian).
 function renderRivian() {
   if (!EV || !EV.rivian) return;
   const R = EV.rivian.quarters, fc = EV.rivian.forecast_deliveries, c = css("--c1");

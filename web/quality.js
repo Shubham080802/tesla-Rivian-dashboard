@@ -21,7 +21,7 @@ function renderQuality() {
     rows.push(["Recalls, complaints, crash ratings", "NHTSA APIs", b, monthsAgo(b.slice(0, 7))]);
     rows.push(["Range and efficiency", "EPA fueleconomy.gov", String(Math.max(...RS.customers.epa.map((e) => e.year))), 0]);
     if (S.tesla) rows.push(["News tone and coverage", "GDELT DOC 2.0 API", fmt.month(S.tesla.months.at(-1)), monthsAgo(S.tesla.months.at(-1))]);
-    rows.push(["EV registrations (WA, NY)", "Washington DOL; New York DMV open data", b, monthsAgo(b.slice(0, 7))]);
+    rows.push(["EV registrations (CA, WA, NY, CT)", "State DMV open data", b, monthsAgo(b.slice(0, 7))]);
     rows.push(["Neighbourhood demographics", `U.S. Census Bureau, ${RS.owners.acs_release}`, RS.owners.acs_release.match(/\d{4}/)?.[0] ?? "", 0]);
   }
   if (DR) rows.push(["Demand drivers", "FRED (EIA, BEA, BLS, Federal Reserve, Michigan)", fmt.month(DR.meta.latest), monthsAgo(DR.meta.latest)]);
@@ -35,7 +35,7 @@ function renderQuality() {
       `NHTSA recalls, complaints and NCAP ratings. <a href="${S.nhtsa}">nhtsa.gov</a>`,
       `EPA / DOE vehicle data. <a href="${S.epa}">fueleconomy.gov</a>`,
       `The GDELT Project, DOC 2.0 API. <a href="${S.gdelt}">gdeltproject.org</a>`,
-      `Washington State DOL, <a href="${S.wa}">Electric Vehicle Population Data</a>; New York State DMV, <a href="${S.ny}">Vehicle, Snowmobile, and Boat Registrations</a>.`,
+      `California DMV, <a href="${S.ca}">Vehicle Fuel Type Count by Zip Code</a>; Washington State DOL, <a href="${S.wa}">Electric Vehicle Population Data</a>; New York State DMV, <a href="${S.ny}">Vehicle, Snowmobile, and Boat Registrations</a>; Connecticut DMV, <a href="${S.ct}">Electric Vehicle Registration Data</a>.`,
       `U.S. Census Bureau, ${esc2(RS.owners.acs_release)}, via <a href="${S.acs}">Census Reporter</a>.`,
       `Wikimedia page views; U.S. DOE station locator; CPCA via CnEVPost; ACEA press releases; Yahoo Finance (derived percentages only).`,
     ].map((x) => `<li>${x}</li>`).join("");

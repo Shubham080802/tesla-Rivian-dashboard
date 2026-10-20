@@ -43,16 +43,20 @@
   <div class="toolbar">
     <nav class="tabs" id="tabs" role="tablist">
       <button role="tab" data-tab="overview" class="active">Overview</button>
+      <span class="navsep" aria-hidden="true" title="Business"></span>
       <button role="tab" data-tab="versus">Head to head</button>
       <button role="tab" data-tab="market">Market share</button>
+      <button role="tab" data-tab="investors">Investors</button>
+      <button role="tab" data-tab="ev">Sales</button>
+      <span class="navsep" aria-hidden="true" title="Customers"></span>
       <button role="tab" data-tab="buyers">Who buys</button>
-      <button role="tab" data-tab="customers">Customer view</button>
+      <button role="tab" data-tab="customers">Quality &amp; safety</button>
       <button role="tab" data-tab="sentiment">Sentiment</button>
-      <button role="tab" data-tab="investors">Investor view</button>
-      <button role="tab" data-tab="ev">Sales &amp; forecast</button>
+      <span class="navsep" aria-hidden="true" title="Outlook"></span>
       <button role="tab" data-tab="lab">Forecast lab</button>
       <button role="tab" data-tab="drivers">Drivers</button>
-      <button role="tab" data-tab="quality">About the data</button>
+      <span class="navsep" aria-hidden="true"></span>
+      <button role="tab" data-tab="quality">About</button>
     </nav>
   </div>
 
@@ -63,11 +67,11 @@
     <div class="tiles tiles-4" id="ovTiles2"></div>
     <div class="grid2">
       <article class="card"><header class="row-head"><div><h3>Share of U.S. EV sales</h3><p>Quarterly, Cox Automotive estimates</p></div><button type="button" class="linkbtn" data-go-tab="market">Market share →</button></header><div class="plot" id="c-ov-share"></div></article>
-      <article class="card"><header class="row-head"><div><h3>Deliveries, change vs a year earlier</h3><p>Quarterly, company-reported, since 2024</p></div><button type="button" class="linkbtn" data-go-tab="ev">Sales &amp; forecast →</button></header><div class="plot" id="c-ov-growth"></div></article>
+      <article class="card"><header class="row-head"><div><h3>Deliveries, change vs a year earlier</h3><p>Quarterly, company-reported, since 2024</p></div><button type="button" class="linkbtn" data-go-tab="ev">Sales →</button></header><div class="plot" id="c-ov-growth"></div></article>
     </div>
     <div class="grid2">
-      <article class="card"><header class="row-head"><div><h3>Net margin</h3><p>Quarterly net income as a share of revenue, since 2024</p></div><button type="button" class="linkbtn" data-go-tab="investors">Investor view →</button></header><div class="plot" id="c-ov-margin"></div></article>
-      <article class="card"><header class="row-head"><div><h3>Free cash flow</h3><p>Quarterly, US dollars, since 2024</p></div><button type="button" class="linkbtn" data-go-tab="investors">Investor view →</button></header><div class="plot" id="c-ov-fcf"></div></article>
+      <article class="card"><header class="row-head"><div><h3>Net margin</h3><p>Quarterly net income as a share of revenue, since 2024</p></div><button type="button" class="linkbtn" data-go-tab="investors">Investors →</button></header><div class="plot" id="c-ov-margin"></div></article>
+      <article class="card"><header class="row-head"><div><h3>Free cash flow</h3><p>Quarterly, US dollars, since 2024</p></div><button type="button" class="linkbtn" data-go-tab="investors">Investors →</button></header><div class="plot" id="c-ov-fcf"></div></article>
     </div>
     <p class="note" id="ovNote"></p>
   </div>
@@ -102,7 +106,7 @@
 
   <div class="panel" id="tab-buyers">
     <article class="card"><header class="row-head"><div><h3>Owner neighbourhoods</h3><p>Registered EVs matched to Census ACS area statistics. Describes neighbourhoods, not individual owners.</p></div>
-      <div class="seg" id="byState" role="radiogroup" aria-label="State"><button type="button" role="radio" data-s="wa" class="on">Washington</button><button type="button" role="radio" data-s="ny">New York</button></div></header>
+      <div class="seg" id="byState" role="radiogroup" aria-label="State"><button type="button" role="radio" data-s="all" class="on">All four</button><button type="button" role="radio" data-s="ca">California</button><button type="button" role="radio" data-s="wa">Washington</button><button type="button" role="radio" data-s="ny">New York</button><button type="button" role="radio" data-s="ct">Connecticut</button></div></header>
     </article>
     <div class="tiles tiles-4" id="byTiles"></div>
     <div class="grid2">
@@ -296,8 +300,8 @@
     <article class="card"><header><h3>Sources</h3><p>All public. Method notes are in the project's docs/MODEL.md.</p></header><ol class="cite" id="qSources"></ol></article>
     <article class="card"><header><h3>What is not here, and why</h3></header>
       <ul class="plain">
-        <li><b>Customer satisfaction surveys and reviews.</b> No open dataset exists for Tesla or Rivian. The Customer view and Sentiment tabs use NHTSA complaints, crash ratings, EPA figures and news tone instead.</li>
-        <li><b>Owners' personal demographics.</b> No source publishes buyers' age or income. The Who buys tab describes the neighbourhoods where cars are registered in Washington and New York, from the Census Bureau.</li>
+        <li><b>Customer satisfaction surveys and reviews.</b> No open dataset exists for Tesla or Rivian. The Quality & safety and Sentiment tabs use NHTSA complaints, crash ratings, EPA figures and news tone instead.</li>
+        <li><b>Owners' personal demographics.</b> No source publishes buyers' age or income. The Who buys tab describes the neighbourhoods where cars are registered in California, Washington, New York and Connecticut, from the Census Bureau.</li>
         <li><b>Companies listed outside the U.S.</b> They are out of scope, so every company here trades on a U.S. exchange, reports to the SEC in US dollars and follows the same accounting rules.</li>
         <li><b>Raw share prices.</b> No free source clearly allows republishing prices, so only derived yearly percentage changes are shown on the Stock vs business tab; the monthly prices themselves stay on the maintainer's machine.</li>
         <li><b>Registrations by country.</b> Tesla's China domestic and export figures are included (CPCA). Europe runs to August 2026. Rivian sells almost only in North America, so it has no regional split; Tesla's U.S. registrations are not public monthly.</li>

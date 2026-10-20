@@ -348,12 +348,15 @@ def census(level, state):
         for gid, t in d["data"].items():
             e = lambda tab, c: t[tab]["estimate"].get(f"{tab}{c:03d}")
             pop = e("B01003", 1); edu = e("B15003", 1)
-            rows.append({"geoid": gid.split("US")[1], "pop": pop, "income": e("B19013", 1), "age": e("B01002", 1),
+            rows.append({"geoid": gid.split("US")[1], "name": d["geography"].get(gid, {}).get("name", ""), "pop": pop, "income": e("B19013", 1), "age": e("B01002", 1),
                          "bachelor_plus": (sum(e("B15003", c) or 0 for c in (22, 23, 24, 25)) / edu) if edu else None,
                          "owner_share": (e("B25003", 2) / e("B25003", 1)) if e("B25003", 1) else None})
         (R / f"acs_{state}_release.json").write_text(json.dumps(d["release"]))
         return pd.DataFrame(rows)
-    return cached(f"acs_{state}.csv", fetch, "csv")
+    df = cached(f"acs_{state}.csv", fetch, "csv")
+    if "name" not in df:                                # caches written before names were kept
+        df = cached(f"acs_{state}.csv", fetch, "csv") if not CACHE_ONLY else df.assign(name="")
+    return df
 
 
 def wa_regs():
@@ -377,6 +380,27 @@ def ny_regs():
         d["n"] = d.n.astype(int)
         return d.groupby(["zip", "make"], as_index=False).n.sum()
     return cached("ny_zip_make.csv", fetch)
+
+
+def ca_regs():
+    """California DMV light-duty vehicles by ZIP, make and fuel (latest 1 January snapshot), battery-electric and plug-in hybrid."""
+    def fetch():
+        pkg = jget("https://data.ca.gov/api/3/action/package_show?id=vehicle-fuel-type-count-by-zip-code")["result"]
+        res = sorted([r for r in pkg["resources"] if r.get("datastore_active")], key=lambda r: pd.to_datetime(r["name"].split()[0]))[-1]
+        sql = (f'SELECT "ZIP Code" AS zip, CASE WHEN "Make" IN (\'TESLA\', \'RIVIAN\') THEN "Make" ELSE \'OTHER\' END AS make, MAX("Date") AS snapshot, '
+               f'SUM("Vehicles"::int) AS n FROM "{res["id"]}" WHERE "Fuel" IN (\'Battery Electric\', \'Plug-in Hybrid\') AND "Duty" = \'Light\' GROUP BY 1, 2')
+        return pd.DataFrame(jget("https://data.ca.gov/api/3/action/datastore_search_sql?" + urllib.parse.urlencode({"sql": sql}))["result"]["records"])
+    return cached("ca_zip_make.csv", fetch)
+
+
+def ct_regs():
+    """Connecticut DMV registered EVs by town of the primary customer (Connecticut residents only)."""
+    def fetch():
+        d = pd.DataFrame(jget("https://data.ct.gov/resource/y7ky-5wcz.json?" + urllib.parse.urlencode({"$select": "primarycustomercity as town,vehiclemake as make,count(*) as n,max(registration_date_start) as snapshot", "$where": "primarycustomerstate='CT'", "$group": "town,make", "$limit": 50000})))
+        d["make"] = d.make.str.upper().where(d.make.str.upper().isin(["TESLA", "RIVIAN"]), "OTHER")
+        d["n"] = d.n.astype(int)
+        return d.groupby(["town", "make"], as_index=False).agg(n=("n", "sum"), snapshot=("snapshot", "max"))
+    return cached("ct_town_make.csv", fetch)
 
 
 BANDS = [0, 50000, 75000, 100000, 125000, 150000, 200000, 1e9]
@@ -430,12 +454,26 @@ def owners():
     kn = ny.assign(g=np.where(ny.make == "TESLA", "tesla", np.where(ny.make.isin(["RIVIA", "RIVIAN"]), "rivian", "other_ev"))).pivot_table(index="zip", columns="g", values="n", aggfunc="sum", fill_value=0)
     acs_ny = census("860", "36"); acs_ny["geoid"] = acs_ny.geoid.astype(str).str.zfill(5)
     ny_df = acs_ny.set_index("geoid").join(kn, how="left").fillna({"tesla": 0, "rivian": 0, "other_ev": 0})
+    grp = lambda d: np.where(d.make == "TESLA", "tesla", np.where(d.make == "RIVIAN", "rivian", "other_ev"))
+    ca = ca_regs(); ca["n"] = ca.n.astype(int); ca["zip"] = ca.zip.astype(str).str[:5].str.zfill(5)
+    kc = ca.assign(g=grp(ca)).pivot_table(index="zip", columns="g", values="n", aggfunc="sum", fill_value=0)
+    acs_ca = census("860", "06"); acs_ca["geoid"] = acs_ca.geoid.astype(str).str.zfill(5)
+    ca_df = acs_ca.set_index("geoid").join(kc, how="left").fillna({"tesla": 0, "rivian": 0, "other_ev": 0})
+    ct = ct_regs(); ct["n"] = ct.n.astype(int); ct["town"] = ct.town.astype(str).str.upper().str.strip()
+    kt = ct.assign(g=grp(ct)).pivot_table(index="town", columns="g", values="n", aggfunc="sum", fill_value=0)
+    acs_ct = census("060", "09"); acs_ct["town"] = acs_ct.name.astype(str).str.split(" town,").str[0].str.upper().str.strip()
+    ct_df = acs_ct.set_index("town").join(kt, how="left").fillna({"tesla": 0, "rivian": 0, "other_ev": 0})
+    ct_matched = float(kt.loc[kt.index.isin(acs_ct.town)].values.sum() / kt.values.sum())
+    every = pd.concat([d[["pop", "income", "age", "bachelor_plus", "owner_share", "tesla", "rivian", "other_ev"]] for d in (wa_df, ny_df, ca_df, ct_df)], ignore_index=True)
     rel = lambda s: json.loads((R / f"acs_{s}_release.json").read_text())["name"] if (R / f"acs_{s}_release.json").exists() else "ACS 5-year"
+    tot = lambda kk: {"tesla": int(kk.tesla.sum()), "rivian": int(kk.rivian.sum()), "other_ev": int(kk.other_ev.sum())}
     return {"wa": area_profile(wa_df, "Washington (census tracts)"), "ny": area_profile(ny_df, "New York (ZIP code areas)"),
+            "ca": area_profile(ca_df, "California (ZIP code areas)"), "ct": area_profile(ct_df, "Connecticut (towns)"),
+            "all": area_profile(every, "All four states (tracts, ZIPs and towns)"),
+            "snapshots": {"wa": "current", "ny": "current", "ca": str(ca.snapshot.max())[:10], "ct": str(ct.snapshot.max())[:10]}, "ct_town_match": round(ct_matched, 3),
             "wa_counties": {"county": list(cty.index[:15]), "tesla_per1k": [round(v, 2) for v in cty.tesla_per1k[:15]], "rivian_per1k": [round(v, 2) for v in cty.rivian_per1k[:15]]},
             "wa_bev_share_by_model_year": {"years": [int(y) for y in myp.index], "tesla": [round(float(v), 4) for v in myp.get("tesla", 0)], "rivian": [round(float(v), 4) for v in myp.get("rivian", 0)]},
-            "totals": {"wa": {"tesla": int(k.tesla.sum()), "rivian": int(k.rivian.sum()), "other_ev": int(k.other_ev.sum())},
-                       "ny": {"tesla": int(kn.tesla.sum()), "rivian": int(kn.rivian.sum()), "other_ev": int(kn.other_ev.sum())}},
+            "totals": {"wa": tot(k), "ny": tot(kn), "ca": tot(kc), "ct": tot(kt)},
             "acs_release": rel("53")}
 
 
@@ -459,7 +497,8 @@ def main():
                                 "gdelt": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/",
                                 "wa": "https://data.wa.gov/Transportation/Electric-Vehicle-Population-Data/f6w7-q2d2",
                                 "ny": "https://data.ny.gov/Transportation/Vehicle-Snowmobile-and-Boat-Registrations/w4pv-hbkt",
-                                "acs": "https://censusreporter.org/"}},
+                                "acs": "https://censusreporter.org/",
+                                "ca": "https://data.ca.gov/dataset/vehicle-fuel-type-count-by-zip-code", "ct": "https://data.ct.gov/Environment-and-Natural-Resources/Electric-Vehicle-Registration-Data/y7ky-5wcz"}},
            "investors": investors(vol), "market": mk, "customers": customers(mk), "sentiment": sentiment(), "owners": owners()}
     (W / "research.json").write_text(json.dumps(out, separators=(",", ":"), allow_nan=False))
     print("research.json:", round((W / "research.json").stat().st_size / 1024), "KB")
