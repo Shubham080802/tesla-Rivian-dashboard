@@ -31,3 +31,14 @@ function renderPriceChart() {
     dateRanges: ["1d|1", "1m|30", "3m|60", "12m|1D", "60m|1W", "all|1M"],
   });
 }
+
+// Live valuation and fundamentals (market cap, P/E, P/S, margins, balance sheet) for both companies, from TradingView.
+function renderValuation() {
+  const seg = $("finSeg");
+  seg.onclick = (e) => {
+    const b = e.target.closest("[data-i]"); if (!b) return;
+    [...seg.children].forEach((x) => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); });
+    TICKERS.forEach((_, i) => { $(`tv-fin-${i}`).hidden = String(i) !== b.dataset.i; });
+  };
+  TICKERS.forEach(([sym], i) => tvWidget(`tv-fin-${i}`, "embed-widget-financials.js", { symbol: sym, displayMode: "regular", width: "100%", height: 480, largeChartUrl: "" }));
+}

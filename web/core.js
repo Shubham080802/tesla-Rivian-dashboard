@@ -49,7 +49,61 @@ function layout(extra = {}) {
   }
   return l;
 }
-const draw = (id, traces, lay) => Plotly.react(id, traces, lay, { displayModeBar: false, responsive: true, scrollZoom: false });
+// Events that explain jumps in the data. Drawn on any chart whose x axis is dates ("2025-07-01") or quarters ("Q3 2025").
+const EVENTS = [
+  { d: "2021-11-10", q: "Q4 2021", t: "Rivian IPO", s: "IPO" },
+  { d: "2023-11-30", q: "Q4 2023", t: "Cybertruck launch", s: "Cybertruck" },
+  { d: "2025-09-30", q: "Q3 2025", t: "Federal EV tax credit ends", s: "Tax credit ends" },
+  { d: "2026-04-01", q: "Q2 2026", t: "Rivian R2 launch", s: "R2" },
+];
+function eventMarks(traces, below = 0) {
+  const xs = traces.flatMap((t) => (t.orientation === "h" || !Array.isArray(t.x) ? [] : t.x)).filter((v) => typeof v === "string");
+  if (!xs.length) return { shapes: [], annotations: [] };
+  const isDate = xs.every((v) => /^\d{4}-\d{2}-\d{2}$/.test(v)), isQ = xs.every((v) => /^Q[1-4] \d{4}$/.test(v));
+  if (!isDate && !isQ) return { shapes: [], annotations: [] };
+  const lo = isDate ? xs.reduce((a, b) => (a < b ? a : b)) : null, hi = isDate ? xs.reduce((a, b) => (a > b ? a : b)) : null, qs = new Set(xs);
+  const hits = EVENTS.filter((e) => (isDate ? e.d > lo && e.d <= hi : qs.has(e.q)));
+  const c = css("--muted"), cats = [...qs], narrow = innerWidth < 600;
+  const frac = (e) => (isDate ? (Date.parse(e.d) - Date.parse(lo)) / (Date.parse(hi) - Date.parse(lo) || 1) : cats.indexOf(e.q) / Math.max(1, cats.length - 1));
+  return {
+    shapes: hits.map((e) => ({ type: "line", xref: "x", x0: isDate ? e.d : e.q, x1: isDate ? e.d : e.q, yref: "paper", y0: 0, y1: 1, line: { color: c, width: 1, dash: "dot" }, layer: "below" })),
+    annotations: hits.map((e, i) => ({ x: isDate ? e.d : e.q, xref: "x", y: 1, yref: "paper", yanchor: "top", yshift: -2 - below - (narrow ? i : i % 2) * 14, text: narrow ? e.s : e.t, showarrow: false, xanchor: frac(e) > 0.7 ? "right" : "left", xshift: frac(e) > 0.7 ? -3 : 3, font: { size: 10.5, color: c }, bgcolor: "rgba(0,0,0,0)" })),
+  };
+}
+
+// Every chart gets a "Download CSV" link with the data exactly as plotted (one row per series and point).
+function chartCsv(gd) {
+  const rows = [["series", "category", "value"]];
+  (gd.data || []).forEach((t, i) => {
+    const h = t.orientation === "h", cat = (h ? t.y : t.x) || [], val = (h ? t.x : t.y) || [];
+    const name = t.name || (t.showlegend === false && t.hoverinfo === "skip" ? "80% range (upper)" : gd.data.length === 1 ? (gd.closest("article")?.querySelector("h3")?.textContent || "value") : `series ${i + 1}`);
+    cat.forEach((c, k) => { if (val[k] != null) rows.push([name, c, val[k]]); });
+  });
+  return rows.map((r) => r.map((v) => (/[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : v)).join(",")).join("\n");
+}
+function addCsvLink(id) {
+  const gd = $(id);
+  if (!gd || gd.nextElementSibling?.classList.contains("plot-foot")) return;
+  const foot = document.createElement("div");
+  foot.className = "plot-foot";
+  foot.innerHTML = '<button type="button" class="dl">Download CSV</button>';
+  foot.firstChild.onclick = () => {
+    const title = gd.closest("article")?.querySelector("h3")?.textContent || id;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([chartCsv(gd)], { type: "text/csv" }));
+    a.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".csv";
+    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+  gd.after(foot);
+}
+
+const draw = (id, traces, lay) => {
+  const ev = eventMarks(traces, (lay.annotations || []).length ? 18 : 0);   // start below a chart's own top labels
+  const l = { ...lay, shapes: [...(lay.shapes || []), ...ev.shapes], annotations: [...(lay.annotations || []), ...ev.annotations] };
+  const p = Plotly.react(id, traces, l, { displayModeBar: false, responsive: true, scrollZoom: false });
+  addCsvLink(id);
+  return p;
+};
 const line = (color, w = 2) => ({ color, width: w, shape: "spline", smoothing: 0.4 });
 
 const ARROW = { up: "▲", down: "▼", flat: "–" };

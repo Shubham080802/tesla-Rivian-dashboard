@@ -232,6 +232,9 @@
     <article class="card"><header><h3>Investor scorecard</h3><p>Figures from SEC filings. Public float is the market value of shares held by non-insiders, as each company states it on its annual 10-K cover page.</p></header><div class="tablewrap"><table id="ivTable"></table></div></article>
     <p class="note" id="ivNote"></p>
     <h2 class="sect">Shares vs the business</h2>
+    <article class="card"><header class="row-head"><div><h3>Valuation and key ratios, live</h3><p>Market cap, enterprise value, P/E, P/S and balance-sheet ratios from TradingView, updated with the share price.</p></div>
+      <div class="seg" id="finSeg" role="radiogroup" aria-label="Company"><button type="button" role="radio" data-i="0" class="on">Tesla</button><button type="button" role="radio" data-i="1">Rivian</button></div></header>
+      <div class="tv tv-fin" id="tv-fin-0"></div><div class="tv tv-fin" id="tv-fin-1" hidden></div></article>
     <article class="card"><header><h3>Share price</h3><p>TSLA and RIVN on Nasdaq from TradingView, updating during market hours (may be delayed up to 15 minutes). Switch company and range inside the chart. Quotes are supplied by TradingView, not stored by this site.</p></header><div class="tv tv-chart" id="tv-chart"></div></article>
     <article class="card"><header><h3>How have the shares done next to the business?</h3><p>Calendar-year share price changes for Tesla (TSLA) and Rivian (RIVN), both on Nasdaq, beside revenue and vehicle volume growth. Prices are split-adjusted, in US dollars, and exclude dividends.</p></header>
       <div class="tiles tiles-4" id="skTiles"></div></article>

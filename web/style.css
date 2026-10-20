@@ -410,6 +410,12 @@ article.card .row-head .linkbtn:hover { color: var(--ink); }
 /* live quotes (TradingView widgets) */
 .tv-quotes { gap: 12px; }
 .tv { min-height: 72px; min-width: 0; color-scheme: normal; }   /* matching the widget's own scheme keeps its frame transparent */
-.tv-chart { height: 440px; }
+.tv-chart { height: 440px; } .tv-fin { height: 490px; }
+.tv-fin .tradingview-widget-container, .tv-fin .tradingview-widget-container__widget { height: 100%; }
 .tv-chart .tradingview-widget-container, .tv-chart .tradingview-widget-container__widget { height: 100%; }
 @media (max-width: 560px) { .tv-chart { height: 380px; } }
+
+/* chart footer: CSV download */
+.plot-foot { display: flex; justify-content: flex-end; margin-top: 2px; }
+.plot-foot .dl { background: none; border: 0; padding: 2px 0; font: inherit; font-size: 12.5px; color: var(--muted); cursor: pointer; }
+.plot-foot .dl:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }

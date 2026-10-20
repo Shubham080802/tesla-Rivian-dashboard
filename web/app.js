@@ -5,7 +5,7 @@ const TABS = ["overview", "versus", "market", "buyers", "customers", "sentiment"
 const OLD_TABS = { regions: "market", stocks: "investors" };          // links shared before the research tabs
 const renderers = {
   overview: () => { renderOverview(); renderQuotes(); }, market: () => { renderMarket(); renderRegions(); }, buyers: () => renderBuyers(), customers: () => renderCustomers(),
-  sentiment: () => renderSentiment(), investors: () => { renderInvestors(); renderStocks(); renderPriceChart(); },
+  sentiment: () => renderSentiment(), investors: () => { renderInvestors(); renderStocks(); renderPriceChart(); renderValuation(); },
   versus: () => typeof renderVersus === "function" && renderVersus(), ev: () => typeof renderEv === "function" && renderEv(),
   lab: () => renderLab(), drivers: () => renderDrivers(), quality: () => renderQuality(),
 };
