@@ -9,7 +9,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 EXT = ROOT / "data" / "external"
 EXT.mkdir(parents=True, exist_ok=True)
-SEC_UA = "tesla-byd-dashboard personal-research-project"     # SEC asks for a descriptive User-Agent
+SEC_UA = "tesla-rivian-dashboard personal-research-project"     # SEC asks for a descriptive User-Agent
 
 
 def get(url, headers=None, tries=3):

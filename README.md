@@ -2,7 +2,7 @@
 
 A head-to-head dashboard for two U.S.-listed electric-vehicle makers, Tesla (TSLA) and Rivian (RIVN), built only from SEC filings, company releases and open data through 2026: vehicle volumes with backtested forecasts, quarterly and annual financials in US dollars, share price changes beside the business, Tesla's sales in China and Europe, English Wikipedia attention, both U.S. charging networks, and U.S. demand drivers. Every chart and KPI is drawn natively on the site (Plotly), from the same JSON files, and the Research brief tab turns it into findings for investors and customers with methods, limits and citations. It began as an Amazon Appliances review analysis; that project lives in its own repository.
 
-**Live site:** https://tesla-byd-dashboard.vercel.app
+**Live site:** https://tesla-rivian-dashboard.vercel.app
 
 ## What's in it
 The site is laid out like a research paper: a brief with findings for investors and for customers, then one tab per research question, each with its evidence, method notes and sources.
@@ -54,4 +54,4 @@ python -m http.server -d web 8000      # open http://localhost:8000
 A GitHub Action (`.github/workflows/refresh-data.yml`) runs the same steps daily (except share prices) and commits only when a source changed; Vercel redeploys on every push to `main`. Tesla China, Europe and new Rivian quarters are typed in by hand (see [docs/TODO.md](docs/TODO.md)).
 
 ## Caveats
-Owner demographics are neighbourhood averages from two states, not facts about individual owners; Cox sales are modelled estimates; NHTSA complaints are unverified owner reports; GDELT tone measures news wording, not buyer opinion. Only U.S.-listed companies are covered, so both report to the SEC in US dollars under the same accounting rules; BYD was dropped for that reason. Volumes are what the companies report, not revenue. There are no customer-review or satisfaction views because neither company publishes that data. Attention is English Wikipedia only. This is not investment advice. Method notes: [docs/MODEL.md](docs/MODEL.md).
+Owner demographics are neighbourhood averages from two states, not facts about individual owners; Cox sales are modelled estimates; NHTSA complaints are unverified owner reports; GDELT tone measures news wording, not buyer opinion. Only U.S.-listed companies are covered, so both report to the SEC in US dollars under the same accounting rules. Volumes are what the companies report, not revenue. There are no customer-review or satisfaction views because neither company publishes that data. Attention is English Wikipedia only. This is not investment advice. Method notes: [docs/MODEL.md](docs/MODEL.md).

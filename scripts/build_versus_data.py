@@ -21,7 +21,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 EV = ROOT / "data" / "external" / "ev"
-UA = {"User-Agent": "tesla-byd-dashboard personal-research-project"}
+UA = {"User-Agent": "tesla-rivian-dashboard personal-research-project"}
 WIKI = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/{}/monthly/2015070100/{}"
 GROUPS = {"tesla": ["Tesla,_Inc.", "Tesla_Motors"], "rivian": ["Rivian"]}
 
