@@ -406,3 +406,10 @@ article.card .row-head .linkbtn { font-size: 13px; color: var(--ink2); text-deco
 article.card .row-head .linkbtn:hover { color: var(--ink); }
 .cite { margin: 4px 0 8px; padding-left: 22px; display: grid; gap: 6px; font-size: 13.5px; color: var(--ink2); }
 .stars { color: var(--c4); letter-spacing: 1px; white-space: nowrap; } .stars .muted, .muted { color: var(--grid); }
+
+/* live quotes (TradingView widgets) */
+.tv-quotes { gap: 12px; }
+.tv { min-height: 72px; min-width: 0; color-scheme: normal; }   /* matching the widget's own scheme keeps its frame transparent */
+.tv-chart { height: 440px; }
+.tv-chart .tradingview-widget-container, .tv-chart .tradingview-widget-container__widget { height: 100%; }
+@media (max-width: 560px) { .tv-chart { height: 380px; } }

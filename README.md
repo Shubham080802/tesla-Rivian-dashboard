@@ -9,13 +9,13 @@ An analytical dashboard: an Overview of headline KPIs and trends, then one tab p
 
 | Tab | Answers |
 |---|---|
-| **Overview** | Side-by-side KPIs (U.S. market share, deliveries, revenue, net margin, free cash flow, cash, gross profit per vehicle, news tone) and four trend charts linking to the detail tabs. |
+| **Overview** | Near-live TSLA and RIVN share prices (TradingView widgets), side-by-side KPIs (U.S. market share, deliveries, revenue, net margin, free cash flow, cash, gross profit per vehicle, news tone) and four trend charts linking to the detail tabs. |
 | **Head to head** | A scoreboard (deliveries, growth, revenue, net income, margins, revenue per vehicle, attention) with the leader on each row, revenue and net income by year, margins, attention, and both charging networks. |
 | **Market share** | Tesla and Rivian's share of U.S. EV sales by quarter, sales stacked against every other brand, EVs as a share of all new vehicles, sales by model, plus Tesla's China wholesale and Europe registrations. |
 | **Who buys** | Every Tesla and Rivian registered in Washington (by census tract) and New York (by ZIP code) joined to Census ACS income, age, education and home-ownership: where the cars sit by neighbourhood income, ownership per 1,000 residents, the typical owner's neighbourhood, top counties and share by model year. |
 | **Customer view** | EPA range and efficiency by model, NHTSA crash-test stars, owner complaints per 10,000 vehicles sold, recalls by year and how many were fixable over the air, and what complaints and recalls were about. |
 | **Sentiment** | GDELT news tone and coverage by month, and owner complaints filed with NHTSA (Wikipedia attention is on Head to head). |
-| **Investor view** | Margins from gross to free cash flow, per-vehicle economics, quarterly net income and free cash flow, cash vs debt, cash runway, R&D, SG&A and stock-based pay, dilution, public float to sales, a scorecard, and share price changes beside the business. Not investment advice. |
+| **Investor view** | Margins from gross to free cash flow, per-vehicle economics, quarterly net income and free cash flow, cash vs debt, cash runway, R&D, SG&A and stock-based pay, dilution, public float to sales, a scorecard, a near-live TradingView price chart, and share price changes beside the business. Not investment advice. |
 | **Sales & forecast** | Tesla and Rivian deliveries side by side, then each company's deliveries with forecasts and 80% ranges, production vs deliveries, revenue and margins, and Tesla's model mix. |
 | **Forecast lab** | Ask the dashboard, an outlook scorecard, a per-series lab with demand scenarios and a target tester, an on-track check and seasonality. |
 | **Drivers** | Gasoline price, loan rates, vehicle sales, new-car prices, sentiment and the fed funds rate, tested against Tesla and Rivian growth with an overlap-corrected test. |
@@ -28,6 +28,7 @@ An analytical dashboard: an Overview of headline KPIs and trends, then one tab p
 | [Rivian 8-K releases](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1874178&type=8-K) and [SEC EDGAR](https://www.sec.gov/edgar/browse/?CIK=1874178) | deliveries, production, financials | Q3 2026 deliveries, Q2 2026 financials |
 | [CPCA](https://cnevpost.com/2026/08/12/tesla-jul-china-deliveries-shanghai-exports/) (via CnEVPost) and [ACEA press releases](https://www.acea.auto/files/Press_release_car_registrations_August_2026.pdf) | Tesla China domestic and exports; Tesla Europe registrations (EU, EFTA, UK) | Sep 2026 / Aug 2026 |
 | Yahoo Finance (personal use, run by hand) | TSLA and RIVN share price changes (percentages only) | Sep 2026 |
+| [TradingView widgets](https://www.tradingview.com/widget-docs/) | near-live TSLA and RIVN quotes and price chart, shown in the page; nothing is stored | live |
 | [FRED](https://fred.stlouisfed.org/) | U.S. demand drivers; all new light-vehicle sales (LTOTALNSA) | Oct 2026 |
 | [Cox Automotive / Kelley Blue Book EV Sales Reports](https://www.coxautoinc.com/insights/q3-2026-ev-sales-report-commentary/) | U.S. EV sales estimates by brand and model | Q3 2026 |
 | [NHTSA APIs](https://www.nhtsa.gov/nhtsa-datasets-and-apis) | recalls, owner complaints, NCAP crash ratings | daily |
