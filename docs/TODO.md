@@ -1,7 +1,7 @@
 # To do
 
 ## Data
-- [ ] **Cox EV sales report:** each quarter (about two weeks after quarter end) run `python scripts/parse_cox_ev_report.py <pdf-url> <quarter>` with the new Kelley Blue Book EV Sales Report.
+- [x] **Cox EV sales report:** automated. `.github/workflows/cox-report.yml` runs `scripts/find_cox_report.py` weekly in report months, picks up new and revised reports, and commits only if every check passes.
 - [ ] **More states for owner profiles:** California, Washington, New York and Connecticut are in. Colorado, Texas and others do not yet publish make-level EV registrations openly; add them if they do.
 - [ ] **Rivian quarterly:** add each new quarter's production and deliveries (from the 8-K, Exhibit 99.1) to `data/external/ev/rivian_quarterly.csv`.
 - [ ] **Share prices:** refresh by hand with `python scripts/build_stocks.py` after each month end (it fetches into a git-ignored cache). If a licensed, redistributable source is ever available, a full monthly price chart could replace the derived figures.

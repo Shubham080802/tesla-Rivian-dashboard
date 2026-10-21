@@ -1,0 +1,46 @@
+# Weekly in the months Cox Automotive publishes its quarterly EV sales report (about two weeks after each quarter
+# ends): find a new or revised report, add it, rebuild the market data, and commit only if every check passes.
+name: Cox EV sales report
+
+on:
+  schedule:
+    - cron: "23 7 * 1,2,4,5,7,8,10,11 1"   # Mondays 07:23 UTC in the months a report can appear
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data                      # never run alongside the daily refresh
+  cancel-in-progress: false
+
+jobs:
+  cox:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Look for a new or revised report
+        working-directory: scripts
+        run: python find_cox_report.py
+      - name: Rebuild and check
+        env:
+          RESEARCH_CACHE_ONLY: "1"            # only the Cox file changed; reuse every other cached source
+          RESEARCH_SKIP_GDELT: "1"
+        run: |
+          if git diff --quiet -- data/external/research/us_ev_sales_cox.csv; then echo "No new Cox report."; exit 0; fi
+          python scripts/build_research.py
+          python scripts/check_data.py
+      - name: Commit
+        run: |
+          if git diff --quiet -- data/external/research/us_ev_sales_cox.csv; then exit 0; fi
+          git config user.name "data-refresh-bot"
+          git config user.email "data-refresh-bot@users.noreply.github.com"
+          git add data/external/research/us_ev_sales_cox.csv web
+          git commit -m "data: Cox EV sales report ($(date -u +%F))"
+          git push

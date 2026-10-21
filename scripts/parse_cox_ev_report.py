@@ -54,7 +54,7 @@ def main(url, quarter):
     new = pd.DataFrame(parse(pdf, quarter), columns=["quarter", "item", "units"])
     new["report_quarter"], new["source"] = quarter, url
     old = pd.read_csv(OUT) if OUT.exists() else new.iloc[:0]
-    both = pd.concat([old, new]).sort_values("report_quarter").drop_duplicates(["quarter", "item"], keep="last")
+    both = pd.concat([old, new]).sort_values("report_quarter", kind="stable").drop_duplicates(["quarter", "item"], keep="last")
     OUT.parent.mkdir(parents=True, exist_ok=True)
     both.sort_values(["quarter", "item"]).to_csv(OUT, index=False)
     print(f"{len(new)} rows from the {quarter} report; {both.quarter.nunique()} quarters in {OUT.name}")

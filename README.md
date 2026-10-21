@@ -50,11 +50,11 @@ python scripts/build_regions.py        # Tesla China and Europe -> web/regions.j
 python scripts/build_stocks.py         # by hand only: share price changes vs the business -> web/stocks.json (fetches personal-use prices into a git-ignored cache; publishes only percentages)
 python scripts/build_drivers.py        # demand drivers and the exploratory test -> web/drivers.json
 python scripts/build_research.py       # investors, market share, customers, sentiment, owners -> web/research.json (RESEARCH_CACHE_ONLY=1 reuses cached downloads)
-python scripts/parse_cox_ev_report.py <report-url> <quarter>   # by hand, once a quarter: add Cox's new EV sales report
+python scripts/find_cox_report.py      # Cox's newest quarterly EV sales report, if any (also runs weekly in .github/workflows/cox-report.yml)
 python scripts/check_data.py           # checks -> web/checks.json
 python -m http.server -d web 8000      # open http://localhost:8000
 ```
-A GitHub Action (`.github/workflows/refresh-data.yml`) runs the same steps daily (except share prices) and commits only when a source changed; Vercel redeploys on every push to `main`. Tesla China, Europe and new Rivian quarters are typed in by hand (see [docs/TODO.md](docs/TODO.md)).
+A GitHub Action (`.github/workflows/refresh-data.yml`) runs the same steps daily (except share prices) and commits only when a source changed; Vercel redeploys on every push to `main`. Cox's quarterly report is picked up automatically by `.github/workflows/cox-report.yml`. Tesla China, Europe and new Rivian quarters are typed in by hand (see [docs/TODO.md](docs/TODO.md)).
 
 ## Caveats
 Owner demographics are neighbourhood averages from four states, not facts about individual owners; Cox sales are modelled estimates; NHTSA complaints are unverified owner reports; GDELT tone measures news wording, not buyer opinion. Only U.S.-listed companies are covered, so both report to the SEC in US dollars under the same accounting rules. Volumes are what the companies report, not revenue. There are no customer-review or satisfaction views because neither company publishes that data. Attention is English Wikipedia only. This is not investment advice. Method notes: [docs/MODEL.md](docs/MODEL.md).
