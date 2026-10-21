@@ -99,7 +99,10 @@ if sk_path.exists():
     check("stocks.json has no missing or infinite numbers", finite(sk), "all values are finite")
     t = {r["year"]: r["stock_return"] for r in sk["years"] if r["company"] == "Tesla"}
     rv_ = {r["year"]: r["stock_return"] for r in sk["years"] if r["company"] == "Rivian"}
-    check("Rivian yearly share price changes match the published record", abs(rv_[2022] + 0.822) < 0.01 and abs(rv_[2023] - 0.273) < 0.01, "2022 -82%, 2023 +27% (price only)")
+    check("Rivian yearly share price changes match the published record", abs(rv_[2022] + 0.822) < 0.01 and abs(rv_[2023] - 0.273) < 0.01 and abs(rv_[2024] + 0.433) < 0.01, "2022 -82%, 2023 +27%, 2024 -43% (price only; 2024 year-end close $13.30)")
+    lc_ = {r["year"]: r["stock_return"] for r in sk["years"] if r["company"] == "Lucid"}
+    check("Lucid yearly share price changes match the published record", 2021 not in lc_ and abs(lc_[2022] + 0.821) < 0.01 and abs(lc_[2023] + 0.384) < 0.01 and abs(lc_[2024] + 0.283) < 0.01,
+          "2022 -82%, 2023 -38%, 2024 -28% (adjusted for the 2025 1-for-10 reverse split; 2024 year-end close $3.02 before adjustment); none for 2021, when the ticker was a SPAC")
     check("Tesla yearly share price changes match the published record", abs(t[2020] - 7.434) < 0.01 and abs(t[2021] - 0.498) < 0.01 and abs(t[2022] + 0.650) < 0.01 and abs(t[2023] - 1.017) < 0.01 and abs(t[2024] - 0.625) < 0.01,
           "2020 +743%, 2021 +50%, 2022 -65%, 2023 +102%, 2024 +63% (split-adjusted, price only)")
     check("Share price data is current", months_old(sk["meta"]["through"]) <= 3, f"through {sk['meta']['through']} (refreshed by hand; not part of the daily job)", warn=True)

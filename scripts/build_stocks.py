@@ -1,4 +1,4 @@
-"""Stock performance vs the business: calendar-year price returns for Tesla (TSLA) and Rivian (RIVN), both US-listed, set against
+"""Stock performance vs the business: calendar-year price returns for Tesla (TSLA), Rivian (RIVN) and Lucid (LCID), all US-listed, set against
 revenue and volume growth -> web/stocks.json (additive).
 
 DATA TERMS, PLEASE READ: no free monthly price source clearly allows republishing prices. Monthly closes are fetched from Yahoo
@@ -24,17 +24,21 @@ ROOT = Path(__file__).resolve().parent.parent
 EV = ROOT / "data" / "external" / "ev"
 LOCAL = EV / "stock_monthly_local.csv"             # git-ignored raw closes
 DERIVED = EV / "stock_derived.json"                 # committed: only percentage figures
-SYMS = {"Tesla": "TSLA", "Rivian": "RIVN"}
+SYMS = {"Tesla": "TSLA", "Rivian": "RIVN", "Lucid": "LCID"}
+LISTED = {"Lucid": "2021-07"}                        # first month the shares were the company itself
 
 
 def fetch():
     rows = []
     for co, sym in SYMS.items():
-        u = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(sym)}?range=max&interval=1mo&events=div%2Csplit"
+        # daily closes, then the last trading day of each month: Yahoo sometimes answers a monthly request with weekly
+        # bars (it did for LCID), and a week that starts in one month and ends in the next would land in the wrong month
+        # (an explicit date range keeps daily bars; "range=max" is silently downgraded to weekly or monthly)
+        u = f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(sym)}?period1=0&period2={int(dt.datetime.now().timestamp())}&interval=1d&events=div%2Csplit"
         d = json.loads(urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"}), timeout=60).read())["chart"]["result"][0]
         for t, c in zip(d["timestamp"], d["indicators"]["quote"][0]["close"]):
             if c is not None:
-                rows.append((co, dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%Y-%m"), float(c)))
+                rows.append((co, dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%Y-%m"), float(c)))   # in time order, so the month's last close wins
     df = pd.DataFrame(rows, columns=["company", "month", "close"]).drop_duplicates(["company", "month"], keep="last")
     this_month = dt.date.today().strftime("%Y-%m")
     return df[df.month < this_month]                 # the running month is incomplete
@@ -44,6 +48,7 @@ def derive(df):
     out = {}
     for co in SYMS:
         s = df[df.company == co].set_index("month").close
+        s = s[s.index >= LISTED.get(co, "")]            # before Lucid's July 2021 merger the ticker was the CCIV SPAC
         dec = {m[:4]: v for m, v in s.items() if m.endswith("-12")}
         last_m = s.index[-1]; ly = last_m[:4]
         ret = {int(y): round(float(dec[y] / dec[str(int(y) - 1)] - 1), 4) for y in dec if str(int(y) - 1) in dec and int(y) >= 2020 and int(y) < int(ly)}
@@ -72,9 +77,14 @@ def main():
     for q in ev["rivian"]["quarters"]:
         ann_r.setdefault(int(q["q"][:4]), []).append(q["deliveries"])
     ann_r = {y: sum(v) for y, v in ann_r.items() if len(v) == 4}
+    ann_l = {}
+    for q in ev["lucid"]["quarters"]:
+        ann_l.setdefault(int(q["q"][:4]), []).append(q["deliveries"])
+    ann_l = {y: sum(v) for y, v in ann_l.items() if len(v) == 4}
+    rev_l = vs["fin"]["lucid"]["revenue"]
     g = lambda d, y: (d[y] / d[y - 1] - 1) if y in d and y - 1 in d and d[y - 1] else None
     rows = []
-    for co, rev, vol in (("Tesla", dict(zip(Y, rev_t)), ann_t), ("Rivian", {y: v for y, v in zip(Y, rev_r) if v}, ann_r)):
+    for co, rev, vol in (("Tesla", dict(zip(Y, rev_t)), ann_t), ("Rivian", {y: v for y, v in zip(Y, rev_r) if v}, ann_r), ("Lucid", {y: v for y, v in zip(Y, rev_l) if v}, ann_l)):
         for y in sorted(derived[co]["annual_return"], key=int):
             y = int(y)
             rows.append({"company": co, "year": y, "stock_return": derived[co]["annual_return"][str(y)], "revenue_growth": None if g(rev, y) is None or rev.get(y - 1, 0) < 100 else round(g(rev, y), 4), "volume_growth": None if g(vol, y) is None else round(g(vol, y), 4)})
