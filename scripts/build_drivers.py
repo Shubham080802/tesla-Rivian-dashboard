@@ -1,5 +1,5 @@
 """Demand drivers for EVs (U.S. macro series from FRED) and an exploratory test of whether they line up with
-Tesla and Rivian deliveries. Writes web/drivers.json (additive).
+Tesla, Rivian and Lucid deliveries. Writes web/drivers.json (additive).
 
 Honest limits: Tesla has about 26 usable year-over-year quarters and Rivian about 15, which is little data, and Tesla's
 volumes are also shaped by China and Europe, which these U.S. series do not capture. The test is therefore labelled exploratory:
@@ -54,8 +54,10 @@ def main():
     tq.index = pd.PeriodIndex([f"{q[:4]}Q{(int(q[5:7]) - 1) // 3 + 1}" for q in tq.index], freq="Q")
     rq = pd.Series({q["q"]: q["deliveries"] for q in ev["rivian"]["quarters"]}, dtype=float)
     rq.index = pd.PeriodIndex([f"{q[:4]}Q{(int(q[5:7]) - 1) // 3 + 1}" for q in rq.index], freq="Q")
-    tg, rg = np.log(tq / tq.shift(4)).dropna(), np.log(rq / rq.shift(4)).dropna()
-    alpha = 0.05 / (len(SERIES) * 2 * 2)                       # indicators x leads x companies
+    lq = pd.Series({q["q"]: q["deliveries"] for q in ev["lucid"]["quarters"]}, dtype=float)
+    lq.index = pd.PeriodIndex([f"{q[:4]}Q{(int(q[5:7]) - 1) // 3 + 1}" for q in lq.index], freq="Q")
+    tg, rg, lg = np.log(tq / tq.shift(4)).dropna(), np.log(rq / rq.shift(4)).dropna(), np.log(lq / lq.shift(4)).dropna()
+    alpha = 0.05 / (len(SERIES) * 2 * 3)                       # indicators x leads x companies
     out_series, rows = {}, []
     for sid, label, kind, unit, pub in SERIES:
         s = common.fred(sid)
@@ -69,7 +71,7 @@ def main():
         qv = s.copy(); qv.index = qv.index.to_period("Q"); qv = qv.groupby(level=0).mean()
         mv = s.copy(); mv.index = mv.index.to_period("M"); mv = mv.groupby(level=0).mean()
         for lead in (0, 1):
-            for co, g, v, lag in (("Tesla", tg, qv, 4), ("Rivian", rg, qv, 4)):
+            for co, g, v, lag in (("Tesla", tg, qv, 4), ("Rivian", rg, qv, 4), ("Lucid", lg, qv, 4)):
                 res = test(g, yoy(v, kind, lag), lead, lag)
                 if res:
                     rows.append({"id": sid, "label": label, "company": co, **res})

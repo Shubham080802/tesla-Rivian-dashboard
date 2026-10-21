@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tesla vs Rivian</title>
-<meta name="description" content="A research dashboard on Tesla and Rivian, two US-listed EV makers: market share, buyers, customer quality and safety, sentiment, profit and loss, cash and forecasts, from public data through 2026.">
+<title>Tesla, Rivian &amp; Lucid</title>
+<meta name="description" content="An analytical dashboard on three US-listed EV makers, Tesla, Rivian and Lucid: market share, buyers, quality and safety, sentiment, profit and loss, cash, share prices and forecasts, from public data through 2026.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="style.css">
 <script>
@@ -22,7 +22,7 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg>
       </span>
       <div>
-        <h1>Tesla vs Rivian</h1>
+        <h1>Tesla, Rivian &amp; Lucid</h1>
         <p id="subtitle">Public data through 2026</p>
       </div>
     </div>
@@ -63,7 +63,7 @@
 
   <div class="panel active" id="tab-overview">
     <article class="card quotes"><header class="row-head"><div><h3>Share price</h3><p>Near-live Nasdaq quotes from TradingView; a "D" marks data delayed by up to 15 minutes. Not investment advice.</p></div><button type="button" class="linkbtn" data-go-tab="investors">Price chart →</button></header>
-      <div class="grid2 tv-quotes"><div class="tv" id="tv-quote-0"></div><div class="tv" id="tv-quote-1"></div></div></article>
+      <div class="grid3 tv-quotes"><div class="tv" id="tv-quote-0"></div><div class="tv" id="tv-quote-1"></div><div class="tv" id="tv-quote-2"></div></div></article>
     <div class="tiles tiles-4" id="ovTiles"></div>
     <div class="tiles tiles-4" id="ovTiles2"></div>
     <div class="grid2">
@@ -71,7 +71,7 @@
       <article class="card"><header class="row-head"><div><h3>Deliveries, change vs a year earlier</h3><p>Quarterly, company-reported, since 2024</p></div><button type="button" class="linkbtn" data-go-tab="ev">Sales →</button></header><div class="plot" id="c-ov-growth"></div></article>
     </div>
     <div class="grid2">
-      <article class="card"><header class="row-head"><div><h3>Net margin</h3><p>Quarterly net income as a share of revenue, since 2024</p></div><button type="button" class="linkbtn" data-go-tab="investors">Investors →</button></header><div class="plot" id="c-ov-margin"></div></article>
+      <article class="card"><header class="row-head"><div><h3>Net margin</h3><p id="ovMarginSub"></p></div><button type="button" class="linkbtn" data-go-tab="investors">Investors →</button></header><div class="plot" id="c-ov-margin"></div></article>
       <article class="card"><header class="row-head"><div><h3>Free cash flow</h3><p>Quarterly, US dollars, since 2024</p></div><button type="button" class="linkbtn" data-go-tab="investors">Investors →</button></header><div class="plot" id="c-ov-fcf"></div></article>
     </div>
     <p class="note" id="ovNote"></p>
@@ -117,7 +117,7 @@
     <article class="card"><header><h3>The typical owner's neighbourhood</h3><p>Vehicle-weighted averages of each area's census figures, against the state's population as a whole.</p></header><div class="tablewrap"><table id="byProfile"></table></div></article>
     <div class="grid2">
       <article class="card"><header><h3>Washington counties with the most Teslas per resident</h3><p>Registered battery-electric vehicles per 1,000 residents.</p></header><div class="plot h-lg" id="c-by-cty"></div></article>
-      <article class="card"><header><h3>Share of Washington's electric cars, by model year</h3><p>Tesla and Rivian as a share of all battery-electric vehicles of each model year still registered in Washington.</p></header><div class="plot h-lg" id="c-by-my"></div></article>
+      <article class="card"><header><h3>Share of Washington's electric cars, by model year</h3><p>Tesla, Rivian and Lucid as a share of all battery-electric vehicles of each model year still registered in Washington.</p></header><div class="plot h-lg" id="c-by-my"></div></article>
     </div>
     <p class="note" id="byNote"></p>
   </div>
@@ -145,14 +145,14 @@
     <article class="card"><header><h3>News tone, monthly average</h3><p id="seToneSub"></p></header><div class="plot h-lg" id="c-se-tone"></div></article>
     <div class="grid2">
       <article class="card"><header><h3>News coverage</h3><p>Articles mentioning each company per million articles GDELT monitored that month.</p></header><div class="plot h-lg" id="c-se-vol"></div></article>
-      <article class="card"><header><h3>Owner complaints filed with NHTSA, by month</h3><p>All Tesla and Rivian model years. Tesla has a far larger fleet, so compare the shape, not the level.</p></header><div class="plot h-lg" id="c-se-comp"></div></article>
+      <article class="card"><header><h3>Owner complaints filed with NHTSA, by month</h3><p>All Tesla, Rivian and Lucid model years. Tesla has a far larger fleet, so compare the shape, not the level.</p></header><div class="plot h-lg" id="c-se-comp"></div></article>
     </div>
     <p class="note" id="seNote"></p>
   </div>
 
   <div class="panel" id="tab-ev">
     <article class="card">
-      <header><h3>Tesla and Rivian, in one view</h3><p>Reported vehicle volumes through the latest quarterly release, with the same backtested forecasts as the rest of the dashboard. Both are battery-electric only.</p></header>
+      <header><h3>Tesla, Rivian and Lucid, in one view</h3><p>Reported vehicle volumes through the latest quarterly release, with the same backtested forecasts as the rest of the dashboard. All three sell only battery-electric vehicles.</p></header>
       <div class="tablewrap fresh" id="evFresh"></div>
     </article>
 
@@ -160,7 +160,7 @@
       <h2 class="sect">Head to head</h2>
       <div class="tiles tiles-4" id="evTiles"></div>
     </section>
-    <article class="card"><header><h3>Vehicles delivered, last 12 months rolling</h3><p>Quarterly deliveries summed over the trailing four quarters. Both share one axis, so the gap in scale is real.</p></header><div class="plot h-lg" id="c-ev-h2h"></div></article>
+    <article class="card"><header><h3>Vehicles delivered, last 12 months rolling</h3><p>Quarterly deliveries summed over the trailing four quarters, on a log scale so all three companies are readable: each gridline is ten times the one below.</p></header><div class="plot h-lg" id="c-ev-h2h"></div></article>
 
     <section>
       <h2 class="sect">Tesla</h2>
@@ -181,7 +181,15 @@
     </section>
     <div class="grid2">
       <article class="card"><header><h3>Rivian deliveries by quarter</h3><p id="rivSub"></p></header><div class="plot h-lg" id="c-riv-del"></div></article>
-      <article class="card"><header><h3>Rivian revenue and margin</h3><p>Quarterly, from Rivian's SEC filings. Gross margin turned positive only recently; the company is still loss-making.</p></header><div class="plot h-lg" id="c-riv-fin"></div></article>
+      <article class="card"><header><h3>Rivian revenue and net income</h3><p>Quarterly, US dollars, from Rivian's SEC filings. Rivian is still loss-making; margins are on the Investors tab.</p></header><div class="plot h-lg" id="c-riv-fin"></div></article>
+    </div>
+    <section>
+      <h2 class="sect">Lucid</h2>
+      <div class="tiles tiles-4" id="lucTiles"></div>
+    </section>
+    <div class="grid2">
+      <article class="card"><header><h3>Lucid deliveries by quarter</h3><p id="lucSub"></p></header><div class="plot h-lg" id="c-luc-del"></div></article>
+      <article class="card"><header><h3>Lucid revenue and net income</h3><p>Quarterly, US dollars, from Lucid's SEC filings. Lucid is still loss-making; margins are on the Investors tab.</p></header><div class="plot h-lg" id="c-luc-fin"></div></article>
     </div>
     <p class="note" id="evNote"></p>
   </div>
@@ -238,15 +246,16 @@
     <p class="note" id="ivNote"></p>
     <h2 class="sect">Shares vs the business</h2>
     <article class="card"><header class="row-head"><div><h3>Valuation and key ratios, live</h3><p>Market cap, enterprise value, P/E, P/S and balance-sheet ratios from TradingView, updated with the share price.</p></div>
-      <div class="seg" id="finSeg" role="radiogroup" aria-label="Company"><button type="button" role="radio" data-i="0" class="on">Tesla</button><button type="button" role="radio" data-i="1">Rivian</button></div></header>
-      <div class="tv tv-fin" id="tv-fin-0"></div><div class="tv tv-fin" id="tv-fin-1" hidden></div></article>
-    <article class="card"><header><h3>Share price</h3><p>TSLA and RIVN on Nasdaq from TradingView, updating during market hours (may be delayed up to 15 minutes). Switch company and range inside the chart. Quotes are supplied by TradingView, not stored by this site.</p></header><div class="tv tv-chart" id="tv-chart"></div></article>
-    <article class="card"><header><h3>How have the shares done next to the business?</h3><p>Calendar-year share price changes for Tesla (TSLA) and Rivian (RIVN), both on Nasdaq, beside revenue and vehicle volume growth. Prices are split-adjusted, in US dollars, and exclude dividends.</p></header>
-      <div class="tiles tiles-4" id="skTiles"></div></article>
+      <div class="seg" id="finSeg" role="radiogroup" aria-label="Company"><button type="button" role="radio" data-i="0" class="on">Tesla</button><button type="button" role="radio" data-i="1">Rivian</button><button type="button" role="radio" data-i="2">Lucid</button></div></header>
+      <div class="tv tv-fin" id="tv-fin-0"></div><div class="tv tv-fin" id="tv-fin-1" hidden></div><div class="tv tv-fin" id="tv-fin-2" hidden></div></article>
+    <article class="card"><header><h3>Share price</h3><p>TSLA, RIVN and LCID on Nasdaq from TradingView, updating during market hours (may be delayed up to 15 minutes). Switch company and range inside the chart. Quotes are supplied by TradingView, not stored by this site.</p></header><div class="tv tv-chart" id="tv-chart"></div></article>
+    <article class="card"><header><h3>How have the shares done next to the business?</h3><p>Calendar-year share price changes for Tesla (TSLA), Rivian (RIVN) and Lucid (LCID), all on Nasdaq, beside revenue and vehicle volume growth. Prices are split-adjusted, in US dollars, and exclude dividends.</p></header>
+      <div class="tiles tiles-2" id="skTiles"></div></article>
     <article class="card"><header><h3>Share price change by year</h3><p>Each company's price at year end vs the year before.</p></header><div class="plot h-lg" id="c-sk-ret"></div></article>
     <div class="grid2">
       <article class="card"><header><h3>Tesla: market vs business</h3><p>Price change, revenue growth and deliveries growth.</p></header><div class="plot h-lg" id="c-sk-tesla"></div></article>
       <article class="card"><header><h3>Rivian: market vs business</h3><p>Price change, revenue growth and deliveries growth (listed since November 2021).</p></header><div class="plot h-lg" id="c-sk-rivian"></div></article>
+      <article class="card"><header><h3>Lucid: market vs business</h3><p>Price change, revenue growth and deliveries growth (listed since July 2021; adjusted for the 2025 1-for-10 reverse split).</p></header><div class="plot h-lg" id="c-sk-lucid"></div></article>
     </div>
     <article class="card"><header><h3>Was the market ahead of or behind the business?</h3></header><div class="tablewrap"><table id="skTable"></table></div></article>
     <p class="note" id="skNote"></p>
@@ -268,6 +277,7 @@
       <div class="seg" id="labSeg" role="radiogroup" aria-label="Series">
         <button type="button" role="radio" data-id="tsl_del" class="on">Tesla deliveries</button><button type="button" role="radio" data-id="tsl_rev">Tesla revenue</button>
         <button type="button" role="radio" data-id="riv_del">Rivian deliveries</button><button type="button" role="radio" data-id="riv_rev">Rivian revenue</button>
+        <button type="button" role="radio" data-id="luc_del">Lucid deliveries</button><button type="button" role="radio" data-id="luc_rev">Lucid revenue</button>
       </div>
       <div class="tiles tiles-4" id="labTiles"></div>
     </section>
@@ -289,7 +299,7 @@
   </div>
 
   <div class="panel" id="tab-drivers">
-    <article class="card"><header><h3>What moves EV demand?</h3><p>U.S. indicators that could plausibly drive demand, tested against Tesla and Rivian growth. This is exploratory and honest about how little data there is.</p></header>
+    <article class="card"><header><h3>What moves EV demand?</h3><p>U.S. indicators that could plausibly drive demand, tested against Tesla, Rivian and Lucid growth. This is exploratory and honest about how little data there is.</p></header>
       <div class="tablewrap"><table id="drTable"></table></div><p class="note" id="drNote"></p></article>
     <section><h2 class="sect">The indicators</h2><div class="tiles tiles-4" id="drTiles"></div></section>
     <div class="grid3" id="drGrid"></div>
@@ -301,25 +311,25 @@
     <article class="card"><header><h3>Sources</h3><p>All public. Method notes are in the project's docs/MODEL.md.</p></header><ol class="cite" id="qSources"></ol></article>
     <article class="card"><header><h3>What is not here, and why</h3></header>
       <ul class="plain">
-        <li><b>Customer satisfaction surveys and reviews.</b> No open dataset exists for Tesla or Rivian. The Quality & safety and Sentiment tabs use NHTSA complaints, crash ratings, EPA figures and news tone instead.</li>
+        <li><b>Customer satisfaction surveys and reviews.</b> No open dataset exists for Tesla, Rivian or Lucid. The Quality & safety and Sentiment tabs use NHTSA complaints, crash ratings, EPA figures and news tone instead.</li>
         <li><b>Owners' personal demographics.</b> No source publishes buyers' age or income. The Who buys tab describes the neighbourhoods where cars are registered in California, Washington, New York and Connecticut, from the Census Bureau.</li>
         <li><b>Companies listed outside the U.S.</b> They are out of scope, so every company here trades on a U.S. exchange, reports to the SEC in US dollars and follows the same accounting rules.</li>
         <li><b>Raw share prices.</b> No free source clearly allows republishing prices, so only derived yearly percentage changes are shown on the Stock vs business tab; the monthly prices themselves stay on the maintainer's machine.</li>
         <li><b>Registrations by country.</b> Tesla's China domestic and export figures are included (CPCA). Europe runs to August 2026. Rivian sells almost only in North America, so it has no regional split; Tesla's U.S. registrations are not public monthly.</li>
-        <li><b>Monthly volumes.</b> Both companies report deliveries quarterly, so the forecasts work in quarters.</li>
+        <li><b>Monthly volumes.</b> All three companies report deliveries quarterly, so the forecasts work in quarters.</li>
       </ul></article>
   </div>
 </main>
 
 <footer>
-  <p>Data: Tesla and Rivian 8-K releases and SEC filings; CPCA; ACEA; Wikimedia page views; U.S. station locator; FRED. Volumes are what the companies report, not revenue. Not investment advice.</p>
+  <p>Data: Tesla, Rivian and Lucid 8-K releases and SEC filings; Cox Automotive; NHTSA; EPA; state DMVs; Census ACS; GDELT; CPCA; ACEA; Wikimedia page views; U.S. station locator; FRED. Volumes are what the companies report, not revenue. Not investment advice.</p>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="core.js"></script>
 <script src="app.js"></script>
 <script src="ev.js"></script>
-<script src="rivian.js"></script>
+<script src="challengers.js"></script>
 <script src="versus.js"></script>
 <script src="regions.js"></script>
 <script src="stocks.js"></script>

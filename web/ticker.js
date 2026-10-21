@@ -1,6 +1,6 @@
-// Live share prices (TSLA, RIVN) through TradingView's free embeddable widgets. TradingView supplies and licenses the
+// Live share prices (TSLA, RIVN, LCID) through TradingView's free embeddable widgets. TradingView supplies and licenses the
 // quotes; this site stores and republishes no prices. Widgets are rebuilt only when the colour theme changes.
-const TICKERS = [["NASDAQ:TSLA", "Tesla"], ["NASDAQ:RIVN", "Rivian"]];
+const TICKERS = [["NASDAQ:TSLA", "Tesla"], ["NASDAQ:RIVN", "Rivian"], ["NASDAQ:LCID", "Lucid"]];
 const tvBuilt = {};
 
 function tvWidget(id, script, config) {
@@ -32,7 +32,7 @@ function renderPriceChart() {
   });
 }
 
-// Live valuation and fundamentals (market cap, P/E, P/S, margins, balance sheet) for both companies, from TradingView.
+// Live valuation and fundamentals (market cap, P/E, P/S, margins, balance sheet) for all three companies, from TradingView.
 function renderValuation() {
   const seg = $("finSeg");
   seg.onclick = (e) => {

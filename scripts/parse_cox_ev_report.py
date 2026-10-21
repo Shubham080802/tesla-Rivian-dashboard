@@ -1,5 +1,5 @@
 """Read one Cox Automotive / Kelley Blue Book quarterly "Electric Vehicle Sales Report" PDF and update
-data/external/research/us_ev_sales_cox.csv with U.S. EV sales estimates for Tesla, Rivian, their models and the whole market.
+data/external/research/us_ev_sales_cox.csv with U.S. EV sales estimates for Tesla, Rivian, Lucid, their models and the whole market.
 
 Each report gives the quarter and the same quarter a year earlier. The newest report covering a quarter wins, because Cox
 revises earlier quarters. Run by hand once a quarter (Cox publishes about two weeks after quarter end):
@@ -18,8 +18,8 @@ import pandas as pd
 import pypdf
 
 OUT = Path(__file__).resolve().parent.parent / "data" / "external" / "research" / "us_ev_sales_cox.csv"
-ITEMS = ["Tesla", "Rivian", "Tesla Model 3", "Tesla Model Y", "Tesla Model S", "Tesla Model X", "Tesla Cybertruck",
-         "Rivian R1S", "Rivian R1T", "Rivian R2", "Rivian EDV500/700"]
+ITEMS = ["Tesla", "Rivian", "Lucid", "Tesla Model 3", "Tesla Model Y", "Tesla Model S", "Tesla Model X", "Tesla Cybertruck",
+         "Rivian R1S", "Rivian R1T", "Rivian R2", "Rivian EDV500/700", "Lucid Air", "Lucid Gravity"]
 NUM = r"([\d,]+|-)"
 
 

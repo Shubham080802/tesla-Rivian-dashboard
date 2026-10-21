@@ -1,4 +1,4 @@
-// Demand drivers: U.S. macro series and an exploratory test against Tesla and Rivian volumes (drivers.json, scripts/build_drivers.py).
+// Demand drivers: U.S. macro series and an exploratory test against Tesla, Rivian and Lucid volumes (drivers.json, scripts/build_drivers.py).
 let DR = null;
 function prepDrivers(d) { DR = d; }
 
@@ -13,7 +13,7 @@ function renderDrivers() {
       delta: deltaChip(c, k.kind === "level" ? pctTxt : numTxt(" pts", 2), id !== "GASREGW"), sub: "vs a year earlier" });
   }).join("");
   $("drGrid").innerHTML = ids.map((id) => `<article class="card"><header><h3>${S[id].label}</h3><p>${S[id].unit}. ${S[id].publisher}.</p></header><div class="plot sm" id="c-dr-${id}"></div></article>`).join("");
-  ids.forEach((id, i) => draw(`c-dr-${id}`, [{ x: S[id].dates.map((d) => d + "-01"), y: S[id].values, mode: "lines", line: line([css("--c1"), css("--c2"), css("--c3"), css("--c4"), "#8a6fd6", "#e87ba4"][i % 6], 2.4), hovertemplate: "%{y:.2f}" }],
+  ids.forEach((id, i) => draw(`c-dr-${id}`, [{ x: S[id].dates.map((d) => d + "-01"), y: S[id].values, mode: "lines", line: line(css("--ink2"), 2.4), hovertemplate: "%{y:.2f}" }],
     layout({ margin: { l: 8, r: 12, t: 8, b: 8 }, xaxis: { type: "date" }, showlegend: false })));
   const rows = DR.tests.slice().sort((a, b) => a.p - b.p);
   $("drTable").innerHTML = `<thead><tr><th>Driver</th><th>Company</th><th class="n">Link (r)</th><th class="n">Raw p</th><th class="n">Adjusted p</th><th class="n">Data points</th><th>Verdict</th></tr></thead><tbody>` +

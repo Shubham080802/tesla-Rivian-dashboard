@@ -1,8 +1,8 @@
-"""Tesla vs Rivian: attention, annual financials, and both U.S. charging networks -> web/versus.json.
+"""Tesla, Rivian and Lucid: attention, annual financials, and the U.S. charging networks -> web/versus.json.
 
 Sources (all public; quarterly volumes stay in web/ev.json):
   * Wikipedia page views (Wikimedia REST API, English Wikipedia, monthly, human users). Tesla = "Tesla, Inc." plus the old
-    "Tesla Motors" title; Rivian = "Rivian". A proxy for attention, not demand.
+    "Tesla Motors" title; Rivian = "Rivian"; Lucid = "Lucid Motors". A proxy for attention, not demand.
   * Annual financials: both from SEC filings (sum of four quarters, USD), complete years only.
   * Charging: the U.S. federal alternative-fuel station locator, public Tesla-network and Rivian Adventure Network stations
     that are open today, counted by the year they opened (so closed stations are missing and older years are understated).
@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 EV = ROOT / "data" / "external" / "ev"
 UA = {"User-Agent": "tesla-rivian-dashboard personal-research-project"}
 WIKI = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/{}/monthly/2015070100/{}"
-GROUPS = {"tesla": ["Tesla,_Inc.", "Tesla_Motors"], "rivian": ["Rivian"]}
+GROUPS = {"tesla": ["Tesla,_Inc.", "Tesla_Motors"], "rivian": ["Rivian"], "lucid": ["Lucid_Motors"]}
 
 
 def get(url, tries=3):
@@ -86,19 +86,20 @@ def annual(name):
 def main():
     pv, ch = pageviews(), chargers()
     rch = chargers("RIVIAN_ADVENTURE", "rivian")
-    ty, ry = annual("tesla"), annual("rivian")
+    ty, ry, ly = annual("tesla"), annual("rivian"), annual("lucid")
     years = [y for y in sorted(ty.index) if y >= 2019]
     rnd = lambda v: round(float(v), 1)
     out = {
         "meta": {"built": dt.date.today().isoformat(), "pageviews_latest": pv.month.max(), "charger_latest_year": int(ch.year.max()),
-                 "sources": {"pageviews": "https://pageviews.wmcloud.org/", "sec": "https://www.sec.gov/edgar/browse/?CIK=1318605", "sec_rivian": "https://www.sec.gov/edgar/browse/?CIK=1874178", "chargers": "https://afdc.energy.gov/stations/"},
+                 "sources": {"pageviews": "https://pageviews.wmcloud.org/", "sec": "https://www.sec.gov/edgar/browse/?CIK=1318605", "sec_rivian": "https://www.sec.gov/edgar/browse/?CIK=1874178", "sec_lucid": "https://www.sec.gov/edgar/browse/?CIK=1811210", "chargers": "https://afdc.energy.gov/stations/"},
                  "notes": {"pageviews": "English Wikipedia page views measure attention, not demand.",
-                           "fin": "Both companies' figures come from their SEC filings, in US dollars. Rivian began deliveries in late 2021 and has not yet made a profit.",
+                           "fin": "All three companies' figures come from their SEC filings, in US dollars. Rivian and Lucid began deliveries in late 2021 and neither has made a profit yet.",
                            "chargers": "Public stations that are open today, by opening year. Stations that closed are missing, so older years are understated. U.S. only."}},
         "pageviews": {co: {"months": pv[pv.company == co].month.tolist(), "views": pv[pv.company == co].views.astype(int).tolist()} for co in GROUPS},
         "fin": {"years": [int(y) for y in years],
                 "tesla": {k: [rnd(ty.loc[y, k]) for y in years] for k in ty.columns},
-                "rivian": {k: [rnd(ry.loc[y, k]) if y in ry.index else None for y in years] for k in ry.columns}},
+                "rivian": {k: [rnd(ry.loc[y, k]) if y in ry.index else None for y in years] for k in ry.columns},
+                "lucid": {k: [rnd(ly.loc[y, k]) if y in ly.index and pd.notna(ly.loc[y, k]) else None for y in years] for k in ly.columns}},
         "chargers": {"years": ch.year.astype(int).tolist(), "stations": ch.stations.astype(int).tolist(), "fast_ports": ch.fast_ports.astype(int).tolist()},
         "chargers_rivian": {"years": rch.year.astype(int).tolist(), "stations": rch.stations.astype(int).tolist(), "fast_ports": rch.fast_ports.astype(int).tolist()},
     }

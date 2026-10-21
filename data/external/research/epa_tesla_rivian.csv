@@ -1,6 +1,12 @@
 year,make,model,VClass,drive,range,combE,comb08,UCity,evMotor
 2022,Rivian,R1S,Standard Sport Utility Vehicle 4WD,Part-time 4-Wheel Drive,316,48.6142,69,104.3,"162, 162, 163, 163kW AC 3-Phase"
 2022,Rivian,R1T,Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,314,48.0759,70,103.0,"162, 162, 163, 163kW AC 3-Phase"
+2022,Lucid,Air Dream P AWD w/19 inch wheels,Large Cars,All-Wheel Drive,471,29.1655,116,155.3835,370 and 459kW ACPM
+2022,Lucid,Air Dream P AWD w/21 inch wheels,Large Cars,All-Wheel Drive,451,30.4704,111,146.8627,370 and 459kW ACPM
+2022,Lucid,Air Dream R AWD w/19 inch wheels,Large Cars,All-Wheel Drive,520,26.8675,125,167.38,198 and 498kW ACPM
+2022,Lucid,Air Dream R AWD w/21 inch wheels,Large Cars,All-Wheel Drive,481,29.1656,116,153.1133,198 and 498kW ACPM
+2022,Lucid,Air G Touring AWD w/19 inch wheels,Large Cars,All-Wheel Drive,516,25.709,131,173.56,178 and 433kW ACPM
+2022,Lucid,Air G Touring AWD w/21 inch wheels,Large Cars,All-Wheel Drive,469,27.793,121,160.8,178 and 433kW ACPM
 2022,Tesla,Model 3 Long Range AWD,Midsize Cars,All-Wheel Drive,358,25.8238,131,184.5,98 and 195 kW AC 3-Phase
 2022,Tesla,Model 3 Performance AWD,Midsize Cars,All-Wheel Drive,315,29.9572,113,157.3,131 and 190 kW AC 3-Phase
 2022,Tesla,Model 3 RWD,Midsize Cars,Rear-Wheel Drive,272,25.4929,132,185.3,192 kW AC 3-Phase
@@ -24,6 +30,15 @@ year,make,model,VClass,drive,range,combE,comb08,UCity,evMotor
 2023,Tesla,Model Y AWD,Small Sport Utility Vehicle 4WD,All-Wheel Drive,279,27.5117,123,167.3,91 and 200 kW AC 3-Phase
 2023,Tesla,Model Y Long Range AWD,Small Sport Utility Vehicle 4WD,All-Wheel Drive,330,27.6273,122,164.8,91 and 200 kW AC 3-Phase
 2023,Tesla,Model Y Performance AWD,Small Sport Utility Vehicle 4WD,All-Wheel Drive,303,30.4938,111,149.6,133 and 179 kW AC 3-Phase
+2023,Lucid,Air G Touring XR AWD with 19 inch wheels,Large Cars,All-Wheel Drive,516,25.709,131,173.56,370 and 459kW ACPM
+2023,Lucid,Air G Touring XR AWD with 20 inch wheels,Large Cars,All-Wheel Drive,469,27.793,121,160.8,370 and 370kW ACPM
+2023,Lucid,Air G Touring XR AWD with 21 inch wheels,Large Cars,All-Wheel Drive,469,27.793,121,160.8,TBD
+2023,Lucid,Air GT P AWD with 21 inch wheels,Large Cars,All-Wheel Drive,446,30.4704,111,146.8627,TBD
+2023,Lucid,Air Pure AWD with 19 inch wheels,Large Cars,All-Wheel Drive,410,24.0616,140,187.4,TBD
+2023,Lucid,Air Pure AWD with 20 inch wheels,Large Cars,All-Wheel Drive,384,27.857,121,162.0,TBD
+2023,Lucid,Air Touring AWD with 19 inch wheels,Large Cars,All-Wheel Drive,425,24.0616,140,187.4,TBD
+2023,Lucid,Air Touring AWD with 20 inch wheels,Large Cars,All-Wheel Drive,384,27.857,121,162.0,TBD
+2023,Lucid,Air Touring AWD with 21 inch wheels,Large Cars,All-Wheel Drive,384,27.857,121,162.0,TBD
 2023,Rivian,R1T (20 inch wheels),Standard Pickup Trucks 4WD,All-Wheel Drive,289,52.3772,64,94.5,"162, 162, 163, 163kW AC 3-Phase"
 2023,Rivian,R1T (21 inch wheels),Standard Pickup Trucks 4WD,All-Wheel Drive,328,46.1441,73,103.1,"162, 162, 163, 163kW AC 3-Phase"
 2023,Rivian,R1T (22 inch wheels),Standard Pickup Trucks 4WD,All-Wheel Drive,303,49.3574,68,100.3,"162, 162, 163, 163kW AC 3-Phase"
@@ -41,7 +56,16 @@ year,make,model,VClass,drive,range,combE,comb08,UCity,evMotor
 2023,Rivian,R1T 21 inch Performance Dual Large,Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,352,43.2259,78,115.6,496 kW ACPM
 2023,Rivian,R1T 22 inch Dual Large,Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,341,44.478,76,111.2,418 kW ACPM
 2023,Rivian,R1T 22 inch Performance Dual Large,Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,341,44.478,76,111.2,496 kW ACPM
+2024,Lucid,Air Pure RWD with 19 inch wheels,Large Cars,Rear-Wheel Drive,419,24.5788,137,192.6,330 kW ACPM
+2024,Lucid,Air Pure RWD with 20 inch wheels,Large Cars,Rear-Wheel Drive,394,25.9281,130,183.9,330 kW ACPM
+2024,Lucid,Air Sapphire AWD,Large Cars,All-Wheel Drive,427,32.1321,105,149.2,"310, 310 and 330 kW ACPM"
 2024,Rivian,R1S All-Terrain Quad Large (20 inch),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,274,53.6978,63,87.3,"162, 162, 163 and 135 kW ACPM 3-Phase"
+2024,Lucid,Air G Touring XR AWD with19 inch wheels,Large Cars,All-Wheel Drive,516,26.1381,129,176.3,178 and 433 kW ACPM
+2024,Lucid,Air G Touring XR AWD with 20 inch wheels,Large Cars,All-Wheel Drive,485,27.8516,121,166.8,178 and 433 kW ACPM
+2024,Lucid,Air G Touring XR AWD with 21 inch wheels,Large Cars,All-Wheel Drive,450,29.7946,113,156.2,178 and 433 kW ACPM
+2024,Lucid,Air Touring AWD with 19 inch wheels,Large Cars,All-Wheel Drive,411,25.3039,133,182.8,178 and 433 kW ACPM
+2024,Lucid,Air Touring AWD with 20 inch wheels,Large Cars,All-Wheel Drive,382,27.4478,123,169.4,178 and 433 kW ACPM
+2024,Lucid,Air Touring AWD with 21inch wheels,Large Cars,All-Wheel Drive,365,28.6247,118,163.6,178 and 433 kW ACPM
 2024,Rivian,R1T All-Terrain Dual Large (20in),Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,307,49.2406,68,102.5,208 and 208 kW ACPM
 2024,Rivian,R1T All-Terrain Dual Max (20in),Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,355,46.124,73,112.1,208 and 208 kW ACPM
 2024,Rivian,R1T All-Terrain Dual Standard Plus (20in),Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,277,51.6452,65,97.3,208 and 208 kW ACPM
@@ -99,6 +123,15 @@ year,make,model,VClass,drive,range,combE,comb08,UCity,evMotor
 2024,Tesla,Model X,Standard Sport Utility Vehicle 4WD,All-Wheel Drive,335,33.6127,100,146.5,243 and 243 kW ACPM 3-Phase
 2024,Tesla,Model X Plaid (20in wheels),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,326,34.5286,98,140.5,"230, 230 and 230 kW ACPM 3-Phase"
 2024,Tesla,Model X Plaid (22in wheels),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,300,37.2621,90,131.8,"230, 230 and 230 kW ACPM 3-Phase"
+2025,Lucid,Air G Touring XR AWD with 19 inch wheels,Large Cars,All-Wheel Drive,512,26.4283,128,176.3,178 and 433 kW ACPM
+2025,Lucid,Air G Touring XR AWD with 20 inch wheels,Large Cars,All-Wheel Drive,480,28.1608,120,166.8,178 and 433 kW ACPM
+2025,Lucid,Air G Touring XR AWD with 21 inch wheels,Large Cars,All-Wheel Drive,446,30.1254,112,156.2,178 and 433 kW ACPM
+2025,Lucid,Air Pure RWD with 19 inch wheels,Large Cars,Rear-Wheel Drive,420,23.141,146,209.1,330 kW ACPM
+2025,Lucid,Air Pure RWD with 20 inch wheels,Large Cars,Rear-Wheel Drive,372,26.1017,129,185.7,330 kW ACPM
+2025,Lucid,Air Sapphire AWD,Large Cars,All-Wheel Drive,427,32.1321,105,149.2,"310, 310 and 310 kW ACPM"
+2025,Lucid,Air Touring AWD with 19 inch wheels,Large Cars,All-Wheel Drive,406,25.5849,132,182.8,178 and 433 kW ACPM
+2025,Lucid,Air Touring AWD with 20 inch wheels,Large Cars,All-Wheel Drive,377,27.7525,121,169.4,178 and 433 kW ACPM
+2025,Lucid,Air Touring AWD with 21 inch wheels,Large Cars,All-Wheel Drive,361,28.9425,116,163.6,178 and 433 kW ACPM
 2025,Rivian,R1T All-Terrain Dual Large Plus (20in),Standard Pickup Trucks 4WD,4-Wheel Drive,292,46.8874,72,108.8,264 and 264 kW ACPM
 2025,Rivian,R1T All-Terrain Dual Max (20in),Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,370,43.2248,78,112.0,264 and 264 kW ACPM
 2025,Rivian,R1T All-Terrain Performance Dual Large Plus (20in),Standard Pickup Trucks 4WD,4-Wheel Drive,292,46.8874,72,108.8,264 and 264 kW ACPM
@@ -159,12 +192,26 @@ year,make,model,VClass,drive,range,combE,comb08,UCity,evMotor
 2024,Tesla,Model 3 Long Range RWD,Midsize Cars,Rear-Wheel Drive,363,24.6398,137,206.9,192 kW ACPM 3-Phase
 2024,Tesla,Model 3 Performance AWD,Midsize Cars,All-Wheel Drive,303,30.1017,112,157.3,85 and 192 kW ACPM 3-Phase
 2025,Tesla,Model 3 Performance AWD,Midsize Cars,All-Wheel Drive,298,30.9191,109,161.8,85 and 191 kW ACPM 3-Phase
+2025,Lucid,Gravity GT w/20F21R wheels (2R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,450,31.0845,108,158.5,170 and 448 kW ACPM
+2025,Lucid,Gravity GT w/20F21R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,437,32.4302,104,150.3,170 and 448 kW ACPM
+2025,Lucid,Gravity GT w/21F22R wheels (2R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,407,34.3333,98,142.5,170 and 448 kW ACPM
+2025,Lucid,Gravity GT w/21F22R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,386,36.4512,92,133.9,170 and 448 kW ACPM
+2025,Lucid,Gravity GT w/22F23R wheels (2R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,407,34.3333,98,142.5,170 and 448 kW ACPM
+2025,Lucid,Gravity GT w/22F23R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,386,36.4512,92,133.9,170 and 448 kW ACPM
 2025,Tesla,Cybertruck AWD,Standard Pickup Trucks 4WD,All-Wheel Drive,325,42.9059,79,116.6,224 and 239 kW AC Induction
 2025,Tesla,Model S,Large Cars,All-Wheel Drive,410,27.1309,124,187.9,243 and 248 kW ACPM 3-Phase
 2025,Tesla,Model X,Standard Sport Utility Vehicle 4WD,All-Wheel Drive,329,34.2466,98,146.5,243 and 248 kW ACPM
 2025,Tesla,Cybertruck Long Range,Standard Pickup Trucks 2WD,Rear-Wheel Drive,335,40.8735,82,133.5,240 kW ACPM 3-Phase
 2025,Tesla,Cybertruck Long Range (20in Cyber wheels),Standard Pickup Trucks 2WD,Rear-Wheel Drive,335,43.3555,78,127.7,240 kW ACPM 3-Phase
 2025,Tesla,Model 3 Long Range RWD-I (19in wheels),Midsize Cars,Rear-Wheel Drive,346,25.6484,131,199.4,"192, 213 and 225 kW ACPM 3-Phase"
+2026,Lucid,Gravity GT w/20F21R wheels (2R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,450,31.0948,108,158.5,399 kW ACPM
+2026,Lucid,Gravity GT w/21F22R wheels (2R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,407,34.3333,98,142.5,399 kW ACPM
+2026,Lucid,Gravity GT w/22F23R wheels (2R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,407,34.3333,98,142.5,399 kW ACPM
+2026,Lucid,Gravity GT w/21F22R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,386,36.4512,92,133.9,399 kW ACPM
+2026,Lucid,Gravity GT w/22F23R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,386,36.4512,92,133.9,399 kW ACPM
+2026,Lucid,Gravity Dream w/20F21R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,420,33.8831,99,141.4,399 kW ACPM
+2026,Lucid,Gravity Dream w/21F22R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,378,37.641,90,127.8,399 kW ACPM
+2026,Lucid,Gravity Dream w/22F23R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,378,37.641,90,127.8,399 kW ACPM
 2026,Rivian,R1T Dual Standard (22in),Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,270,39.8854,85,127.7,208 kW ACPM
 2026,Rivian,R1T Dual Standard (20in),Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,258,42.8683,79,116.8,208 kW ACPM
 2026,Rivian,R1T Dual Max (20in),Standard Pickup Trucks 4WD,Part-time 4-Wheel Drive,380,41.9729,80,121.3,264 kW ACPM
@@ -221,12 +268,22 @@ year,make,model,VClass,drive,range,combE,comb08,UCity,evMotor
 2026,Tesla,Model Y Long Range AWD,Small Sport Utility Vehicle 4WD,All-Wheel Drive,327,27.4959,123,185.4,90 and 200 kW ACPM
 2026,Tesla,Model X,Standard Sport Utility Vehicle 4WD,All-Wheel Drive,352,32.2022,105,157.0,246 and 251 kW ACPM
 2026,Tesla,Model X Plaid,Standard Sport Utility Vehicle 4WD,All-Wheel Drive,335,33.6949,100,148.0,230 kW ACPM 3-Phase
+2026,Lucid,Air G Touring XR AWD with19 inch wheels,Large Cars,All-Wheel Drive,512,26.4283,128,176.3,178 and 433 kW ACPM
+2026,Lucid,Air G Touring XR AWD with 20 inch wheels,Large Cars,All-Wheel Drive,480,28.1608,120,166.8,178 and 433 kW ACPM
+2026,Lucid,Air G Touring XR AWD with 21 inch wheels,Large Cars,All-Wheel Drive,446,30.1254,112,156.2,178 and 433 kW ACPM
+2026,Lucid,Air Pure RWD with 19 inch wheels,Large Cars,Rear-Wheel Drive,420,23.141,146,209.1,330 kW ACPM
+2026,Lucid,Air Pure RWD with 20 inch wheels,Large Cars,Rear-Wheel Drive,372,26.1017,129,185.7,330 kW ACPM
+2026,Lucid,Air Sapphire AWD,Large Cars,All-Wheel Drive,427,32.1321,105,149.2,310 kW ACPM
+2026,Lucid,Air Touring AWD with 19 inch wheels,Large Cars,All-Wheel Drive,431,25.1902,134,186.0,178 and 433 kW ACPM
+2026,Lucid,Air Touring AWD with 20 inch wheels,Large Cars,All-Wheel Drive,396,27.3055,123,172.5,178 and 433 kW ACPM
+2026,Lucid,Gravity GT w/20F21R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,437,32.4302,104,150.3,399 kW ACPM
 2026,Tesla,Model 3 Performance,Midsize Cars,All-Wheel Drive,309,29.585,114,171.5,88 and 208 kW AC Induction
 2026,Tesla,Model 3 Premium AWD,Midsize Cars,All-Wheel Drive,346,26.3757,128,190.5,88 and 208 kW AC Induction
 2026,Tesla,Model 3 Premium RWD,Midsize Cars,Rear-Wheel Drive,363,24.6398,137,206.9,225 kW ACPM 3-Phase
 2026,Tesla,Cybertruck AWD,Standard Pickup Trucks 4WD,All-Wheel Drive,325,42.9059,79,116.6,223 and 226 kW ACPM 3-Phase
 2026,Tesla,Model Y Standard RWD (18in Wheels),Small Sport Utility Vehicle 2WD,Rear-Wheel Drive,321,24.3451,138,210.8,228 and 243 kW ACPM 3-Phase
 2026,Tesla,Model Y Standard RWD (19in Wheels),Small Sport Utility Vehicle 2WD,Rear-Wheel Drive,303,25.6907,131,202.6,228 and 243 kW ACPM 3-Phase
+2026,Lucid,Gravity Touring w/20F21R wheels,Standard Sport Utility Vehicle 4WD,All-Wheel Drive,337,30.3355,111,161.2,399 kW ACPM
 2026,Tesla,Cybertruck Long Range (20in Cyber wheels),Standard Pickup Trucks 2WD,Rear-Wheel Drive,335,43.3555,78,127.7,240 kW ACPM 3-Phase
 2026,Tesla,Model 3 Performance AWD,Midsize Cars,All-Wheel Drive,314,30.2452,111,166.7,88 and 208  kW ACPM 3-Phase
 2026,Tesla,Model 3 Standard RWD,Midsize Cars,Rear-Wheel Drive,321,24.3033,139,209.8,225 kW ACPM 3-Phase
@@ -236,6 +293,13 @@ year,make,model,VClass,drive,range,combE,comb08,UCity,evMotor
 2027,Rivian,R2 Performance AWD (20in AT),Standard Sport Utility Vehicle 4WD,4-Wheel Drive,307,34.0963,99,154.2,300 kW ACPM
 2027,Rivian,R2 Performance AWD (21in),Standard Sport Utility Vehicle 4WD,4-Wheel Drive,330,32.1727,105,155.7,300 kW ACPM
 2026,Tesla,Cybertruck Dual Motor AWD,Standard Pickup Trucks 4WD,All-Wheel Drive,325,42.9469,78,123.7,223 and 226 kW ACPM 3-Phase
+2027,Lucid,Gravity GT w/20F21R wheels (2R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,450,31.0948,108,158.5,170 and 448 kW ACPM
+2027,Lucid,Gravity GT w/20F21R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,437,32.4302,104,150.3,170 and 448 kW ACPM
+2027,Lucid,Gravity GT w/21F22R wheels (2R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,407,34.3333,98,142.5,170 and 448 kW ACPM
+2027,Lucid,Gravity GT w/21F22R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,386,36.4512,92,133.9,170 and 448 kW ACPM
+2027,Lucid,Gravity GT w/22F23R wheels (2R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,407,34.3333,98,142.5,170 and 448 kW ACPM
+2027,Lucid,Gravity GT w/22F23R wheels (3R),Standard Sport Utility Vehicle 4WD,All-Wheel Drive,386,36.4512,92,133.9,170 and 448 kW ACPM
+2027,Lucid,Gravity Touring w/20F21R wheels,Standard Sport Utility Vehicle 4WD,All-Wheel Drive,337,30.3355,111,161.2,170 and 448 kW ACPM
 2027,Rivian,R1S Performance (20in AT),Standard Sport Utility Vehicle 4WD,4-Wheel Drive,329,49.8346,68,97.3,201 and 233 kW ACPM
 2027,Rivian,R1S Performance (20in),Standard Sport Utility Vehicle 4WD,4-Wheel Drive,348,46.9882,72,104.4,201 and 233 kW ACPM
 2027,Rivian,R1S Performance (22in),Standard Sport Utility Vehicle 4WD,4-Wheel Drive,371,44.5717,76,113.6,201 and 233 kW ACPM
@@ -260,5 +324,13 @@ year,make,model,VClass,drive,range,combE,comb08,UCity,evMotor
 2027,Rivian,R1T Quad (20in AT),Standard Pickup Trucks 4WD,4-Wheel Drive,325,50.1027,67,97.5,201 kW ACPM
 2027,Rivian,R1T Quad (22in UHP),Standard Pickup Trucks 4WD,4-Wheel Drive,338,47.3466,71,106.0,201 kW ACPM
 2027,Rivian,R1T Quad (22in),Standard Pickup Trucks 4WD,4-Wheel Drive,374,44.3718,76,110.4,201 kW ACPM
+2027,Lucid,Air G Touring XR AWD with19 inch wheels,Large Cars,All-Wheel Drive,512,26.4283,128,176.3,178 and 433 kW ACPM
+2027,Lucid,Air G Touring XR AWD with 20 inch wheels,Large Cars,All-Wheel Drive,480,28.1608,120,166.8,178 and 433 kW ACPM
+2027,Lucid,Air G Touring XR AWD with 21 inch wheels,Large Cars,All-Wheel Drive,446,30.1254,112,156.2,178 and 433 kW ACPM
+2027,Lucid,Air Pure RWD with 19 inch wheels,Large Cars,Rear-Wheel Drive,420,23.141,146,209.1,330 kW ACPM
+2027,Lucid,Air Pure RWD with 20 inch wheels,Large Cars,Rear-Wheel Drive,372,26.1017,129,185.7,330 kW ACPM
+2027,Lucid,Air Sapphire AWD,Large Cars,All-Wheel Drive,427,32.1321,105,149.2,330 kW ACPM
+2027,Lucid,Air Touring AWD with 19 inch wheels,Large Cars,All-Wheel Drive,431,25.1902,134,186.0,178 and 433 kW ACPM
+2027,Lucid,Air Touring AWD with 20 inch wheels,Large Cars,All-Wheel Drive,396,27.3055,123,172.5,178 and 433 kW ACPM
 2027,Tesla,Model 3 Performance AWD,Midsize Cars,All-Wheel Drive,316,30.2452,111,166.7,208 kW ACPM 3-Phase
 2027,Tesla,Model Y L (20in Wheels),Small Sport Utility Vehicle 4WD,All-Wheel Drive,328,30.0,114,169.9,91 and 200 kW ACPM 3-Phase

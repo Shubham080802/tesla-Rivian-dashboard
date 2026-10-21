@@ -1,4 +1,4 @@
-"""Tesla and Rivian: reported volumes, Tesla's SEC financials, and forecasts, written to web/ev.json (additive).
+"""Tesla, Rivian and Lucid: reported volumes, Tesla's SEC financials, and forecasts, written to web/ev.json (additive).
 
 Sources (all public):
   * Tesla deliveries/production by quarter: Tesla's own 8-K Exhibit 99.1 releases, via the datahub.io
@@ -31,6 +31,7 @@ TAGS = {
     "net_income": ["NetIncomeLoss"],
     "operating_cash_flow": ["NetCashProvidedByUsedInOperatingActivities"],
     "capex": ["PaymentsToAcquirePropertyPlantAndEquipment"],
+    "cost_of_revenue": ["CostOfRevenue", "CostOfGoodsAndServicesSold"],
 }
 qkey = lambda end: f"{end[:4]}-{int(end[5:7]) - 2:02d}"        # quarter label = first month, as elsewhere in the project
 
@@ -49,6 +50,9 @@ def sec_financials(cik, name):
                 if how[end] != "reported":
                     derived.setdefault(qkey(end), {})[col] = how[end]
         df = pd.DataFrame(table).T.sort_index(); df.index.name = "quarter"
+        if "cost_of_revenue" in df:                     # Lucid files cost of revenue but no gross-profit line
+            df["gross_profit"] = df.get("gross_profit", pd.Series(index=df.index, dtype=float)).fillna(df.revenue - df.cost_of_revenue)
+            df = df.drop(columns="cost_of_revenue")
         df.to_csv(path); (EV / f"{name}_quarterly_derived.json").write_text(json.dumps(derived, indent=1, sort_keys=True))
         print(f"SEC ({name}):", len(df), "quarters, latest", df.index[-1])
     except Exception as e:
@@ -89,6 +93,24 @@ def nn(v):
     return None if pd.isna(v) else round(float(v), 1)
 
 
+def challenger(name, cik):
+    """Rivian and Lucid: quarterly volumes typed in from their 8-K releases (data/external/ev/<name>_quarterly.csv),
+    financials from SEC, and the same backtested forecasts as Tesla."""
+    v = pd.read_csv(EV / f"{name}_quarterly.csv", parse_dates=["quarter_start"])
+    v["q"] = v.quarter_start.dt.strftime("%Y-%m"); v = v.set_index("q")
+    f = sec_financials(cik, name)
+    fc_v = forecast_series(v.deliveries.to_numpy(float), v.index[-1], season=4, step=3, horizon=6, origins=(8, 6, 4), min_history=16, monitor=True, monitor_n=8)
+    fr = contiguous(f["revenue"][f["revenue"] > 0])
+    fc_r = forecast_series(fr.to_numpy(float), fr.index[-1], season=4, step=3, horizon=6, origins=(8, 6, 4), min_history=12, monitor=True, monitor_n=8)
+    rows = []
+    for q, r in v.iterrows():
+        row = {"q": q, "deliveries": int(r.deliveries), "production": None if pd.isna(r.production) else int(r.production)}
+        if q in f.index:
+            row.update({k: nn(f.loc[q, k]) for k in f.columns})
+        rows.append(row)
+    return v, rows, fc_v, fc_r, fr
+
+
 def main():
     tv, fin = tesla_volumes(), tesla_financials()
     # Tesla: quarterly deliveries forecast (season 4, 3 months a step)
@@ -104,32 +126,24 @@ def main():
     # Tesla revenue: quarterly forecast on the SEC series (contiguous quarters only)
     fr = contiguous(fin["revenue"])
     fc_r = forecast_series(fr.to_numpy(float), fr.index[-1], season=4, step=3, horizon=6, origins=(8, 6, 4), min_history=16, monitor=True, monitor_n=8)
-    # Rivian: quarterly volumes from its 8-K releases, financials from SEC (CIK 1874178)
-    rv = pd.read_csv(EV / "rivian_quarterly.csv", parse_dates=["quarter_start"])
-    rv["q"] = rv.quarter_start.dt.strftime("%Y-%m"); rv = rv.set_index("q")
-    rfin = sec_financials(1874178, "rivian")
-    fc_rv = forecast_series(rv.deliveries.to_numpy(float), rv.index[-1], season=4, step=3, horizon=6, origins=(8, 6, 4), min_history=16, monitor=True, monitor_n=8)
-    rfr = contiguous(rfin["revenue"][rfin["revenue"] > 0])
-    fc_rvr = forecast_series(rfr.to_numpy(float), rfr.index[-1], season=4, step=3, horizon=6, origins=(8, 6, 4), min_history=12, monitor=True, monitor_n=8)
-    rq = []
-    for q, r in rv.iterrows():
-        row = {"q": q, "deliveries": int(r.deliveries), "production": int(r.production)}
-        if q in rfin.index:
-            row.update({k: nn(rfin.loc[q, k]) for k in rfin.columns})
-        rq.append(row)
+    rv, rq, fc_rv, fc_rvr, rfr = challenger("rivian", 1874178)
+    lv, lq, fc_lv, fc_lvr, lfr = challenger("lucid", 1811210)
     out = {
-        "meta": {"built": dt.date.today().isoformat(), "tesla_latest_quarter": last_q, "rivian_latest_quarter": rv.index[-1],
+        "meta": {"built": dt.date.today().isoformat(), "tesla_latest_quarter": last_q, "rivian_latest_quarter": rv.index[-1], "lucid_latest_quarter": lv.index[-1],
                  "tesla_sources": {"deliveries": "https://datahub.io/datapressr/tesla-quarterly-deliveries", "q3_2026": "Tesla 8-K filed 2026-10-02, Exhibit 99.1", "sec": "https://www.sec.gov/edgar/browse/?CIK=1318605"},
                  "notes": {"tesla": "Deliveries are not sales revenue; quarterly financials come from SEC filings."}},
         "tesla": {"quarters": tq, "forecast_deliveries": fc_t, "forecast_revenue": fc_r, "revenue_latest_quarter": fr.index[-1], "financials_ahead": fin_extra},
         "rivian": {"quarters": rq, "forecast_deliveries": fc_rv, "forecast_revenue": fc_rvr, "revenue_latest_quarter": rfr.index[-1],
                    "sources": {"deliveries": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1874178&type=8-K", "sec": "https://www.sec.gov/edgar/browse/?CIK=1874178"},
                    "note": "Rivian reports production and deliveries each quarter in an 8-K; financials come from its SEC filings. It does not break deliveries out by model."},
+        "lucid": {"quarters": lq, "forecast_deliveries": fc_lv, "forecast_revenue": fc_lvr, "revenue_latest_quarter": lfr.index[-1],
+                  "sources": {"deliveries": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1811210&type=8-K", "sec": "https://www.sec.gov/edgar/browse/?CIK=1811210"},
+                  "note": "Lucid reports production and deliveries each quarter in an 8-K (production for Q1 and Q2 2022 was published only as a first-half total); financials come from its SEC filings."},
     }
     path = ROOT / "web" / "ev.json"
     path.write_text(json.dumps(out, separators=(",", ":"), allow_nan=False))
     print(f"wrote {path} ({path.stat().st_size / 1024:.0f} KB)")
-    for name, fc in (("Tesla deliveries", fc_t), ("Tesla revenue ($M)", fc_r), ("Rivian deliveries", fc_rv), ("Rivian revenue ($M)", fc_rvr)):
+    for name, fc in (("Tesla deliveries", fc_t), ("Tesla revenue ($M)", fc_r), ("Rivian deliveries", fc_rv), ("Rivian revenue ($M)", fc_rvr), ("Lucid deliveries", fc_lv), ("Lucid revenue ($M)", fc_lvr)):
         print(name, "->", fc["model"], "wMAPE", fc["wmape"], "| next:", round(fc["fc"]["mean"][0]), f"({round(fc['fc']['p10'][0])}-{round(fc['fc']['p90'][0])})")
 
 

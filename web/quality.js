@@ -10,8 +10,10 @@ function renderQuality() {
     ["Tesla financials", "SEC EDGAR 10-Q and 10-K", evQ(fin.q), monthsAgo(fin.q, 2)],
     ["Rivian deliveries and production", "Rivian 8-K releases", evQ(EV.rivian.quarters.at(-1).q), monthsAgo(EV.rivian.quarters.at(-1).q, 2)],
     ["Rivian financials", "SEC EDGAR 10-Q and 10-K", evQ(EV.rivian.quarters.filter((r) => r.revenue != null).at(-1).q), monthsAgo(EV.rivian.quarters.filter((r) => r.revenue != null).at(-1).q, 2)],
+    ["Lucid financials", "SEC EDGAR 10-Q and 10-K", evQ(EV.lucid.quarters.filter((r) => r.revenue != null).at(-1).q), monthsAgo(EV.lucid.quarters.filter((r) => r.revenue != null).at(-1).q, 2)],
+    ["Lucid deliveries and production", "Lucid 8-K releases", evQ(EV.lucid.quarters.at(-1).q), monthsAgo(EV.lucid.quarters.at(-1).q, 2)],
     ["Wikipedia attention", "Wikimedia page views API", fmt.month(VS.meta.pageviews_latest), monthsAgo(VS.meta.pageviews_latest)],
-    ["Tesla and Rivian charging stations", "U.S. federal station locator", String(VS.meta.charger_latest_year), monthsAgo(VS.meta.charger_latest_year + "-12")],
+    ["Tesla and Rivian charging stations (Lucid has no network)", "U.S. federal station locator", String(VS.meta.charger_latest_year), monthsAgo(VS.meta.charger_latest_year + "-12")],
   ];
   if (RG) { rows.push(["Tesla China (domestic and exports)", "CPCA, as tabulated by CnEVPost", fmt.month(RG.meta.tesla_china_latest), monthsAgo(RG.meta.tesla_china_latest)]); rows.push(["Europe registrations", "ACEA press releases (earlier months via CnEVPost)", fmt.month(RG.meta.europe_latest), monthsAgo(RG.meta.europe_latest)]); }
   if (SK) rows.push(["Share prices (derived figures only)", "Yahoo Finance, personal-use data", fmt.month(SK.meta.through), monthsAgo(SK.meta.through)]);
@@ -28,8 +30,8 @@ function renderQuality() {
   if (RS) {
     const S = RS.meta.sources;
     $("qSources").innerHTML = [
-      `U.S. SEC, EDGAR company facts: Tesla, Inc. (CIK 1318605) and Rivian Automotive, Inc. (CIK 1874178). <a href="${S.sec}">sec.gov</a>`,
-      `Tesla and Rivian quarterly production and delivery releases (8-K).`,
+      `U.S. SEC, EDGAR company facts: Tesla, Inc. (CIK 1318605), Rivian Automotive, Inc. (CIK 1874178) and Lucid Group, Inc. (CIK 1811210). <a href="${S.sec}">sec.gov</a>`,
+      `Tesla, Rivian and Lucid quarterly production and delivery releases (8-K).`,
       `Cox Automotive / Kelley Blue Book, Electric Vehicle Sales Report, quarterly. ${S.cox.map((u, i) => `<a href="${u}">[${i + 1}]</a>`).join(" ")}`,
       `U.S. BEA light-vehicle sales (LTOTALNSA) and U.S. demand indicators, via <a href="${S.fred}">FRED</a>.`,
       `NHTSA recalls, complaints and NCAP ratings. <a href="${S.nhtsa}">nhtsa.gov</a>`,

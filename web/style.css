@@ -429,3 +429,5 @@ article.card .row-head .linkbtn:hover { color: var(--ink); }
 #periodSeg { overflow-x: auto; max-width: 100%; }
 #periodSeg button { padding: 6px 11px; font-size: 13px; }
 body[data-tab="quality"] .period { visibility: hidden; }
+.tiles-2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 560px) { .tiles-2 { grid-template-columns: 1fr; } }

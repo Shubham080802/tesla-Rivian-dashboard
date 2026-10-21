@@ -10,6 +10,8 @@ quarter,item,units,report_quarter,source
 2024-01,Tesla Model X,5607,2025-01,https://www.coxautoinc.com/wp-content/uploads/2025/04/Q1-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-01,Tesla Model Y,96729,2025-01,https://www.coxautoinc.com/wp-content/uploads/2025/04/Q1-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-01,Total EV market,265981,2025-01,https://www.coxautoinc.com/wp-content/uploads/2025/04/Q1-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2024-04,Lucid,2394,2025-04,https://www.coxautoinc.com/wp-content/uploads/2025/07/Q2-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2024-04,Lucid Air,2394,2025-04,https://www.coxautoinc.com/wp-content/uploads/2025/07/Q2-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-04,Rivian,13653,2025-04,https://www.coxautoinc.com/wp-content/uploads/2025/07/Q2-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-04,Rivian EDV500/700,2207,2025-04,https://www.coxautoinc.com/wp-content/uploads/2025/07/Q2-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-04,Rivian R1S,8137,2025-04,https://www.coxautoinc.com/wp-content/uploads/2025/07/Q2-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
@@ -21,6 +23,8 @@ quarter,item,units,report_quarter,source
 2024-04,Tesla Model X,6570,2025-04,https://www.coxautoinc.com/wp-content/uploads/2025/07/Q2-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-04,Tesla Model Y,101301,2025-04,https://www.coxautoinc.com/wp-content/uploads/2025/07/Q2-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-04,Total EV market,331853,2025-04,https://www.coxautoinc.com/wp-content/uploads/2025/07/Q2-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2024-07,Lucid,2085,2025-07,https://www.coxautoinc.com/wp-content/uploads/2025/10/Q3-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2024-07,Lucid Air,2085,2025-07,https://www.coxautoinc.com/wp-content/uploads/2025/10/Q3-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-07,Rivian,10018,2025-07,https://www.coxautoinc.com/wp-content/uploads/2025/10/Q3-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-07,Rivian EDV500/700,4509,2025-07,https://www.coxautoinc.com/wp-content/uploads/2025/10/Q3-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-07,Rivian R1S,3406,2025-07,https://www.coxautoinc.com/wp-content/uploads/2025/10/Q3-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
@@ -32,6 +36,8 @@ quarter,item,units,report_quarter,source
 2024-07,Tesla Model X,3338,2025-07,https://www.coxautoinc.com/wp-content/uploads/2025/10/Q3-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-07,Tesla Model Y,89077,2025-07,https://www.coxautoinc.com/wp-content/uploads/2025/10/Q3-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-07,Total EV market,337616,2025-07,https://www.coxautoinc.com/wp-content/uploads/2025/10/Q3-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2024-10,Lucid,2790,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2024-10,Lucid Air,2790,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-10,Rivian,14183,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-10,Rivian EDV500/700,4397,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-10,Rivian R1S,7374,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
@@ -43,6 +49,8 @@ quarter,item,units,report_quarter,source
 2024-10,Tesla Model X,4340,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-10,Tesla Model Y,85506,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2024-10,Total EV market,365830,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2025-01,Lucid,2464,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
+2025-01,Lucid Air,2464,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2025-01,Rivian,8553,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2025-01,Rivian EDV500/700,1469,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2025-01,Rivian R1S,5357,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
@@ -54,6 +62,9 @@ quarter,item,units,report_quarter,source
 2025-01,Tesla Model X,3843,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2025-01,Tesla Model Y,64051,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2025-01,Total EV market,296589,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
+2025-04,Lucid,2639,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
+2025-04,Lucid Air,2630,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
+2025-04,Lucid Gravity,9,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2025-04,Rivian,10599,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2025-04,Rivian EDV500/700,2701,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2025-04,Rivian R1S,6146,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
@@ -65,6 +76,9 @@ quarter,item,units,report_quarter,source
 2025-04,Tesla Model X,2871,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2025-04,Tesla Model Y,86120,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2025-04,Total EV market,311064,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
+2025-07,Lucid,3181,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
+2025-07,Lucid Air,2531,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
+2025-07,Lucid Gravity,650,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
 2025-07,Rivian,13201,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
 2025-07,Rivian EDV500/700,2639,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
 2025-07,Rivian R1S,8184,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
@@ -76,6 +90,9 @@ quarter,item,units,report_quarter,source
 2025-07,Tesla Model X,3592,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
 2025-07,Tesla Model Y,114897,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
 2025-07,Total EV market,434279,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
+2025-10,Lucid,4330,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2025-10,Lucid Air,3188,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2025-10,Lucid Gravity,1142,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2025-10,Rivian,9745,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2025-10,Rivian EDV500/700,3021,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2025-10,Rivian R1S,5165,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
@@ -87,6 +104,9 @@ quarter,item,units,report_quarter,source
 2025-10,Tesla Model X,2760,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2025-10,Tesla Model Y,92460,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
 2025-10,Total EV market,234171,2025-10,https://www.coxautoinc.com/wp-content/uploads/2026/01/Q4-2025-Kelley-Blue-Book-EV-Sales-Report.pdf
+2026-01,Lucid,2551,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
+2026-01,Lucid Air,920,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
+2026-01,Lucid Gravity,1631,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2026-01,Rivian,10365,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2026-01,Rivian EDV500/700,3213,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2026-01,Rivian R1S,5494,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
@@ -98,6 +118,9 @@ quarter,item,units,report_quarter,source
 2026-01,Tesla Model X,2346,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2026-01,Tesla Model Y,78591,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
 2026-01,Total EV market,216399,2026-01,https://www.coxautoinc.com/wp-content/uploads/2026/04/Q1-EV-Sales-Report-pdf.pdf
+2026-04,Lucid,2657,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
+2026-04,Lucid Air,846,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
+2026-04,Lucid Gravity,1811,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2026-04,Rivian,11405,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2026-04,Rivian EDV500/700,4003,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2026-04,Rivian R1S,6183,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
@@ -109,6 +132,9 @@ quarter,item,units,report_quarter,source
 2026-04,Tesla Model X,749,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2026-04,Tesla Model Y,84863,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
 2026-04,Total EV market,247226,2026-04,https://www.coxautoinc.com/wp-content/uploads/2026/07/Q2-2026-EV-Sales.KBB-Counts.pdf
+2026-07,Lucid,2708,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
+2026-07,Lucid Air,506,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
+2026-07,Lucid Gravity,2202,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
 2026-07,Rivian,19239,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
 2026-07,Rivian EDV500/700,8469,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf
 2026-07,Rivian R1S,5582,2026-07,https://www.coxautoinc.com/wp-content/uploads/2026/10/Q3-2026-Kelley-Blue-Book-EV-Sales-Report-updated-as-of-10-13-26.pdf

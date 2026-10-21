@@ -45,6 +45,17 @@ for name, fc in (("Tesla deliveries", ev["tesla"]["forecast_deliveries"]), ("Tes
     check(f"{name} forecast is ordered and non-negative", all(0 <= lo <= m <= hi for lo, m, hi in zip(f["p10"], f["mean"], f["p90"])) and all(a <= b for q in fc["cumq"] for a, b in zip(q, q[1:])), f"{len(f['mean'])} periods, backtest error {fc['wmape']:.0%}")
     check(f"{name} 80% range held up in backtests", 0.6 <= fc["coverage80"] <= 0.97, f"coverage {fc['coverage80']:.0%} (target 80%)", warn=True)
 
+LV = ev["lucid"]["quarters"]
+lsum = lambda y, k: sum(r[k] or 0 for r in LV if r["q"].startswith(y))
+check("Lucid volumes match its reported annual totals",
+      [lsum(y, "deliveries") for y in ("2022", "2023", "2024", "2025")] == [4369, 6001, 10241, 15841] and [lsum(y, "production") for y in ("2023", "2024", "2025")] == [8428, 9029, 18378] and lsum("2022", "production") + 1405 == 7180,
+      "deliveries 4,369 / 6,001 / 10,241 / 15,841 and production 7,180 / 8,428 / 9,029 / 18,378 for 2022-2025 (2022 Q1-Q2 production published only as a first-half total of 1,405)")
+check("Lucid quarters are consecutive and recent", months_old(LV[-1]["q"]) <= 6 and all((int(b["q"][:4]) * 12 + int(b["q"][5:7])) - (int(a["q"][:4]) * 12 + int(a["q"][5:7])) == 3 for a, b in zip(LV, LV[1:])), f"{len(LV)} quarters, latest {LV[-1]['q']}")
+check("Lucid 2024 revenue matches the filing", abs(sum(r["revenue"] for r in LV if r["q"].startswith("2024")) - 807.8) < 1, "$807.8 million")
+for name, fc in (("Lucid deliveries", ev["lucid"]["forecast_deliveries"]), ("Lucid revenue", ev["lucid"]["forecast_revenue"])):
+    f = fc["fc"]
+    check(f"{name} forecast is ordered and non-negative", all(0 <= lo <= m <= hi for lo, m, hi in zip(f["p10"], f["mean"], f["p90"])), f"{len(f['mean'])} periods, backtest error {fc['wmape']:.0%}")
+
 RV = ev["rivian"]["quarters"]
 rsum = lambda y, k: sum(r[k] for r in RV if r["q"].startswith(y))
 check("Rivian volumes match its reported annual totals",
@@ -119,7 +130,8 @@ if rs_path.exists():
           f"Q3 2026: Tesla {M['tesla'][qi['2026-07']]:,}, Rivian {M['rivian'][qi['2026-07']]:,}, all EVs {M['total_ev'][qi['2026-07']]:,} (within 5% of first publication, allowing Cox's revisions)")
     check("Tesla and Rivian never exceed the whole EV market", all(t + r <= v for t, r, v in zip(M["tesla"], M["rivian"], M["total_ev"])), "holds in every quarter")
     mods = M["models"]
-    check("Cox model rows add up to the brand totals", all(abs(sum(mods[k][i] or 0 for k in mods if k.startswith(co)) - M[co.lower()][i]) <= 0.02 * M[co.lower()][i] for co in ("Tesla", "Rivian") for i in range(len(M["quarters"]))), "within 2% every quarter")
+    check("Cox model rows add up to the brand totals", all(abs(sum(mods[k][i] or 0 for k in mods if k.startswith(co)) - M[co.lower()][i]) <= 0.02 * M[co.lower()][i] for co in ("Tesla", "Rivian", "Lucid") for i in range(len(M["quarters"])) if M[co.lower()][i]), "within 2% every quarter, for all three companies")
+    check("Cox Lucid figures match the published report", near(M["lucid"][qi["2026-07"]], 2708) and near(mods["Lucid Gravity"][qi["2026-07"]], 2202), f"Q3 2026: Lucid {M['lucid'][qi['2026-07']]:,}, of which Gravity {mods['Lucid Gravity'][qi['2026-07']]:,}")
     I = rs["investors"]
     tq = {q: v for q, v in zip(I["tesla"]["quarters"], I["tesla"]["revenue"])}
     check("Investor figures agree with the annual filings", abs(sum(tq[f"2023-{m}"] for m in ("01", "04", "07", "10")) - 96773) < 5 and abs(sum(v for q, v in zip(I["rivian"]["quarters"], I["rivian"]["revenue"]) if q.startswith("2024")) - 4970) < 2,
@@ -127,15 +139,17 @@ if rs_path.exists():
     check("Cash and share counts are present for both companies", all(I[c]["liquidity"][-1] and I[c]["shares"][-1] for c in I), f"latest quarter {I['tesla']['latest']}")
     O = rs["owners"]
     T_ = O["totals"]
-    check("Registration totals are plausible", T_["ca"]["tesla"] > 500000 and T_["wa"]["tesla"] > 80000 and T_["ny"]["tesla"] > 80000 and T_["ct"]["tesla"] > 10000 and min(T_[s]["rivian"] for s in T_) > 500,
-          "; ".join(f"{s.upper()} Tesla {T_[s]['tesla']:,}, Rivian {T_[s]['rivian']:,}" for s in ("ca", "wa", "ny", "ct")))
+    check("Registration totals are plausible", T_["ca"]["tesla"] > 500000 and T_["wa"]["tesla"] > 80000 and T_["ny"]["tesla"] > 80000 and T_["ct"]["tesla"] > 10000 and min(T_[s]["rivian"] for s in T_) > 500 and min(T_[s]["lucid"] for s in T_) > 50,
+          "; ".join(f"{s.upper()} Tesla {T_[s]['tesla']:,}, Rivian {T_[s]['rivian']:,}, Lucid {T_[s]['lucid']:,}" for s in ("ca", "wa", "ny", "ct")))
+    check("Split-adjusted share counts are continuous", all(max(abs(b / a - 1) for a, b in zip(v, v[1:]) if a and b) < 0.6 for v in ([x for q, x in zip(I[c]["quarters"], I[c]["shares"]) if q >= "2022-01" and x] for c in I)),
+          "no quarter-to-quarter jump of 60% or more since 2022 after restating Tesla's and Lucid's splits")
     check("Income-band shares add up to 100%", all(abs(sum(v) - 1) < 1e-3 for st in ("wa", "ny", "ca", "ct", "all") for v in O[st]["share_by_band"].values()), "every group in every state and combined")
     check("Connecticut towns match the Census list", O["ct_town_match"] >= 0.85, f"{O['ct_town_match']:.0%} of registrations matched to a Census town", warn=True)
     C = rs["customers"]
     check("Crash ratings are between one and five stars", all(1 <= x["overall"] <= 5 for x in C["ncap"]) and len(C["ncap"]) >= 3, f"{len(C['ncap'])} models rated")
     check("EPA ranges are plausible", all(100 < e["range_max"] < 600 for e in C["epa"]), f"{len(C['epa'])} models")
     se = rs["sentiment"]
-    check("News tone covers both companies and is current", set(se) == {"tesla", "rivian"} and all(months_old(v["months"][-1]) <= 2 for v in se.values()), "latest " + ", ".join(f"{k} {v['months'][-1]}" for k, v in se.items()) if se else "GDELT not yet fetched", warn=True)
+    check("News tone covers all three companies and is current", set(se) == {"tesla", "rivian", "lucid"} and all(months_old(v["months"][-1]) <= 2 for v in se.values()), "latest " + ", ".join(f"{k} {v['months'][-1]}" for k, v in se.items()) if se else "GDELT not yet fetched", warn=True)
 
 out = {"built": date.today().isoformat(), "checks": checks}
 (W / "checks.json").write_text(json.dumps(out, separators=(",", ":")))

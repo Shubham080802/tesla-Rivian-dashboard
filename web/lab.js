@@ -7,13 +7,16 @@ const labState = { id: "tsl_del", shift: 0, target: "" };
 function buildLab() {
   const T = EV.tesla;
   const tq = T.quarters, rq = tq.filter((r) => r.revenue != null);
-  const mk = (id, co, label, unit, step, x, y, fc, f, rev) => ({ id, co, label, unit, step, n12: step === 3 ? 4 : 12, x, y, fc, f, color: co === "Tesla" ? css("--c2") : css("--c1") });
+  const mk = (id, co, label, unit, step, x, y, fc, f, rev) => ({ id, co, label, unit, step, n12: step === 3 ? 4 : 12, x, y, fc, f, color: css({ Tesla: "--c2", Rivian: "--c1", Lucid: "--c3" }[co]) });
   const RV = EV.rivian.quarters, RVr = RV.filter((r) => r.revenue != null && r.revenue > 0);
+  const LV = EV.lucid.quarters, LVr = LV.filter((r) => r.revenue != null && r.revenue > 0);
   LAB = [
     mk("tsl_del", "Tesla", "Tesla deliveries", "vehicles", 3, tq.map((r) => r.q), tq.map((r) => r.deliveries), T.forecast_deliveries, fmt.intC),
     mk("tsl_rev", "Tesla", "Tesla revenue", "$ millions", 3, rq.map((r) => r.q), rq.map((r) => r.revenue), T.forecast_revenue, fmt.usdB),
     mk("riv_del", "Rivian", "Rivian deliveries", "vehicles", 3, RV.map((r) => r.q), RV.map((r) => r.deliveries), EV.rivian.forecast_deliveries, fmt.intC),
     mk("riv_rev", "Rivian", "Rivian revenue", "$ millions", 3, RVr.map((r) => r.q), RVr.map((r) => r.revenue), EV.rivian.forecast_revenue, fmt.usdB),
+    mk("luc_del", "Lucid", "Lucid deliveries", "vehicles", 3, LV.map((r) => r.q), LV.map((r) => r.deliveries), EV.lucid.forecast_deliveries, fmt.intC),
+    mk("luc_rev", "Lucid", "Lucid revenue", "$ millions", 3, LVr.map((r) => r.q), LVr.map((r) => r.revenue), EV.lucid.forecast_revenue, fmt.usdB),
   ];
   LAB.forEach((s) => {
     const n = s.n12, q = s.fc.cumq[n - 1], last12 = sum(s.y.slice(-n)), prior12 = sum(s.y.slice(-2 * n, -n)), fc12 = sum(s.fc.fc.mean.slice(0, n));
@@ -31,7 +34,7 @@ function initLab() {
   $("labScoreBody").onclick = (e) => { const r = e.target.closest("[data-id]"); if (r) { labState.id = r.dataset.id; syncUI(); renderLab(); } };
 }
 
-function labReadHash(p) { if (p.get("ls") && ["tsl_del", "tsl_rev", "riv_del", "riv_rev"].includes(p.get("ls"))) labState.id = p.get("ls"); const v = parseInt(p.get("lsh")); if (Number.isFinite(v) && v >= -30 && v <= 30) labState.shift = v; }
+function labReadHash(p) { if (p.get("ls") && ["tsl_del", "tsl_rev", "riv_del", "riv_rev", "luc_del", "luc_rev"].includes(p.get("ls"))) labState.id = p.get("ls"); const v = parseInt(p.get("lsh")); if (Number.isFinite(v) && v >= -30 && v <= 30) labState.shift = v; }
 function labWriteHash(p) { if (labState.id !== "tsl_del") p.set("ls", labState.id); if (labState.shift) p.set("lsh", labState.shift); }
 
 function renderLab() {
@@ -60,8 +63,8 @@ function renderLab() {
   const traces = [
     { x: H, y: Y, type: "bar", name: "Actual", marker: { color: Y.map((_, i) => (i === Y.length - 1 ? col : rgba(col, 0.55))), cornerradius: 3 }, hovertemplate: "%{y:,.0f}" },
     { x: fx, y: s.fc.fc.p90.map((v) => v * f), mode: "lines", line: { width: 0 }, showlegend: false, hoverinfo: "skip" },
-    { x: fx, y: s.fc.fc.p10.map((v) => v * f), mode: "lines", line: { width: 0 }, fill: "tonexty", fillcolor: rgba(css("--c3"), 0.18), name: "80% range", hoverinfo: "skip" },
-    { x: fx, y: s.fc.fc.mean.map((v) => v * f), mode: "lines+markers", name: labState.shift ? "Scenario" : "Expected", line: { color: css("--c3"), width: 2.6, dash: "dash" }, marker: { size: 7, color: css("--c3"), line: { color: css("--surface"), width: 2 } }, hovertemplate: "%{y:,.0f}" },
+    { x: fx, y: s.fc.fc.p10.map((v) => v * f), mode: "lines", line: { width: 0 }, fill: "tonexty", fillcolor: rgba(s.color, 0.18), name: "80% range", hoverinfo: "skip" },
+    { x: fx, y: s.fc.fc.mean.map((v) => v * f), mode: "lines+markers", name: labState.shift ? "Scenario" : "Expected", line: { color: s.color, width: 2.6, dash: "dash" }, marker: { size: 7, color: css("--c3"), line: { color: css("--surface"), width: 2 } }, hovertemplate: "%{y:,.0f}" },
   ];
   if (labState.shift) traces.push({ x: fx, y: s.fc.fc.mean, mode: "lines", name: "Model", line: { color: css("--muted"), width: 1.6, dash: "dot" }, hovertemplate: "%{y:,.0f}" });
   draw("c-lab", traces, layout({ margin: { l: 8, r: 16, t: 28, b: 8 }, xaxis: { type: "category", tickmode: "array", tickvals: tv, tickangle: 0 }, yaxis: { tickformat: ".2s" },
@@ -74,8 +77,8 @@ function renderLab() {
   const mlab = (p) => labLabel(s, p.month);
   draw("c-lab-mon", [
     { x: mo.map(mlab), y: mo.map((m) => m.hi), mode: "lines", line: { width: 0 }, showlegend: false, hoverinfo: "skip" },
-    { x: mo.map(mlab), y: mo.map((m) => m.lo), mode: "lines", line: { width: 0 }, fill: "tonexty", fillcolor: rgba(css("--c3"), 0.18), name: "Expected range", hoverinfo: "skip" },
-    { x: mo.map(mlab), y: mo.map((m) => m.expected), mode: "lines", name: "Expected", line: { color: css("--c3"), width: 2, dash: "dash" }, hovertemplate: "%{y:,.0f}" },
+    { x: mo.map(mlab), y: mo.map((m) => m.lo), mode: "lines", line: { width: 0 }, fill: "tonexty", fillcolor: rgba(s.color, 0.18), name: "Expected range", hoverinfo: "skip" },
+    { x: mo.map(mlab), y: mo.map((m) => m.expected), mode: "lines", name: "Expected", line: { color: s.color, width: 2, dash: "dash" }, hovertemplate: "%{y:,.0f}" },
     { x: mo.map(mlab), y: mo.map((m) => m.actual), mode: "lines+markers", name: "Actual", line: { color: col, width: 2.6 }, marker: { size: 7, color: mo.map((m) => (m.actual >= m.lo && m.actual <= m.hi ? col : css("--bad") || "#d03b3b")), line: { color: css("--surface"), width: 2 } }, hovertemplate: "%{y:,.0f}" },
   ], layout({ margin: { l: 8, r: 16, t: 28, b: 8 }, xaxis: { type: "category", tickangle: 0 }, yaxis: { tickformat: ".2s" } }));
   const outside = mo.filter((m) => m.actual < m.lo || m.actual > m.hi).length;

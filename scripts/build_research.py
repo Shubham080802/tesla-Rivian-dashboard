@@ -1,4 +1,4 @@
-"""Research layer for Tesla vs Rivian: investor economics, customer-facing quality data, public sentiment, U.S. market share
+"""Research layer for Tesla, Rivian and Lucid: investor economics, customer-facing quality data, public sentiment, U.S. market share
 and where owners live. Writes web/research.json. Every source is public; each fetch is cached under data/external/research
 so the site keeps its last good data when a source is down.
 
@@ -14,7 +14,9 @@ so the site keeps its last good data when a source is down.
 import csv
 import io
 import json
+import math
 import os
+import re
 import time
 import urllib.error
 import urllib.parse
@@ -32,7 +34,7 @@ R = bm.EXT / "research"
 R.mkdir(parents=True, exist_ok=True)
 EV = bm.EXT / "ev"
 W = bm.ROOT / "web"
-CIK = {"tesla": 1318605, "rivian": 1874178}
+CIK = {"tesla": 1318605, "rivian": 1874178, "lucid": 1811210}
 CACHE_ONLY = os.environ.get("RESEARCH_CACHE_ONLY") == "1"      # local development: reuse cached downloads
 qkey = lambda end: f"{end[:4]}-{int(end[5:7]) - 2:02d}"
 
@@ -72,9 +74,9 @@ def jtry(url):
 FLOW = {"revenue": ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax"], "gross_profit": ["GrossProfit"],
         "operating_income": ["OperatingIncomeLoss"], "net_income": ["NetIncomeLoss"],
         "ocf": ["NetCashProvidedByUsedInOperatingActivities"], "capex": ["PaymentsToAcquirePropertyPlantAndEquipment"],
-        "rnd": ["ResearchAndDevelopmentExpense"], "sga": ["SellingGeneralAndAdministrativeExpense"], "sbc": ["ShareBasedCompensation"]}
+        "rnd": ["ResearchAndDevelopmentExpense"], "cost_of_revenue": ["CostOfRevenue", "CostOfGoodsAndServicesSold"], "sga": ["SellingGeneralAndAdministrativeExpense"], "sbc": ["ShareBasedCompensation"]}
 INSTANT = {"cash": ["CashAndCashEquivalentsAtCarryingValue"], "st_investments": ["ShortTermInvestments"],
-           "debt": {"tesla": ["LongTermDebt"], "rivian": ["LongTermDebtNoncurrent", "LongTermDebt"]},
+           "debt": {"tesla": ["LongTermDebt"], "rivian": ["LongTermDebtNoncurrent", "LongTermDebt"], "lucid": ["LongTermDebtNoncurrent", "LongTermDebt"]},
            "shares": ["CommonStockSharesOutstanding"], "equity": ["StockholdersEquity", "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"],
            "inventory": ["InventoryNet"]}
 
@@ -93,6 +95,26 @@ def instants(facts, tags, unit):
     return out
 
 
+# Stock splits, as shares-per-old-share ratios. SEC company facts mix bases: some earlier quarters were restated in later
+# filings and some were not. So, walking back from the latest quarter, each earlier value is put on the latest basis
+# with whichever combination of the company's splits brings it closest to the quarter after it (Tesla: 5-for-1 in 2020
+# and 3-for-1 in 2022; Lucid: 1-for-10 in 2025).
+SPLITS = {"tesla": [5, 3], "lucid": [0.1]}
+
+
+def split_adjusted(shares, name):
+    factors = [1.0]
+    for f in SPLITS.get(name, []):
+        factors += [x * f for x in factors]
+    s = shares.copy()
+    later = None
+    for q in reversed(s.dropna().index):
+        if later is not None:
+            s[q] *= min(factors, key=lambda f: abs(math.log(s[q] * f / later)))
+        later = s[q]
+    return s
+
+
 def sec_company(name):
     def fetch():
         f = jget(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{CIK[name]:010d}.json", {"User-Agent": bm.SEC_UA})["facts"]
@@ -107,17 +129,19 @@ def sec_company(name):
                 rows.setdefault(e, {})[col] = v / 1e6
         df = pd.DataFrame(rows).T.sort_index()
         df.index = [qkey(e) for e in df.index]; df.index.name = "quarter"
+        df["gross_profit"] = df.get("gross_profit", pd.Series(index=df.index, dtype=float)).fillna(df.revenue - df.cost_of_revenue)
         pf = [(r["end"], r["val"] / 1e6) for r in list(f["dei"].get("EntityPublicFloat", {}).get("units", {}).values() or [[]])[0]]
         (R / f"{name}_public_float.json").write_text(json.dumps(sorted(set(pf))))
         return df.reset_index()
     df = cached(f"{name}_sec_research.csv", fetch).set_index("quarter")
+    df["shares"] = split_adjusted(df["shares"], name)       # the cache keeps shares as filed; restate on every build
     pf = json.loads((R / f"{name}_public_float.json").read_text())
     return df[df.index >= "2019-01"], pf
 
 
 def investors(vol):
     out = {}
-    for name in ("tesla", "rivian"):
+    for name in ("tesla", "rivian", "lucid"):
         df, pf = sec_company(name)
         df = df.join(vol[name], how="left")
         df = df[df.revenue.notna()]
@@ -159,15 +183,15 @@ def market():
     allq = {f"{i.year}-{(i.quarter - 1) * 3 + 1:02d}": s * 1000 for i, (s, c) in lvq.iterrows() if c == 3}
     qs = list(p.index)
     col = lambda c: [None if pd.isna(p.at[x, c]) else int(p.at[x, c]) if c in p else None for x in qs]
-    models = [c for c in p.columns if c.startswith(("Tesla ", "Rivian "))]
-    return {"quarters": qs, "total_ev": col("Total EV market"), "tesla": col("Tesla"), "rivian": col("Rivian"),
+    models = [c for c in p.columns if c.startswith(("Tesla ", "Rivian ", "Lucid "))]
+    return {"quarters": qs, "total_ev": col("Total EV market"), "tesla": col("Tesla"), "rivian": col("Rivian"), "lucid": col("Lucid"),
             "all_vehicles": [allq.get(x) for x in qs], "models": {m: col(m) for m in models},
             "sources": sorted(cox.source.unique().tolist())}
 
 
 # ---------------------------------------------------------------- customers
 NHTSA = "https://api.nhtsa.gov"
-YEARS = {"tesla": range(2019, date.today().year + 1), "rivian": range(2022, date.today().year + 1)}
+YEARS = {"tesla": range(2019, date.today().year + 1), "rivian": range(2022, date.today().year + 1), "lucid": range(2022, date.today().year + 1)}
 
 
 def nhtsa_models(make, year, issue):
@@ -179,7 +203,8 @@ def nhtsa_models(make, year, issue):
 
 
 def base_model(m):
-    return str(m).upper().replace("(ALL VARIANTS)", "").strip()
+    """NHTSA's model name without variant labels: "MODEL Y (ALL VARIANTS)" and "GRAVITY BEV" become "MODEL Y" and "GRAVITY"."""
+    return re.sub(r"\s+BEV$", "", str(m).upper().replace("(ALL VARIANTS)", "").strip())
 
 
 def nhtsa_recalls():
@@ -215,7 +240,7 @@ def nhtsa_complaints():
 def nhtsa_ratings():
     def fetch():
         rows = []
-        for make in ("tesla", "rivian"):
+        for make in ("tesla", "rivian", "lucid"):
             for y in range(date.today().year - 2, date.today().year + 2):
                 for m in jget(f"{NHTSA}/SafetyRatings/modelyear/{y}/make/{make}").get("Results", []):
                     for v in jget(f"{NHTSA}/SafetyRatings/modelyear/{y}/make/{make}/model/{urllib.parse.quote(m['Model'])}").get("Results", []):
@@ -231,7 +256,7 @@ def epa():
     def fetch():
         z = zipfile.ZipFile(io.BytesIO(bm.get("https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip")))
         df = pd.read_csv(z.open(z.namelist()[0]), low_memory=False)
-        df = df[df.make.isin(["Tesla", "Rivian"]) & (df.year >= 2022)]
+        df = df[df.make.isin(["Tesla", "Rivian", "Lucid"]) & (df.year >= 2022)]
         return df[["year", "make", "model", "VClass", "drive", "range", "combE", "comb08", "UCity", "evMotor"]]
     return cached("epa_tesla_rivian.csv", fetch)
 
@@ -244,12 +269,12 @@ def customers(market_):
     rec_year = {mk: {int(y): int(n) for y, n in g.groupby("year").size().items() if y >= 2019} for mk, g in camp.groupby("make")}
     ota = {mk: round(float(g.ota.mean()), 3) for mk, g in camp.groupby("make")}
     comp = camp.assign(c=camp.component.str.split(":").str[0].str.title()).groupby(["make", "c"]).size()
-    rec_comp = {mk: comp[mk].sort_values(ascending=False).head(8).to_dict() for mk in ("tesla", "rivian") if mk in comp}
+    rec_comp = {mk: comp[mk].sort_values(ascending=False).head(8).to_dict() for mk in MAKERS if mk in comp}
     # complaints per 10,000 sold: model year Y against calendar-year Y U.S. sales of that model (Cox), an approximation
     p = pd.DataFrame(market_["models"], index=market_["quarters"])
     cal = p.groupby(p.index.str[:4]).sum(min_count=4)
     nm = {"tesla": {"MODEL 3": "Tesla Model 3", "MODEL Y": "Tesla Model Y", "MODEL S": "Tesla Model S", "MODEL X": "Tesla Model X", "CYBERTRUCK": "Tesla Cybertruck"},
-          "rivian": {"R1S": "Rivian R1S", "R1T": "Rivian R1T", "R2": "Rivian R2"}}
+          "rivian": {"R1S": "Rivian R1S", "R1T": "Rivian R1T", "R2": "Rivian R2"}, "lucid": {"AIR": "Lucid Air", "GRAVITY": "Lucid Gravity"}}
     rate = []
     for (mk, m, y), g in com.assign(model=com.model.map(base_model)).groupby(["make", "model", "model_year"]):
         key = nm.get(mk, {}).get(base_model(m))
@@ -261,7 +286,7 @@ def customers(market_):
     cm = com.groupby(["make", "month"]).size().unstack(0).fillna(0).sort_index()
     cm = cm[(cm.index >= "2021-01") & (cm.index < date.today().strftime("%Y-%m"))]
     ccomp = com.assign(c=com.components.fillna("").str.split(",").str[0].str.split(":").str[0].str.title()).groupby(["make", "c"]).size()
-    com_comp = {mk: ccomp[mk].sort_values(ascending=False).head(8).to_dict() for mk in ("tesla", "rivian") if mk in ccomp}
+    com_comp = {mk: ccomp[mk].sort_values(ascending=False).head(8).to_dict() for mk in MAKERS if mk in ccomp}
     # NCAP: best rating per model for the latest model year rated
     rat = rat.dropna(subset=["overall"])
     rat = rat[rat.overall.astype(str).str.isdigit()]
@@ -274,7 +299,7 @@ def customers(market_):
     # EPA: longest-range and most efficient version per model for the newest model year
     ep = ep[ep["range"] > 0]
     specs = []
-    for (mk, base), g in ep.assign(base=ep.model.str.extract(r"^(Model [3SXY]|Cybertruck|R1S|R1T|R2|EDV)", expand=False).fillna(ep.model)).groupby(["make", "base"]):
+    for (mk, base), g in ep.assign(base=ep.model.str.extract(r"^(Model [3SXY]|Cybertruck|R1S|R1T|R2|EDV|Air|Gravity)", expand=False).fillna(ep.model)).groupby(["make", "base"]):
         cur = g.year[g.year <= date.today().year]                         # next year's line-up is often incomplete
         g = g[g.year == (cur.max() if len(cur) else g.year.max())]
         specs.append({"make": mk.lower(), "model": base, "year": int(g.year.iloc[0]), "versions": len(g), "range_max": int(g["range"].max()), "range_min": int(g["range"].min()),
@@ -286,7 +311,9 @@ def customers(market_):
 
 
 # ---------------------------------------------------------------- sentiment
-GDELT_Q = {"tesla": "Tesla (car OR cars OR EV OR electric OR Musk OR Cybertruck) sourcelang:english", "rivian": "Rivian sourcelang:english"}
+MAKERS = ("tesla", "rivian", "lucid")
+GDELT_Q = {"tesla": "Tesla (car OR cars OR EV OR electric OR Musk OR Cybertruck) sourcelang:english", "rivian": "Rivian sourcelang:english",
+           "lucid": "(\"Lucid Motors\" OR \"Lucid Group\" OR \"Lucid Air\" OR \"Lucid Gravity\") sourcelang:english"}   # plain "Lucid" is a common word
 
 
 def gdelt_series(co, mode, waits=(20, 60, 120, 240)):
@@ -370,12 +397,12 @@ def census(level, state):
 def wa_regs():
     def fetch():
         d = pd.DataFrame(jget("https://data.wa.gov/resource/f6w7-q2d2.json?" + urllib.parse.urlencode({"$select": "_2020_census_tract as tract,county,make,count(*) as n", "$group": "tract,county,make", "$limit": 500000})))
-        d["make"] = d.make.where(d.make.isin(["TESLA", "RIVIAN"]), "OTHER")
+        d["make"] = d.make.where(d.make.isin(["TESLA", "RIVIAN", "LUCID"]), "OTHER")
         d["n"] = d.n.astype(int)
         return d.groupby(["tract", "county", "make"], as_index=False).n.sum()
     def fetch_my():
         d = pd.DataFrame(jget("https://data.wa.gov/resource/f6w7-q2d2.json?" + urllib.parse.urlencode({"$select": "model_year,make,count(*) as n", "$group": "model_year,make", "$where": "ev_type like 'Battery%'", "$limit": 50000})))
-        d["make"] = d.make.where(d.make.isin(["TESLA", "RIVIAN"]), "OTHER")
+        d["make"] = d.make.where(d.make.isin(["TESLA", "RIVIAN", "LUCID"]), "OTHER")
         d["n"] = d.n.astype(int)
         return d.groupby(["model_year", "make"], as_index=False).n.sum()
     return cached("wa_tract_make.csv", fetch), cached("wa_model_year_make_bev.csv", fetch_my)
@@ -384,7 +411,7 @@ def wa_regs():
 def ny_regs():
     def fetch():
         d = pd.DataFrame(jget("https://data.ny.gov/resource/w4pv-hbkt.json?" + urllib.parse.urlencode({"$select": "zip,make,count(*) as n", "$where": "fuel_type='ELECTRIC' AND record_type='VEH'", "$group": "zip,make", "$limit": 500000})))
-        d["make"] = d.make.where(d.make.isin(["TESLA", "RIVIA", "RIVIAN"]), "OTHER")      # only Tesla, Rivian and everyone else are used
+        d["make"] = d.make.where(d.make.isin(["TESLA", "RIVIA", "RIVIAN", "LUCID"]), "OTHER")      # only the three companies and everyone else are used
         d["n"] = d.n.astype(int)
         return d.groupby(["zip", "make"], as_index=False).n.sum()
     return cached("ny_zip_make.csv", fetch)
@@ -395,7 +422,7 @@ def ca_regs():
     def fetch():
         pkg = jget("https://data.ca.gov/api/3/action/package_show?id=vehicle-fuel-type-count-by-zip-code")["result"]
         res = sorted([r for r in pkg["resources"] if r.get("datastore_active")], key=lambda r: pd.to_datetime(r["name"].split()[0]))[-1]
-        sql = (f'SELECT "ZIP Code" AS zip, CASE WHEN "Make" IN (\'TESLA\', \'RIVIAN\') THEN "Make" ELSE \'OTHER\' END AS make, MAX("Date") AS snapshot, '
+        sql = (f'SELECT "ZIP Code" AS zip, CASE WHEN "Make" IN (\'TESLA\', \'RIVIAN\', \'LUCID\') THEN "Make" ELSE \'OTHER\' END AS make, MAX("Date") AS snapshot, '
                f'SUM("Vehicles"::int) AS n FROM "{res["id"]}" WHERE "Fuel" IN (\'Battery Electric\', \'Plug-in Hybrid\') AND "Duty" = \'Light\' GROUP BY 1, 2')
         return pd.DataFrame(jget("https://data.ca.gov/api/3/action/datastore_search_sql?" + urllib.parse.urlencode({"sql": sql}))["result"]["records"])
     return cached("ca_zip_make.csv", fetch)
@@ -405,7 +432,8 @@ def ct_regs():
     """Connecticut DMV registered EVs by town of the primary customer (Connecticut residents only)."""
     def fetch():
         d = pd.DataFrame(jget("https://data.ct.gov/resource/y7ky-5wcz.json?" + urllib.parse.urlencode({"$select": "primarycustomercity as town,vehiclemake as make,count(*) as n,max(registration_date_start) as snapshot", "$where": "primarycustomerstate='CT'", "$group": "town,make", "$limit": 50000})))
-        d["make"] = d.make.str.upper().where(d.make.str.upper().isin(["TESLA", "RIVIAN"]), "OTHER")
+        up = d.make.str.upper().str.strip()
+        d["make"] = np.select([up.str.startswith("TESLA"), up.str.startswith("RIVIAN"), up.str.startswith("LUCID")], ["TESLA", "RIVIAN", "LUCID"], "OTHER")
         d["n"] = d.n.astype(int)
         return d.groupby(["town", "make"], as_index=False).agg(n=("n", "sum"), snapshot=("snapshot", "max"))
     return cached("ct_town_make.csv", fetch)
@@ -416,10 +444,10 @@ BAND_LABELS = ["Under $50K", "$50K-75K", "$75K-100K", "$100K-125K", "$125K-150K"
 
 
 def area_profile(df, label):
-    """df: one row per area with pop, income, age, bachelor_plus, owner_share and counts tesla, rivian, other_ev."""
+    """df: one row per area with pop, income, age, bachelor_plus, owner_share and counts tesla, rivian, lucid, other_ev."""
     df = df[(df["pop"] > 0) & df.income.notna()].copy()
     df["band"] = pd.cut(df.income, BANDS, labels=BAND_LABELS, right=False)
-    groups = {"tesla": "tesla", "rivian": "rivian", "other_ev": "other_ev", "population": "pop"}
+    groups = {"tesla": "tesla", "rivian": "rivian", "lucid": "lucid", "other_ev": "other_ev", "population": "pop"}
     bands = {g: [round(float(v), 4) for v in (df.groupby("band", observed=False)[c].sum() / df[c].sum())] for g, c in groups.items()}
     per1k = {g: [round(float(v), 2) for v in (df.groupby("band", observed=False)[c].sum() / df.groupby("band", observed=False)["pop"].sum() * 1000)] for g, c in groups.items() if g != "population"}
 
@@ -435,52 +463,59 @@ def area_profile(df, label):
     top["cum_pop"] = top["pop"].cumsum() / top["pop"].sum()
     rich = top[top.cum_pop <= 0.10]
     conc = {g: round(float(rich[c].sum() / df[c].sum()), 3) for g, c in groups.items()}
-    rho = {g: round(float(stats.spearmanr(df.income, df[c] / df["pop"]).statistic), 3) for g in ("tesla", "rivian", "other_ev") for c in [g]}
+    rho = {g: round(float(stats.spearmanr(df.income, df[c] / df["pop"]).statistic), 3) for g in ("tesla", "rivian", "lucid", "other_ev") for c in [g]}
     return {"label": label, "areas": int(len(df)), "bands": BAND_LABELS, "share_by_band": bands, "per1k_by_band": per1k,
             "profile": prof, "top10pct_income_share": conc, "spearman_income_vs_per_capita": rho}
+
+
+def grp(d):
+    """Registration make -> company group. Matched on the start of the make, because states spell makes differently:
+    New York truncates to five letters (RIVIA) and Connecticut writes "Lucid Motors"."""
+    m = d.make.astype(str).str.upper().str.strip()
+    return np.select([m.str.startswith("TESLA"), m.str.startswith("RIVIA"), m.str.startswith("LUCID")], ["tesla", "rivian", "lucid"], "other_ev")
 
 
 def owners():
     wa, wa_my = wa_regs()
     wa["n"] = wa.n.astype(int); wa = wa[wa.tract.astype(str).str.startswith("53")]
     wa["tract"] = wa.tract.astype(str).str[:11]
-    k = wa.assign(g=np.where(wa.make == "TESLA", "tesla", np.where(wa.make == "RIVIAN", "rivian", "other_ev"))).pivot_table(index="tract", columns="g", values="n", aggfunc="sum", fill_value=0)
+    k = wa.assign(g=grp(wa)).pivot_table(index="tract", columns="g", values="n", aggfunc="sum", fill_value=0)
     acs_wa = census("140", "53"); acs_wa["geoid"] = acs_wa.geoid.astype(str).str.zfill(11)
-    wa_df = acs_wa.set_index("geoid").join(k, how="left").fillna({"tesla": 0, "rivian": 0, "other_ev": 0})
-    cty = wa.assign(g=np.where(wa.make == "TESLA", "tesla", np.where(wa.make == "RIVIAN", "rivian", "other_ev"))).pivot_table(index="county", columns="g", values="n", aggfunc="sum", fill_value=0)
+    wa_df = acs_wa.set_index("geoid").join(k, how="left").fillna({"tesla": 0, "rivian": 0, "lucid": 0, "other_ev": 0})
+    cty = wa.assign(g=grp(wa)).pivot_table(index="county", columns="g", values="n", aggfunc="sum", fill_value=0)
     cpop = acs_wa.assign(c=acs_wa.geoid.astype(str).str[:5]).groupby("c")["pop"].sum()
     county_fips = wa.groupby("county").tract.first().str[:5]
     cty["pop"] = [cpop.get(county_fips.get(c)) for c in cty.index]
     cty = cty[cty["pop"] > 0]
-    cty["tesla_per1k"], cty["rivian_per1k"] = cty.tesla / cty["pop"] * 1000, cty.rivian / cty["pop"] * 1000
+    for g in ("tesla", "rivian", "lucid"):
+        cty[f"{g}_per1k"] = cty[g] / cty["pop"] * 1000
     cty = cty.sort_values("tesla_per1k", ascending=False)
     wa_my["n"] = wa_my.n.astype(int); wa_my = wa_my[(wa_my.model_year.astype(int) >= 2016) & (wa_my.model_year.astype(int) <= date.today().year)]
-    myp = wa_my.assign(g=np.where(wa_my.make == "TESLA", "tesla", np.where(wa_my.make == "RIVIAN", "rivian", "other"))).pivot_table(index="model_year", columns="g", values="n", aggfunc="sum", fill_value=0)
+    myp = wa_my.assign(g=grp(wa_my)).pivot_table(index="model_year", columns="g", values="n", aggfunc="sum", fill_value=0)
     myp = myp.div(myp.sum(axis=1), axis=0)
 
     ny = ny_regs(); ny["n"] = ny.n.astype(int); ny["zip"] = ny.zip.astype(str).str[:5].str.zfill(5)
-    kn = ny.assign(g=np.where(ny.make == "TESLA", "tesla", np.where(ny.make.isin(["RIVIA", "RIVIAN"]), "rivian", "other_ev"))).pivot_table(index="zip", columns="g", values="n", aggfunc="sum", fill_value=0)
+    kn = ny.assign(g=grp(ny)).pivot_table(index="zip", columns="g", values="n", aggfunc="sum", fill_value=0)
     acs_ny = census("860", "36"); acs_ny["geoid"] = acs_ny.geoid.astype(str).str.zfill(5)
-    ny_df = acs_ny.set_index("geoid").join(kn, how="left").fillna({"tesla": 0, "rivian": 0, "other_ev": 0})
-    grp = lambda d: np.where(d.make == "TESLA", "tesla", np.where(d.make == "RIVIAN", "rivian", "other_ev"))
+    ny_df = acs_ny.set_index("geoid").join(kn, how="left").fillna({"tesla": 0, "rivian": 0, "lucid": 0, "other_ev": 0})
     ca = ca_regs(); ca["n"] = ca.n.astype(int); ca["zip"] = ca.zip.astype(str).str[:5].str.zfill(5)
     kc = ca.assign(g=grp(ca)).pivot_table(index="zip", columns="g", values="n", aggfunc="sum", fill_value=0)
     acs_ca = census("860", "06"); acs_ca["geoid"] = acs_ca.geoid.astype(str).str.zfill(5)
-    ca_df = acs_ca.set_index("geoid").join(kc, how="left").fillna({"tesla": 0, "rivian": 0, "other_ev": 0})
+    ca_df = acs_ca.set_index("geoid").join(kc, how="left").fillna({"tesla": 0, "rivian": 0, "lucid": 0, "other_ev": 0})
     ct = ct_regs(); ct["n"] = ct.n.astype(int); ct["town"] = ct.town.astype(str).str.upper().str.strip()
     kt = ct.assign(g=grp(ct)).pivot_table(index="town", columns="g", values="n", aggfunc="sum", fill_value=0)
     acs_ct = census("060", "09"); acs_ct["town"] = acs_ct.name.astype(str).str.split(" town,").str[0].str.upper().str.strip()
-    ct_df = acs_ct.set_index("town").join(kt, how="left").fillna({"tesla": 0, "rivian": 0, "other_ev": 0})
+    ct_df = acs_ct.set_index("town").join(kt, how="left").fillna({"tesla": 0, "rivian": 0, "lucid": 0, "other_ev": 0})
     ct_matched = float(kt.loc[kt.index.isin(acs_ct.town)].values.sum() / kt.values.sum())
-    every = pd.concat([d[["pop", "income", "age", "bachelor_plus", "owner_share", "tesla", "rivian", "other_ev"]] for d in (wa_df, ny_df, ca_df, ct_df)], ignore_index=True)
+    every = pd.concat([d[["pop", "income", "age", "bachelor_plus", "owner_share", "tesla", "rivian", "lucid", "other_ev"]] for d in (wa_df, ny_df, ca_df, ct_df)], ignore_index=True)
     rel = lambda s: json.loads((R / f"acs_{s}_release.json").read_text())["name"] if (R / f"acs_{s}_release.json").exists() else "ACS 5-year"
-    tot = lambda kk: {"tesla": int(kk.tesla.sum()), "rivian": int(kk.rivian.sum()), "other_ev": int(kk.other_ev.sum())}
+    tot = lambda kk: {g: int(kk[g].sum()) if g in kk else 0 for g in ("tesla", "rivian", "lucid", "other_ev")}
     return {"wa": area_profile(wa_df, "Washington (census tracts)"), "ny": area_profile(ny_df, "New York (ZIP code areas)"),
             "ca": area_profile(ca_df, "California (ZIP code areas)"), "ct": area_profile(ct_df, "Connecticut (towns)"),
             "all": area_profile(every, "All four states (tracts, ZIPs and towns)"),
             "snapshots": {"wa": "current", "ny": "current", "ca": str(ca.snapshot.max())[:10], "ct": str(ct.snapshot.max())[:10]}, "ct_town_match": round(ct_matched, 3),
-            "wa_counties": {"county": list(cty.index[:15]), "tesla_per1k": [round(v, 2) for v in cty.tesla_per1k[:15]], "rivian_per1k": [round(v, 2) for v in cty.rivian_per1k[:15]]},
-            "wa_bev_share_by_model_year": {"years": [int(y) for y in myp.index], "tesla": [round(float(v), 4) for v in myp.get("tesla", 0)], "rivian": [round(float(v), 4) for v in myp.get("rivian", 0)]},
+            "wa_counties": {"county": list(cty.index[:15]), "tesla_per1k": [round(v, 2) for v in cty.tesla_per1k[:15]], "rivian_per1k": [round(v, 2) for v in cty.rivian_per1k[:15]], "lucid_per1k": [round(v, 2) for v in cty.lucid_per1k[:15]]},
+            "wa_bev_share_by_model_year": {"years": [int(y) for y in myp.index], "tesla": [round(float(v), 4) for v in myp.get("tesla", 0)], "rivian": [round(float(v), 4) for v in myp.get("rivian", 0)], "lucid": [round(float(v), 4) for v in myp.get("lucid", 0)]},
             "totals": {"wa": tot(k), "ny": tot(kn), "ca": tot(kc), "ct": tot(kt)},
             "acs_release": rel("53")}
 
@@ -492,8 +527,8 @@ def volumes():
     m = pd.read_csv(EV / "tesla_q3_2026_manual.csv", parse_dates=["period_start"])
     for _, r in m.iterrows():
         t.loc[r.period_start.strftime("%Y-%m")] = r.deliveries
-    rv = pd.read_csv(EV / "rivian_quarterly.csv"); rv = rv.set_index(rv.quarter_start.str[:7])["deliveries"]
-    return {"tesla": t.sort_index().rename("deliveries"), "rivian": rv.rename("deliveries")}
+    q8k = lambda n: (lambda d: d.set_index(d.quarter_start.str[:7])["deliveries"].rename("deliveries"))(pd.read_csv(EV / f"{n}_quarterly.csv"))
+    return {"tesla": t.sort_index().rename("deliveries"), "rivian": q8k("rivian"), "lucid": q8k("lucid")}
 
 
 def main():
@@ -506,7 +541,7 @@ def main():
                                 "wa": "https://data.wa.gov/Transportation/Electric-Vehicle-Population-Data/f6w7-q2d2",
                                 "ny": "https://data.ny.gov/Transportation/Vehicle-Snowmobile-and-Boat-Registrations/w4pv-hbkt",
                                 "acs": "https://censusreporter.org/",
-                                "ca": "https://data.ca.gov/dataset/vehicle-fuel-type-count-by-zip-code", "ct": "https://data.ct.gov/Environment-and-Natural-Resources/Electric-Vehicle-Registration-Data/y7ky-5wcz"}},
+                                "ca": "https://data.ca.gov/dataset/vehicle-fuel-type-count-by-zip-code", "sec_lucid": "https://www.sec.gov/edgar/browse/?CIK=1811210", "ct": "https://data.ct.gov/Environment-and-Natural-Resources/Electric-Vehicle-Registration-Data/y7ky-5wcz"}},
            "investors": investors(vol), "market": mk, "customers": customers(mk), "sentiment": sentiment(), "owners": owners()}
     (W / "research.json").write_text(json.dumps(out, separators=(",", ":"), allow_nan=False))
     print("research.json:", round((W / "research.json").stat().st_size / 1024), "KB")
