@@ -43,4 +43,5 @@ jobs:
           git config user.email "data-refresh-bot@users.noreply.github.com"
           git add data/external/research/us_ev_sales_cox.csv web
           git commit -m "data: Cox EV sales report ($(date -u +%F))"
+          git pull --rebase origin main      # another push may have landed while this job ran
           git push
