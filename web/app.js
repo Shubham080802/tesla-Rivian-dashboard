@@ -23,6 +23,7 @@ function writeHash() {
   const p = new URLSearchParams();
   if (state.tab !== "overview") p.set("tab", state.tab);
   labWriteHash(p);
+  if (PERIOD !== "all") p.set("p", PERIOD);
   const s = p.toString();
   if (location.hash.slice(1) !== s) history.replaceState(null, "", s ? "#" + s : location.pathname + location.search);
 }
@@ -31,6 +32,7 @@ function readHash() {
   const t = OLD_TABS[p.get("tab")] || p.get("tab");
   if (TABS.includes(t)) state.tab = t;
   labReadHash(p);
+  PERIOD = PERIODS.includes(p.get("p")) ? p.get("p") : "all";
 }
 function renderAll() { try { renderers[state.tab](); } catch (e) { console.error(e); } }
 function goTab(t) { state.tab = t; syncUI(); renderAll(); window.scrollTo({ top: 0, behavior: "auto" }); }
@@ -51,12 +53,15 @@ function start() {
     prepEv(ev); prepVersus(vs); if (rg) prepRegions(rg); if (sk) prepStocks(sk); if (dr) prepDrivers(dr); if (ck) prepChecks(ck); if (rs) prepResearch(rs);
     $("subtitle").textContent = `Two U.S.-listed EV makers, from SEC filings and company releases through ${evQ(ev.tesla.quarters.at(-1).q)}`;
     readHash(); renderChips(); initLab(); initAsk();
+    const syncPeriod = () => [...$("periodSeg").children].forEach((b) => { const on = b.dataset.p === PERIOD; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); });
+    $("periodSeg").onclick = (e) => { const b = e.target.closest("[data-p]"); if (!b) return; PERIOD = b.dataset.p; syncPeriod(); writeHash(); renderAll(); };
+    syncPeriod();
     $("tabs").onclick = (e) => { const b = e.target.closest("button"); if (b) goTab(b.dataset.tab); };
     document.addEventListener("click", (e) => { const b = e.target.closest("[data-go-tab]"); if (b) goTab(b.dataset.goTab); });
     $("shareBtn").onclick = async () => { try { await navigator.clipboard.writeText(location.href); toast("Link to this view copied"); } catch (err) { toast("Copy the address bar to share this view"); } };
     $("themeBtn").onclick = () => { const next = isDark() ? "light" : "dark"; document.documentElement.dataset.theme = next; try { localStorage.setItem("theme", next); } catch (err) {} renderAll(); };
     matchMedia("(prefers-color-scheme: dark)").onchange = renderAll;
-    window.addEventListener("hashchange", () => { readHash(); syncUI(); renderAll(); });
+    window.addEventListener("hashchange", () => { readHash(); syncPeriod(); syncUI(); renderAll(); });
     syncUI(); renderAll();
   }).catch((e) => { $("subtitle").textContent = "Failed to load data: " + e; });
 }

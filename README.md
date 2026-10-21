@@ -5,7 +5,7 @@ A head-to-head dashboard for two U.S.-listed electric-vehicle makers, Tesla (TSL
 **Live site:** https://tesla-rivian-dashboard.vercel.app
 
 ## What's in it
-An analytical dashboard: an Overview of headline KPIs and trends, then one tab per area with detailed charts, tables and source notes. Time charts mark the events behind big moves (Rivian's IPO, the Cybertruck launch, the end of the federal EV tax credit, the R2 launch), and every chart has a **Download CSV** link with the data as plotted.
+An analytical dashboard: an Overview of headline KPIs and trends, then one tab per area with detailed charts, tables and source notes. Time charts mark the events behind big moves (Rivian's IPO, the Cybertruck launch, the end of the federal EV tax credit, the R2 launch), every chart has a **Download CSV** link with the data as plotted, and a **Period** control (All, 2020+, 2022+, 2024+, 2025+) trims every time chart at once and is kept in the page link.
 
 Tabs are grouped: **Overview**; business (**Head to head**, **Market share**, **Investors**, **Sales**); customers (**Who buys**, **Quality & safety**, **Sentiment**); outlook (**Forecast lab**, **Drivers**); and **About**.
 

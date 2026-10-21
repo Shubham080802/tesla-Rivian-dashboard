@@ -423,3 +423,9 @@ article.card .row-head .linkbtn:hover { color: var(--ink); }
 /* grouped navigation: wraps on wide screens, scrolls sideways on phones */
 .tabs .navsep:empty { padding: 0; margin: 6px 4px; border-left: 1px solid var(--border); }
 @media (min-width: 900px) { .tabs { flex-wrap: wrap; row-gap: 4px; } .tabs button { padding: 8px 14px; } }
+/* period filter */
+.period { display: flex; align-items: center; gap: 8px; max-width: 100%; }
+.period-l { font-size: 12.5px; color: var(--muted); }
+#periodSeg { overflow-x: auto; max-width: 100%; }
+#periodSeg button { padding: 6px 11px; font-size: 13px; }
+body[data-tab="quality"] .period { visibility: hidden; }

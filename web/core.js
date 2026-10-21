@@ -97,7 +97,38 @@ function addCsvLink(id) {
   gd.after(foot);
 }
 
-const draw = (id, traces, lay) => {
+// Period filter shared by every time chart: keeps points from the chosen year onward. Charts that are not over time,
+// or that position markers by index (forecast dividers), are left alone.
+let PERIOD = "all";
+const PERIODS = ["all", "2020", "2022", "2024", "2025"];
+function xKey(v) {
+  if (typeof v !== "string") return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  if (/^\d{4}-\d{2}$/.test(v)) return v + "-01";
+  if (/^\d{4}$/.test(v)) return v + "-01-01";
+  const m = v.match(/^Q([1-4]) (\d{4})$/);
+  return m ? `${m[2]}-${String((m[1] - 1) * 3 + 1).padStart(2, "0")}-01` : null;
+}
+function applyPeriod(traces, lay) {
+  if (PERIOD === "all" || (lay.shapes || []).some((sh) => typeof sh.x0 === "number")) return [traces, lay];
+  const xs = traces.filter((t) => t.orientation !== "h" && Array.isArray(t.x) && t.x.length);
+  if (!xs.length || !xs.every((t) => t.x.every((v) => xKey(v) !== null))) return [traces, lay];
+  const st = `${PERIOD}-01-01`;
+  const out = traces.map((t) => {
+    if (t.orientation === "h" || !Array.isArray(t.x)) return t;
+    const keep = t.x.map((v) => xKey(v) >= st), n = t.x.length, cut = (a) => (Array.isArray(a) && a.length === n ? a.filter((_, i) => keep[i]) : a);
+    const u = {}; for (const [k, v] of Object.entries(t)) u[k] = cut(v);
+    if (t.marker) { u.marker = {}; for (const [k, v] of Object.entries(t.marker)) u.marker[k] = cut(v); }
+    return u;
+  });
+  const l = { ...lay };
+  if (l.xaxis?.range && String(l.xaxis.range[0]) < st) l.xaxis = { ...l.xaxis, range: [st, l.xaxis.range[1]] };
+  if (Array.isArray(l.xaxis?.tickvals)) { const keepT = l.xaxis.tickvals.map((v) => (xKey(String(v)) ?? st) >= st); l.xaxis = { ...l.xaxis, tickvals: l.xaxis.tickvals.filter((_, i) => keepT[i]), ticktext: l.xaxis.ticktext?.filter((_, i) => keepT[i]) }; }
+  return [out, l];
+}
+
+const draw = (id, tracesIn, layIn) => {
+  const [traces, lay] = applyPeriod(tracesIn, layIn);
   const ev = eventMarks(traces, (lay.annotations || []).length ? 18 : 0);   // start below a chart's own top labels
   const l = { ...lay, shapes: [...(lay.shapes || []), ...ev.shapes], annotations: [...(lay.annotations || []), ...ev.annotations] };
   const p = Plotly.react(id, traces, l, { displayModeBar: false, responsive: true, scrollZoom: false });
