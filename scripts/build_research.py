@@ -302,20 +302,23 @@ def gdelt_series(co, mode, waits=(20, 60, 120, 240)):
     for w in waits:
         time.sleep(w)                                    # GDELT allows one request every few seconds and throttles busy clients
         try:
-            txt = urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "research dashboard"}), timeout=120).read().decode()
+            txt = urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "research dashboard"}), timeout=300).read().decode()
         except urllib.error.HTTPError as e:
+            print(f"{path.name}: HTTP {e.code}")
             if e.code != 429:
                 break
             continue
-        except Exception:
+        except Exception as e:                           # long daily timelines can be slow; say why and retry
+            print(f"{path.name}: {type(e).__name__} {e}")
             continue
         if txt.lstrip().startswith("{"):
             rows = [{"date": r["date"][:8], "value": r["value"], "norm": r.get("norm")} for r in json.loads(txt)["timeline"][0]["data"]]
             pd.DataFrame(rows).to_csv(path, index=False)
             print("fetched", path.name)
             break
+        print(f"{path.name}: GDELT said: {txt.strip()[:120]}")
     else:
-        print(f"{path.name}: GDELT rate limit, using cache")
+        print(f"{path.name}: no data after {len(waits)} tries, using cache")
     return pd.read_csv(path, dtype={"date": str}) if path.exists() else None
 
 
@@ -324,6 +327,7 @@ def sentiment():
     tones = {co: gdelt_series(co, "timelinetone") for co in GDELT_Q}          # tone first: GDELT often allows only a few requests
     for co in GDELT_Q:
         tone, vol = tones[co], gdelt_series(co, "timelinevolraw")
+        pct = gdelt_series(co, "timelinevol") if vol is None else None          # fallback: GDELT's own share of coverage, in %
         if tone is None:
             continue
         for d in (tone, vol):
@@ -334,6 +338,10 @@ def sentiment():
         res[co] = {"months": list(t.index), "tone": [round(float(x), 3) for x in t],
                    "articles": [int(v.a.get(m, 0)) if v is not None else None for m in t.index],
                    "share_per_million": [round(float(v.a[m] / v.n[m] * 1e6), 1) if v is not None and m in v.index and v.n[m] else None for m in t.index]}
+        if vol is None and pct is not None:
+            pct["month"] = pct.date.str[:4] + "-" + pct.date.str[4:6]
+            pm = pct[pct.month < cutoff].groupby("month").value.mean() * 1e4             # % of all articles -> per million
+            res[co]["share_per_million"] = [round(float(pm[m]), 1) if m in pm.index else None for m in t.index]
     return res
 
 
