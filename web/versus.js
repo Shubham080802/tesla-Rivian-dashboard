@@ -64,7 +64,7 @@ function renderVersus() {
     ...CO.map(([k, n, c]) => ({ x: cat, y: ratio(k, "net_income"), mode: "lines+markers", name: `${n} net`, line: { color: c(), width: 2, dash: "dot" }, marker: { size: 6, color: c(), symbol: "diamond" }, hovertemplate: `${n} net %{x}: %{y:.1%}<extra></extra>` })),
   ], layout({ margin: m0, xaxis: { type: "category" }, yaxis: { tickformat: ".0%", zeroline: true, range: [-1.3, 0.4] } }));
   const off = CO.flatMap(([k, n]) => ["gross_profit", "net_income"].flatMap((m) => ratio(k, m).map((v, i) => (v != null && v < -1.3 ? `${n} ${m === "gross_profit" ? "gross" : "net"} ${yrs[i]} ${fmt.pct(v, 0)}` : null)).filter(Boolean)));
-  $("vsGmSub").textContent = `Solid lines are gross profit as a share of revenue; dotted lines are net income as a share of revenue.${off.length ? ` Off the bottom of the chart: ${off.join(", ")}.` : ""} Years with under $0.5B revenue are left out.`;
+  $("vsGmSub").textContent = `Full calendar years. Solid lines are gross profit as a share of revenue; dotted lines are net income as a share of revenue.${off.length ? ` Off the bottom of the chart: ${off.join(", ")}.` : ""} Years with under $0.5B revenue are left out.`;
 
   // attention: 12-month rolling mean
   const pv = (co) => ({ x: VS.pageviews[co].months.map((m) => m + "-01"), y: rolling(VS.pageviews[co].views, 12).map((v, i) => (i >= 11 ? v : null)) });
