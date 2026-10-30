@@ -96,5 +96,9 @@
  "2026-04": {
   "capex": "derived: 6-month total minus Q1",
   "operating_cash_flow": "derived: 6-month total minus Q1"
+ },
+ "2026-07": {
+  "capex": "derived: 9-month total minus 6-month total",
+  "operating_cash_flow": "derived: 9-month total minus 6-month total"
  }
 }
